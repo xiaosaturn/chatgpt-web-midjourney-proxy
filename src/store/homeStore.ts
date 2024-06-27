@@ -110,7 +110,7 @@ export interface gptServerType{
 const  getServerDefault=()=>{
 let v:gptServerType={
         OPENAI_API_KEY:'',
-        OPENAI_API_BASE_URL:'',
+        OPENAI_API_BASE_URL: 'https://api.aijuli.com/',
         MJ_SERVER:'',
         UPLOADER_URL:'',
         MJ_API_SECRET:'',

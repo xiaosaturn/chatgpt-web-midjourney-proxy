@@ -9,6 +9,7 @@ import { watch } from "vue";
 const emit = defineEmits(['close']);
 const ms = useMessage();
 const save = () => {
+  gptServerStore.myData.OPENAI_API_BASE_URL = 'https://api.aijuli.com/';
   gptServerStore.setMyData(gptServerStore.myData);
   ms.success(t('mjchat.success'));
   emit('close');
