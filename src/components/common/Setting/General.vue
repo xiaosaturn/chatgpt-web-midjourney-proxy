@@ -136,7 +136,7 @@ function handleImportButtonClick(): void {
           {{ $t('common.save') }}
         </NButton>
       </div>
-      <div class="flex items-center space-x-4">
+      <!-- <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
         <div class="w-[200px]">
           <NInput v-model:value="name" placeholder="" />
@@ -144,8 +144,8 @@ function handleImportButtonClick(): void {
         <NButton size="tiny" text type="primary" @click="updateUserInfo({ name })">
           {{ $t('common.save') }}
         </NButton>
-      </div>
-      <div class="flex items-center space-x-4">
+      </div> -->
+      <!-- <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
         <div class="flex-1">
           <NInput v-model:value="description" placeholder="" />
@@ -153,7 +153,7 @@ function handleImportButtonClick(): void {
         <NButton size="tiny" text type="primary" @click="updateUserInfo({ description })">
           {{ $t('common.save') }}
         </NButton>
-      </div>
+      </div> -->
       <div
         class="flex items-center space-x-4"
         :class="isMobile && 'items-start'"
@@ -168,13 +168,13 @@ function handleImportButtonClick(): void {
             {{ $t('common.export') }}
           </NButton>
 
-          <input id="fileInput2" type="file" style="display:none" @change="importData">
+          <!-- <input id="fileInput2" type="file" style="display:none" @change="importData">
           <NButton size="small" @click="handleImportButtonClick">
             <template #icon>
               <SvgIcon icon="ri:upload-2-fill" />
             </template>
             {{ $t('common.import') }}
-          </NButton>
+          </NButton> -->
 
           <NPopconfirm placement="bottom" @positive-click="clearData">
             <template #trigger>

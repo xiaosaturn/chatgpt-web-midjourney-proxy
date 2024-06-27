@@ -58,7 +58,7 @@ const getLastFrom= ()=>{
   return obj.v;
 }
 onMounted( () => {
-  fetchConfig();
+  // fetchConfig();
   
   let t = getLastFrom();
   if(t){
@@ -80,15 +80,16 @@ const  isShow = computed(()=>{
 <template>
   <NSpin :show="loading">
     <div class="p-4 space-y-4">
-      <h2 class="text-xl font-bold">
+      <!-- <h2 class="text-xl font-bold">
         Version - {{ pkg.version }}
         <a class="text-red-500" href="https://github.com/Dooy/chatgpt-web-midjourney-proxy" target="_blank" v-if=" isShow  "> ({{ $t('mj.findVersion') }} {{ st.lastVersion }})</a>
         <a class="text-gray-500" href="https://github.com/Dooy/chatgpt-web-midjourney-proxy" target="_blank" v-else-if="st.lastVersion"> ({{ $t('mj.yesLastVersion') }})</a>
-      </h2>
+      </h2> -->
       <div class="p-2 space-y-2 rounded-md bg-neutral-100 dark:bg-neutral-700">
         <p v-html="$t('mj.infoStar')"></p>
       </div>
-      <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
+      
+      <!-- <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
       <p v-if="isChatGPTAPI" class=" flex items-center justify-between">
         <div>
         {{ $t("setting.monthlyUsage") }}：{{ config?.usage ?? '-' }}
@@ -102,7 +103,7 @@ const  isShow = computed(()=>{
       </p>
       <p v-if="!isChatGPTAPI">
         {{ $t("setting.reverseProxy") }}：{{ config?.reverseProxy ?? '-' }}
-      </p>
+      </p> -->
        
       <!-- <p>{{ $t("setting.timeout") }}：{{ config?.timeoutMs ?? '-' }}</p>  -->
       <!-- <p>{{ $t("setting.socks") }}：{{ config?.socksProxy ?? '-' }}</p>
