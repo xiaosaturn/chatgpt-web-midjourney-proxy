@@ -192,6 +192,7 @@ export default {
 
   },
   mj:{
+    'your key': '您的Key',
     setOpen:'OpenAI 相关',
     setOpenPlaceholder:'必须包含 http(s)://'
     ,setOpenUrl:'OpenAI接口地址'
