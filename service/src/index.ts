@@ -119,15 +119,17 @@ router.get('/reg', regCookie )
 
  const API_BASE_URL = isNotEmptyString(process.env.OPENAI_API_BASE_URL)
     ? process.env.OPENAI_API_BASE_URL
-    : 'https://api.openai.com'
+    : 'https://api.aijuli.com'
 
-app.use('/mjapi',authV2 , proxy(process.env.MJ_SERVER?process.env.MJ_SERVER:'https://api.openai.com', {
+console.log('API_BASE_URL', API_BASE_URL)
+
+app.use('/mjapi',authV2 , proxy(process.env.MJ_SERVER?process.env.MJ_SERVER:'https://api.aijuli.com', {
   https: false, limit: '10mb',
   proxyReqPathResolver: function (req) {
     return req.originalUrl.replace('/mjapi', '') // 将URL中的 `/mjapi` 替换为空字符串
   },
   proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-    if(  process.env.MJ_API_SECRET ) proxyReqOpts.headers['mj-api-secret'] = process.env.MJ_API_SECRET;
+    proxyReqOpts.headers['mj-api-secret'] = proxyReqOpts.headers['authorization'],
     proxyReqOpts.headers['Content-Type'] = 'application/json';
     proxyReqOpts.headers['Mj-Version'] = pkg.version;
     return proxyReqOpts;
@@ -276,7 +278,7 @@ app.use(
        let url = `${API_BASE_URL}/v1/audio/transcriptions` ;
       let responseBody = await axios.post( url , formData, {
               headers: {
-              Authorization: 'Bearer '+ process.env.OPENAI_API_KEY ,
+              Authorization: req.headers['authorization'],
               'Content-Type': 'multipart/form-data',
               'Mj-Version': pkg.version
             }
@@ -303,7 +305,7 @@ app.use('/openapi' ,authV2, turnstileCheck, proxy(API_BASE_URL, {
     return req.originalUrl.replace('/openapi', '') // 将URL中的 `/openapi` 替换为空字符串
   },
   proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-    proxyReqOpts.headers['Authorization'] ='Bearer '+ process.env.OPENAI_API_KEY;
+    proxyReqOpts.headers['Authorization'] = proxyReqOpts.headers['authorization'];
     proxyReqOpts.headers['Content-Type'] = 'application/json';
     proxyReqOpts.headers['Mj-Version'] = pkg.version;
     return proxyReqOpts;
@@ -319,8 +321,7 @@ app.use('/sunoapi' ,authV2, proxy(process.env.SUNO_SERVER??  API_BASE_URL, {
   },
   proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
     //mlog("sunoapi")
-    if ( process.env.SUNO_KEY ) proxyReqOpts.headers['Authorization'] ='Bearer '+process.env.SUNO_KEY;
-    else   proxyReqOpts.headers['Authorization'] ='Bearer '+process.env.OPENAI_API_KEY;  
+    proxyReqOpts.headers['Authorization'] = proxyReqOpts.headers['authorization']; 
     proxyReqOpts.headers['Content-Type'] = 'application/json';
     proxyReqOpts.headers['Mj-Version'] = pkg.version;
     return proxyReqOpts;
@@ -337,8 +338,7 @@ app.use('/luma' ,authV2, proxy(process.env.LUMA_SERVER??  API_BASE_URL, {
   },
   proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
     //mlog("sunoapi")
-    if ( process.env.LUMA_KEY ) proxyReqOpts.headers['Authorization'] ='Bearer '+process.env.LUMA_KEY;
-    //else   proxyReqOpts.headers['Authorization'] ='Bearer '+process.env.OPENAI_API_KEY;  
+    proxyReqOpts.headers['Authorization'] = proxyReqOpts.headers['authorization'];;
     proxyReqOpts.headers['Content-Type'] = 'application/json';
     proxyReqOpts.headers['Mj-Version'] = pkg.version;
     return proxyReqOpts;
