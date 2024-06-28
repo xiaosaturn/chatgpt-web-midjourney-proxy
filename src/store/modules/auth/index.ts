@@ -32,15 +32,42 @@ export const useAuthStore = defineStore('auth-store', {
     async getSession() {
       try {
         const { data } = await fetchSession<SessionResponse>()
-        this.session = { ...data }
-        
-        homeStore.setMyData({session: data });
-        if(appStore.$state.theme=='auto' ){
-            appStore.setTheme(  data.theme && data.theme=='light' ?'light':'dark')
+        // const data = {
+        //   theme: "light",
+        //   auth: false,
+        //   model: "ChatGPTAPI",
+        //   "disableGpt4": "",
+        //   "isWsrv": "",
+        //   "uploadImgSize": "1",
+        //   "isCloseMdPreview": false,
+        //   "notify": "",
+        //   "baiduId": "",
+        //   "googleId": "",
+        //   "isHideServer": false,
+        //   "isUpload": false,
+        //   "amodel": "gpt-3.5-turbo",
+        //   "isApiGallery": false,
+        //   "cmodels": "",
+        //   "isUploadR2": false,
+        //   "gptUrl": "",
+        //   "menuDisable": "",
+        //   "visionModel": "",
+        //   "systemMessage": "",
+        //   "customVisionModel": ""
+        // }
+        this.session = {
+          theme: "light",
+          auth: false,
+          model: "ChatGPTAPI",
+        }
+
+        homeStore.setMyData({ session: data });
+        if (appStore.$state.theme == 'auto') {
+          appStore.setTheme(data.theme && data.theme == 'light' ? 'light' : 'dark')
         }
 
         let str = localStorage.getItem('gptConfigStore');
-        if( ! str ) setTimeout( ()=>  gptConfigStore.setInit() , 500); 
+        if (!str) setTimeout(() => gptConfigStore.setInit(), 500);
         return Promise.resolve(data)
       }
       catch (error) {
