@@ -20,20 +20,37 @@ const nowTime = computed(() => {
     return new Date().getTime()
 })
 
-const FeedLumaTaskDown = async (id: string) => {
+const FeedLumaTaskDown = async (item: LumaMedia) => {
     //FeedLumaTask(id)
-    let d: any = await lumaFetch('/generations/' + id + '/download_video_url');
-    mlog("d", d)
-    if (d.url) {
-        //window.open(d.url)
-        const link = document.createElement('a');
-        link.href = d.url;
-        link.download = id + ".mp4";
-        link.target = '_blank';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    // let d: any = await lumaFetch('/generations/' + id + '/download_video_url');
+    // mlog("d", d)
+    // if (d.url) {
+    //     //window.open(d.url)
+    //     const link = document.createElement('a');
+    //     link.href = d.url;
+    //     link.download = id + ".mp4";
+    //     link.target = '_blank';
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    // }
+    let id = item.id;
+    let url = '';
+    try {
+        let d: any = await lumaFetch('/generations/' + id + '/download_video_url');
+        mlog("d", d)
+        url = d.url ?? item.video?.url
+    } catch (e) {
+        url = item.video?.url ?? ''
     }
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = id + ".mp4";
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 //getLastFrameBase64
@@ -60,8 +77,9 @@ initLoad();
                         @error="$event.target.src = item.video?.url" loop playsinline :controls="st.pIndex == index"
                         class="w-full h-full object-cover"></video>
                     <div class=" text-center" v-else>
+                        <div v-if="item.state == 'failed'" class="pt-2">{{ $t('video.failed') }}</div>
                         <NButton size="small" type="primary" @click="FeedLumaTask(item.id)"
-                            v-if="!item.last_feed || ((new Date().getTime()) - item.last_feed) > 20 * 1000">
+                            v-else-if="!item.last_feed || ((new Date().getTime()) - item.last_feed) > 20 * 1000">
                             {{ $t('video.repeat') }}</NButton>
                         <div class="pt-2" v-else>
                             <div>{{ $t('video.process') }}{{ new Date(item.last_feed).toLocaleString() }}</div>
@@ -81,7 +99,7 @@ initLoad();
                     </div>
                     <div class="flex justify-end items-center pt-1" v-if="item.video?.url || item.video?.download_url">
                         <n-button-group size="tiny">
-                            <n-button size="tiny" round ghost @click="FeedLumaTaskDown(item.id)">
+                            <n-button size="tiny" round ghost @click="FeedLumaTaskDown(item)">
                                 <SvgIcon icon="mdi:download" /> {{ $t('video.download') }}
                             </n-button>
                             <n-button size="tiny" round ghost @click="extend(item)">
