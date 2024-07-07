@@ -28,12 +28,14 @@ watch(() => gptServerStore.myData.OPENAI_API_BASE_URL, (n) => {
   gptServerStore.myData.MJ_SERVER = n
   gptServerStore.myData.SUNO_SERVER = n;
   gptServerStore.myData.LUMA_SERVER = n;
+  gptServerStore.myData.VIGGLE_SERVER = n;
 });
 watch(() => gptServerStore.myData.OPENAI_API_KEY, (n) => {
   if (!gptServerStore.myData.IS_SET_SYNC) return;
   gptServerStore.myData.MJ_API_SECRET = n
   gptServerStore.myData.SUNO_KEY = n;
   gptServerStore.myData.LUMA_KEY = n;
+  gptServerStore.myData.VIGGLE_KEY = n;
 });
 </script>
 <template>
@@ -42,11 +44,11 @@ watch(() => gptServerStore.myData.OPENAI_API_KEY, (n) => {
       <div class="pb-1">
         <n-switch v-model:value="gptServerStore.myData.IS_SET_SYNC" size="small">
           <template #checked>{{ $t('mjchat.setSync') }}</template>
-          <template #unchecked> {{ $t('mjchat.setSync') }} </template>
-        </n-switch>
-      </div>
-      <div class="text-right">{{ $t('mj.setOpen') }}</div>
-    </div> -->
+<template #unchecked> {{ $t('mjchat.setSync') }} </template>
+</n-switch>
+</div>
+<div class="text-right">{{ $t('mj.setOpen') }}</div>
+</div> -->
 
     <!-- <section class="mb-4 flex justify-between items-center">
       <n-input @blur="blurClean" :placeholder="$t('mj.setOpenPlaceholder')"
@@ -61,7 +63,7 @@ watch(() => gptServerStore.myData.OPENAI_API_KEY, (n) => {
       <n-input @blur="blurClean" type="password" :placeholder="$t('mj.setOpenKeyPlaceholder')" show-password-on="click"
         v-model:value="gptServerStore.myData.OPENAI_API_KEY" clearable>
         <template #prefix>
-          <span class="text-[var(--n-tab-text-color-active)]">{{ $t('mj.your key') + ' : '}}</span>
+          <span class="text-[var(--n-tab-text-color-active)]">{{ $t('mj.your key') + ' : ' }}</span>
         </template>
       </n-input>
     </section>
@@ -142,7 +144,26 @@ watch(() => gptServerStore.myData.OPENAI_API_KEY, (n) => {
       </n-input>
     </section> -->
 
+    <!--
+    <div class="text-right">{{ $t('dance.viggleabout') }}</div>
+    <section class="mb-4 flex justify-between items-center">
+      <n-input @blur="blurClean" :placeholder="$t('mj.setOpenPlaceholder')"
+        v-model:value="gptServerStore.myData.VIGGLE_SERVER" clearable>
+        <template #prefix>
+          <span class="text-[var(--n-tab-text-color-active)]">{{ $t('dance.viggleserver') }}:</span>
+        </template>
+      </n-input>
+    </section>
 
+    <section class="mb-4 flex justify-between items-center">
+      <n-input @blur="blurClean" type="password" :placeholder="$t('dance.setOpenKeyPlaceholder')"
+        show-password-on="click" v-model:value="gptServerStore.myData.VIGGLE_KEY" clearable>
+        <template #prefix>
+          <span class="text-[var(--n-tab-text-color-active)]">Viggle Key:</span>
+        </template>
+      </n-input>
+    </section>
+    -->
 
     <!-- <div class="text-right"> {{ $t('mj.setUploader') }}</div>
     <section class="mb-4 flex justify-between items-center">

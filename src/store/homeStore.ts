@@ -104,7 +104,9 @@ export interface gptServerType {
     LUMA_KEY: string
     IS_SET_SYNC?: boolean
     GPTS_GX?: boolean
-    IS_LUMA_PRO?: boolean
+    IS_LUMA_PRO?: boolean,
+    VIGGLE_SERVER: string
+    VIGGLE_KEY: string
 }
 
 const getServerDefault = () => {
@@ -119,7 +121,9 @@ const getServerDefault = () => {
         MJ_CDN_WSRV: false
         , IS_SET_SYNC: true,
         LUMA_SERVER: '',
-        LUMA_KEY: ''
+        LUMA_KEY: '',
+        VIGGLE_SERVER: '',
+        VIGGLE_KEY: '',
     }
     return v;
 }

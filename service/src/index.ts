@@ -16,6 +16,7 @@ import axios from 'axios';
 import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { getUserByIdService, verificationCode, registerUser, login } from './users/index'
+import { viggleProxyFileDo } from './myfun'
 
 const app = express()
 const router = express.Router()
@@ -337,7 +338,22 @@ app.use('/luma', authV2, proxy(process.env.LUMA_SERVER ?? API_BASE_URL, {
         proxyReqOpts.headers['Mj-Version'] = pkg.version;
         return proxyReqOpts;
     },
+}));
 
+app.use('/viggle/asset', authV2, upload2.single('file'), viggleProxyFileDo);
+
+app.use('/viggle', authV2, proxy(process.env.VIGGLE_SERVER ?? API_BASE_URL, {
+    https: false, limit: '10mb',
+    proxyReqPathResolver: function (req) {
+      return req.originalUrl;
+    },
+    proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
+      if (process.env.VIGGLE_KEY) proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.VIGGLE_KEY;
+      else proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.OPENAI_API_KEY;
+      proxyReqOpts.headers['Content-Type'] = 'application/json';
+      proxyReqOpts.headers['Mj-Version'] = pkg.version;
+      return proxyReqOpts;
+    },
 }));
 
 router.get('/app/user/info', getUserByIdService)

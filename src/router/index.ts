@@ -106,6 +106,20 @@ const routes: RouteRecordRaw[] = [
     ],
   },
 
+  {
+    path: '/dance',
+    name: 'dance',
+    component: lumaLayout,
+    redirect: '/dance/index',
+    children: [
+      {
+        path: '/dance/:uuid?',
+        name: 'dance',
+        component: () => import('@/views/viggle/dance.vue'),
+      },
+    ],
+  },
+
   //调试
   // {
   //   path: '/mytest',
