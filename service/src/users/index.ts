@@ -28,6 +28,51 @@ exports.getUserByIdService = async (req: Request, res: Response, next: NextFunct
     })
 }
 
+exports.login = async (req: Request, res: Response, next: NextFunction) => {
+    const userInfo = req.body;
+    if (!userInfo.email) {
+        return res.send({
+            msg: 'no email',
+            code: 10001
+        });
+    }
+    if (!userInfo.password) {
+        return res.send({
+            msg: 'no password',
+            code: 10002
+        });
+    }
+    const userSearch = await getUserByEmail(userInfo.email);
+    if (!userSearch) {
+        return res.send({
+            code: 10007,
+            msg: '用户不存在'
+        });
+    }
+    const flag = bcrypt.compareSync(userInfo.password, userSearch.password);
+    if (!flag) {
+        return res.send({
+            code: 10006,
+            msg: '登录失败，密码错误'
+        });
+    } else {
+        const token = jwt.sign({
+            email: req.body.email
+        }, process.env.SECRET_KEY, {
+            algorithm: 'HS256',
+            expiresIn: 60 * 60 * 24
+        });
+        res.send({
+            code: 200,
+            msg: '登录成功！',
+            data: {
+                token: 'Bearer ' + token,
+                user: userSearch
+            }
+        });
+    }
+}
+
 exports.registerUser = async (req: Request, res: Response, next: NextFunction) => {
     const userInfo = req.body;
     if (!userInfo.email) {
@@ -68,7 +113,10 @@ exports.registerUser = async (req: Request, res: Response, next: NextFunction) =
                 return res.send({
                     code: 200,
                     msg: '注册成功，将为你自动登录',
-                    token: 'Bearer ' + token
+                    data: {
+                        token: 'Bearer ' + token,
+                        user: userInfo
+                    }
                 });
             } else {
                 return res.send({

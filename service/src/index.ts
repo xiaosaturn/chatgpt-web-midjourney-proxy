@@ -15,7 +15,7 @@ import FormData from 'form-data'
 import axios from 'axios';
 import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
-import { getUserByIdService, verificationCode, registerUser } from './users/index'
+import { getUserByIdService, verificationCode, registerUser, login } from './users/index'
 
 const app = express()
 const router = express.Router()
@@ -343,6 +343,7 @@ app.use('/luma', authV2, proxy(process.env.LUMA_SERVER ?? API_BASE_URL, {
 router.get('/app/user/info', getUserByIdService)
 router.get('/app/user/captcha', verificationCode)
 router.post('/app/user/register', registerUser)
+router.post('/app/user/login', login);
 
 app.use('', router)
 app.use('/api', router)
