@@ -38,7 +38,7 @@ const show = computed({
 </script>
 
 <template>
-  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 640px">
+  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 640px;border-radius: 20px">
     <div>
       <NTabs v-model:value="active" type="line" animated>
         <NTabPane name="General" tab="General">
@@ -62,13 +62,13 @@ const show = computed({
           </div>
         </NTabPane>
 
-        <NTabPane name="server" tab="server" v-if=" ! homeStore.myData.session.isHideServer">
+        <!-- <NTabPane name="server" tab="server" v-if=" ! homeStore.myData.session.isHideServer">
           <template #tab>
             <SvgIcon class="text-lg" icon="mingcute:server-line" />
             <span class="ml-2">{{ $t('mjset.server') }}</span>
           </template>
           <aiSetServer />
-        </NTabPane>
+        </NTabPane> -->
         <NTabPane name="Config" tab="Config">
           <template #tab>
             <SvgIcon class="text-lg" icon="ri:list-settings-line" />

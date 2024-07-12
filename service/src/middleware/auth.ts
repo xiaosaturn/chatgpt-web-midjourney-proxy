@@ -120,7 +120,7 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
             res.status(401);
             return res.send({
                 code: 401,
-                msg: '无效的token'
+                msg: '无效的token，请登录'
             });
         }
         console.log('service decoded:', decoded)

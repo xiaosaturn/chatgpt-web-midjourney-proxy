@@ -92,6 +92,7 @@ export const gptConfigStore = reactive({
 
 
 export interface gptServerType {
+    SERVICE_TOKEN?: string
     OPENAI_API_KEY: string
     OPENAI_API_BASE_URL: string
     MJ_SERVER: string
@@ -111,6 +112,7 @@ export interface gptServerType {
 
 const getServerDefault = () => {
     let v: gptServerType = {
+        SERVICE_TOKEN: '',
         OPENAI_API_KEY: '',
         OPENAI_API_BASE_URL: '',
         MJ_SERVER: '',
@@ -118,8 +120,8 @@ const getServerDefault = () => {
         MJ_API_SECRET: '',
         SUNO_KEY: '',
         SUNO_SERVER: '',
-        MJ_CDN_WSRV: false
-        , IS_SET_SYNC: true,
+        MJ_CDN_WSRV: false,
+        IS_SET_SYNC: true,
         LUMA_SERVER: '',
         LUMA_KEY: '',
         VIGGLE_SERVER: '',
@@ -127,6 +129,7 @@ const getServerDefault = () => {
     }
     return v;
 }
+
 const getServerInit = (): gptServerType => {
     let v: gptServerType = getServerDefault();
     let str = localStorage.getItem('gptServerStore');

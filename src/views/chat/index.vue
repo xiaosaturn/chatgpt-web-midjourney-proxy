@@ -695,5 +695,5 @@ const ychat = computed( ()=>{
 
   <drawListVue /> 
   <aiGPT @finished="loading = false" /> 
-  <AiSiderInput v-if="isMobile"  :button-disabled="false" /> 
+  <AiSiderInput v-if="isMobile" :button-disabled="false" /> 
 </template>

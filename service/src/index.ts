@@ -16,7 +16,7 @@ import axios from 'axios';
 import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { getUserByIdService, verificationCode, registerUser, login } from './users/index'
-import { viggleProxyFileDo } from './myfun'
+import { viggleProxyFileDo, viggleProxy, lumaProxy  } from './myfun'
 
 const app = express()
 const router = express.Router()
@@ -27,6 +27,7 @@ app.use(express.static('public', {
         res.set('Cache-Control', 'public, max-age=1');
     }
 }))
+
 //app.use(express.json())
 app.use(bodyParser.json({ limit: '10mb' })); //大文件传输
 
@@ -325,35 +326,42 @@ app.use('/sunoapi', authV2, proxy(process.env.SUNO_SERVER ?? API_BASE_URL, {
 
 
 //代理luma 接口 
-app.use('/luma', authV2, proxy(process.env.LUMA_SERVER ?? API_BASE_URL, {
-    https: false, limit: '10mb',
-    proxyReqPathResolver: function (req) {
-        return req.originalUrl //req.originalUrl.replace('/sunoapi', '') // 将URL中的 `/openapi` 替换为空字符串
-    },
-    proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-        //mlog("sunoapi")
-        proxyReqOpts.headers['Authorization'] = proxyReqOpts.headers['authorization'];;
-        proxyReqOpts.headers['Content-Type'] = 'application/json';
-        proxyReqOpts.headers['Mj-Version'] = pkg.version;
-        return proxyReqOpts;
-    },
-}));
+// app.use('/luma', authV2, proxy(process.env.LUMA_SERVER ?? API_BASE_URL, {
+//     https: false, limit: '10mb',
+//     proxyReqPathResolver: function (req) {
+//         return req.originalUrl //req.originalUrl.replace('/sunoapi', '') // 将URL中的 `/openapi` 替换为空字符串
+//     },
+//     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
+//         //mlog("sunoapi")
+//         proxyReqOpts.headers['Authorization'] = proxyReqOpts.headers['authorization'];;
+//         proxyReqOpts.headers['Content-Type'] = 'application/json';
+//         proxyReqOpts.headers['Mj-Version'] = pkg.version;
+//         return proxyReqOpts;
+//     },
+// }));
+
+app.use('/luma', authV2, lumaProxy);
+app.use('/pro/luam', authV2, lumaProxy);
+
 
 app.use('/viggle/asset', authV2, upload2.single('file'), viggleProxyFileDo);
+app.use('/pro/viggle/asset', authV2, upload2.single('file'), viggleProxyFileDo);
+app.use('/viggle', authV2, viggleProxy);
+app.use('/pro/viggle', authV2, viggleProxy);
 
-app.use('/viggle', authV2, proxy(process.env.VIGGLE_SERVER ?? API_BASE_URL, {
-    https: false, limit: '10mb',
-    proxyReqPathResolver: function (req) {
-      return req.originalUrl;
-    },
-    proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-      if (process.env.VIGGLE_KEY) proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.VIGGLE_KEY;
-      else proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.OPENAI_API_KEY;
-      proxyReqOpts.headers['Content-Type'] = 'application/json';
-      proxyReqOpts.headers['Mj-Version'] = pkg.version;
-      return proxyReqOpts;
-    },
-}));
+// app.use('/viggle', authV2, proxy(process.env.VIGGLE_SERVER ?? API_BASE_URL, {
+//     https: false, limit: '10mb',
+//     proxyReqPathResolver: function (req) {
+//       return req.originalUrl;
+//     },
+//     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
+//       if (process.env.VIGGLE_KEY) proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.VIGGLE_KEY;
+//       else proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.OPENAI_API_KEY;
+//       proxyReqOpts.headers['Content-Type'] = 'application/json';
+//       proxyReqOpts.headers['Mj-Version'] = pkg.version;
+//       return proxyReqOpts;
+//     },
+// }));
 
 router.get('/app/user/info', getUserByIdService)
 router.get('/app/user/captcha', verificationCode)

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { NButton, NInput, NPopconfirm, NSelect, useMessage } from 'naive-ui'
+import { NButton, NInput, NPopconfirm, NSelect, useMessage, useNotification } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon } from '@/components/common'
-import { useAppStore, useUserStore } from '@/store'
+import { useAppStore, useUserStore, gptServerStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
 import { getCurrentDate } from '@/utils/functions'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -26,202 +26,383 @@ const name = ref(userInfo.value.name ?? '')
 
 const description = ref(userInfo.value.description ?? '')
 
+const showRegister = ref(false)
+
+const notification = useNotification()
+
 const language = computed({
-  get() {
-    return appStore.language
-  },
-  set(value: Language) {
-    appStore.setLanguage(value)
-  },
+    get() {
+        return appStore.language
+    },
+    set(value: Language) {
+        appStore.setLanguage(value)
+    },
 })
 
 const themeOptions: { label: string; key: Theme; icon: string }[] = [
-  {
-    label: 'Auto',
-    key: 'auto',
-    icon: 'ri:contrast-line',
-  },
-  {
-    label: 'Light',
-    key: 'light',
-    icon: 'ri:sun-foggy-line',
-  },
-  {
-    label: 'Dark',
-    key: 'dark',
-    icon: 'ri:moon-foggy-line',
-  },
+    {
+        label: 'Auto',
+        key: 'auto',
+        icon: 'ri:contrast-line',
+    },
+    {
+        label: 'Light',
+        key: 'light',
+        icon: 'ri:sun-foggy-line',
+    },
+    {
+        label: 'Dark',
+        key: 'dark',
+        icon: 'ri:moon-foggy-line',
+    },
 ]
 
 const languageOptions: { label: string; key: Language; value: Language }[] = [
-  { label: '简体中文', key: 'zh-CN', value: 'zh-CN' },
-  { label: '繁體中文', key: 'zh-TW', value: 'zh-TW' },
-  { label: 'English', key: 'en-US', value: 'en-US' },
-  { label: '한국어', key: 'ko-KR', value: 'ko-KR' },
-  { label: 'Русский язык', key: 'ru-RU', value: 'ru-RU' },
-  { label: 'Tiếng Việt', key: 'vi-VN', value: 'vi-VN' },
-  { label: 'Français', key: 'fr-FR', value: 'fr-FR' },
-  { label: 'Türkçe', key: 'tr-TR', value: 'tr-TR' },
+    { label: '简体中文', key: 'zh-CN', value: 'zh-CN' },
+    { label: '繁體中文', key: 'zh-TW', value: 'zh-TW' },
+    { label: 'English', key: 'en-US', value: 'en-US' },
+    { label: '한국어', key: 'ko-KR', value: 'ko-KR' },
+    { label: 'Русский язык', key: 'ru-RU', value: 'ru-RU' },
+    { label: 'Tiếng Việt', key: 'vi-VN', value: 'vi-VN' },
+    { label: 'Français', key: 'fr-FR', value: 'fr-FR' },
+    { label: 'Türkçe', key: 'tr-TR', value: 'tr-TR' },
 ]
 
 function updateUserInfo(options: Partial<UserInfo>) {
-  userStore.updateUserInfo(options)
-  ms.success(t('common.success'))
+    userStore.updateUserInfo(options)
+    ms.success(t('common.success'))
 }
 
 function handleReset() {
-  userStore.resetUserInfo()
-  ms.success(t('common.success'))
-  window.location.reload()
+    userStore.resetUserInfo()
+    ms.success(t('common.success'))
+    window.location.reload()
 }
 
 function exportData(): void {
-  const date = getCurrentDate()
-  const data: string = localStorage.getItem('chatStorage') || '{}'
-  const jsonString: string = JSON.stringify(JSON.parse(data), null, 2)
-  const blob: Blob = new Blob([jsonString], { type: 'application/json' })
-  const url: string = URL.createObjectURL(blob)
-  const link: HTMLAnchorElement = document.createElement('a')
-  link.href = url
-  link.download = `chat-store_${date}.json`
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
+    const date = getCurrentDate()
+    const data: string = localStorage.getItem('chatStorage') || '{}'
+    const jsonString: string = JSON.stringify(JSON.parse(data), null, 2)
+    const blob: Blob = new Blob([jsonString], { type: 'application/json' })
+    const url: string = URL.createObjectURL(blob)
+    const link: HTMLAnchorElement = document.createElement('a')
+    link.href = url
+    link.download = `chat-store_${date}.json`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
 }
 
 function importData(event: Event): void {
-  const target = event.target as HTMLInputElement
-  if (!target || !target.files)
-    return
+    const target = event.target as HTMLInputElement
+    if (!target || !target.files)
+        return
 
-  const file: File = target.files[0]
-  if (!file)
-    return
+    const file: File = target.files[0]
+    if (!file)
+        return
 
-  const reader: FileReader = new FileReader()
-  reader.onload = () => {
-    try {
-      const data = JSON.parse(reader.result as string)
-      localStorage.setItem('chatStorage', JSON.stringify(data))
-      ms.success(t('common.success'))
-      location.reload()
+    const reader: FileReader = new FileReader()
+    reader.onload = () => {
+        try {
+            const data = JSON.parse(reader.result as string)
+            localStorage.setItem('chatStorage', JSON.stringify(data))
+            ms.success(t('common.success'))
+            location.reload()
+        }
+        catch (error) {
+            ms.error(t('common.invalidFileFormat'))
+        }
     }
-    catch (error) {
-      ms.error(t('common.invalidFileFormat'))
-    }
-  }
-  reader.readAsText(file)
+    reader.readAsText(file)
 }
 
 function clearData(): void {
-  localStorage.removeItem('chatStorage')
-  location.reload()
+    localStorage.removeItem('chatStorage')
+    location.reload()
 }
 
 function handleImportButtonClick(): void {
-  const fileInput = document.getElementById('fileInput2') as HTMLElement
-  if (fileInput)   fileInput.click()
+    const fileInput = document.getElementById('fileInput2') as HTMLElement
+    if (fileInput) fileInput.click()
+}
+
+const login = () => {
+    if (validateEmail(userInfo.value.email) &&
+        validatePassword(userInfo.value.password)) {
+        // 登录
+
+    }
+}
+
+const getCaptcha = () => {
+    
+}
+
+const register = () => {
+    if (validateEmail(userInfo.value.email) &&
+        validatePassword(userInfo.value.password) &&
+        validatePassword(userInfo.value.rePassword)) {
+        if (userInfo.value.password != userInfo.value.rePassword) {
+            notification.error({
+                title: '两次密码输入不一致',
+                duration: 3000,
+            });
+            return false
+        }
+        if (validateVerificationCode(userInfo.value.captcha)) {
+            // 发送请求到后端
+
+        } else {
+            notification.error({
+                title: '验证码格式不正确',
+                duration: 3000,
+            });
+        }
+    }
+}
+
+const validateEmail = (email?: string) => {
+    if (email == null) {
+        notification.error({
+            title: '邮件不能为空',
+            duration: 3000,
+        });
+        return false;
+    }
+
+    if (email.trim() === '') {
+        notification.error({
+            title: '邮件不能为空',
+            duration: 3000,
+        });
+        return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+        notification.error({
+            title: '邮件地址格式不正确',
+            duration: 3000,
+        });
+        return false;
+    }
+    return true;
+}
+
+const validatePassword = (password?: string) => {
+    // 检查密码是否为空或null或undefined
+    if (!password) {
+        notification.error({
+            title: '密码不能为空',
+            duration: 3000,
+        });
+        return false;
+    }
+
+    if (password.trim() === '') {
+        notification.error({
+            title: '密码不能为空',
+            duration: 3000,
+        });
+        return false;
+    }
+
+    // 密码长度至少为8位
+    if (password.length < 8) {
+        notification.error({
+            title: '密码至少8位',
+            duration: 3000,
+        });
+        return false;
+    }
+
+    if (password.length > 32) {
+        notification.error({
+            title: '密码不能超过32位',
+            duration: 3000,
+        });
+        return false;
+    }
+
+    // 使用正则表达式检查密码格式
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).{8,}$/;
+    const isValid = passwordRegex.test(password);
+    if (!isValid) {
+        notification.error({
+            title: '密码格式不符合要求，至少包含一个大写字母、一个小写字母、一个数字和一个特殊符号',
+            duration: 3000,
+        });
+        return false;
+    }
+    return true;
+}
+
+const validateVerificationCode = (code?: string) => {
+    if (code == null) {
+        notification.error({
+            title: '验证码不能为空',
+            duration: 3000,
+        });
+        return false;
+    }
+    const regex = /^\d{6}$/;
+    return regex.test(code);
 }
 </script>
 
 <template>
-  <div class="p-4 space-y-5 min-h-[200px]">
-    <div class="space-y-6">
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
-        <div class="flex-1">
-          <NInput v-model:value="avatar" placeholder="" />
-        </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ avatar })">
-          {{ $t('common.save') }}
-        </NButton>
-      </div>
-      <!-- <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
-        <div class="w-[200px]">
-          <NInput v-model:value="name" placeholder="" />
-        </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ name })">
-          {{ $t('common.save') }}
-        </NButton>
-      </div> -->
-      <!-- <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
-        <div class="flex-1">
-          <NInput v-model:value="description" placeholder="" />
-        </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ description })">
-          {{ $t('common.save') }}
-        </NButton>
-      </div> -->
-      <div
-        class="flex items-center space-x-4"
-        :class="isMobile && 'items-start'"
-      >
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.chatHistory') }}</span>
+    <div class="p-4 space-y-5 min-h-[200px] rounded-[20px]">
+        <div class="space-y-6" v-if="gptServerStore.myData.SERVICE_TOKEN">
+            <div class="flex items-center space-x-4">
+                <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
+                <div class="flex-1">
+                    <NInput v-model:value="avatar" placeholder="" />
+                </div>
+                <NButton size="tiny" text type="primary" @click="updateUserInfo({ avatar })">
+                    {{ $t('common.save') }}
+                </NButton>
+            </div>
+            <!-- <div class="flex items-center space-x-4">
+                <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
+                <div class="w-[200px]">
+                <NInput v-model:value="name" placeholder="" />
+                </div>
+                <NButton size="tiny" text type="primary" @click="updateUserInfo({ name })">
+                {{ $t('common.save') }}
+                </NButton>
+            </div> -->
+            <!-- <div class="flex items-center space-x-4">
+                <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
+                <div class="flex-1">
+                <NInput v-model:value="description" placeholder="" />
+                </div>
+                <NButton size="tiny" text type="primary" @click="updateUserInfo({ description })">
+                {{ $t('common.save') }}
+                </NButton>
+            </div> -->
+            <div class="flex items-center space-x-4" :class="isMobile && 'items-start'">
+                <span class="flex-shrink-0 w-[100px]">{{ $t('setting.chatHistory') }}</span>
 
-        <div class="flex flex-wrap items-center gap-4">
-          <NButton size="small" @click="exportData">
-            <template #icon>
-              <SvgIcon icon="ri:download-2-fill" />
-            </template>
-            {{ $t('common.export') }}
-          </NButton>
+                <div class="flex flex-wrap items-center gap-4">
+                    <NButton size="small" @click="exportData">
+                        <template #icon>
+                            <SvgIcon icon="ri:download-2-fill" />
+                        </template>
+                        {{ $t('common.export') }}
+                    </NButton>
 
-          <!-- <input id="fileInput2" type="file" style="display:none" @change="importData">
-          <NButton size="small" @click="handleImportButtonClick">
-            <template #icon>
-              <SvgIcon icon="ri:upload-2-fill" />
-            </template>
-            {{ $t('common.import') }}
-          </NButton> -->
+                    <!-- <input id="fileInput2" type="file" style="display:none" @change="importData">
+                        <NButton size="small" @click="handleImportButtonClick">
+                            <template #icon>
+                            <SvgIcon icon="ri:upload-2-fill" />
+                            </template>
+                            {{ $t('common.import') }}
+                        </NButton> -->
 
-          <NPopconfirm placement="bottom" @positive-click="clearData">
-            <template #trigger>
-              <NButton size="small">
-                <template #icon>
-                  <SvgIcon icon="ri:close-circle-line" />
-                </template>
-                {{ $t('common.clear') }}
-              </NButton>
-            </template>
-            {{ $t('chat.clearHistoryConfirm') }}
-          </NPopconfirm>
+                    <NPopconfirm placement="bottom" @positive-click="clearData">
+                        <template #trigger>
+                            <NButton size="small">
+                                <template #icon>
+                                    <SvgIcon icon="ri:close-circle-line" />
+                                </template>
+                                {{ $t('common.clear') }}
+                            </NButton>
+                        </template>
+                        {{ $t('chat.clearHistoryConfirm') }}
+                    </NPopconfirm>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="flex-shrink-0 w-[100px]">{{ $t('setting.theme') }}</span>
+                <div class="flex flex-wrap items-center gap-4">
+                    <template v-for="item of themeOptions" :key="item.key">
+                        <NButton size="small" :type="item.key === theme ? 'primary' : undefined"
+                            @click="appStore.setTheme(item.key)">
+                            <template #icon>
+                                <SvgIcon :icon="item.icon" />
+                            </template>
+                        </NButton>
+                    </template>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="flex-shrink-0 w-[100px]">{{ $t('setting.language') }}</span>
+                <div class="flex flex-wrap items-center gap-4">
+                    <NSelect style="width: 140px" :value="language" :options="languageOptions"
+                        @update-value="value => appStore.setLanguage(value)" />
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="flex-shrink-0 w-[100px]">{{ $t('setting.resetUserInfo') }}</span>
+                <NButton size="small" @click="handleReset">
+                    {{ $t('common.reset') }}
+                </NButton>
+            </div>
         </div>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.theme') }}</span>
-        <div class="flex flex-wrap items-center gap-4">
-          <template v-for="item of themeOptions" :key="item.key">
-            <NButton
-              size="small"
-              :type="item.key === theme ? 'primary' : undefined"
-              @click="appStore.setTheme(item.key)"
-            >
-              <template #icon>
-                <SvgIcon :icon="item.icon" />
-              </template>
-            </NButton>
-          </template>
+        <div v-else>
+            <div v-if="showRegister">
+                <div class="flex items-center space-x-4 mb-2">
+                    <span class="flex-shrink-0 w-[100px]">{{ $t('setting.email') }}</span>
+                    <div class="flex-1">
+                        <NInput v-model:value="userInfo.email" placeholder="" />
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 mb-2">
+                    <span class="flex-shrink-0 w-[100px]">{{ $t('setting.password') }}</span>
+                    <div class="flex-1">
+                        <NInput v-model:value="userInfo.password" placeholder="" />
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 mb-2">
+                    <span class="flex-shrink-0 w-[100px]">{{ $t('setting.rePassword') }}</span>
+                    <div class="flex-1">
+                        <NInput v-model:value="userInfo.rePassword" placeholder="" />
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 mb-4">
+                    <span class="flex-shrink-0 w-[100px]">{{ $t('setting.captcha') }}</span>
+                    <div class="flex-1">
+                        <NInput v-model:value="userInfo.captcha" placeholder="" />
+                    </div>
+                    <NButton size="tiny" text type="primary" @click="getCaptcha">
+                        {{ $t('setting.getCaptcha') }}
+                    </NButton>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <NButton type="primary" @click="register">
+                        {{ $t('setting.register') }}
+                    </NButton>
+                    <div class="h-4"></div>
+                    <NButton text type="primary" @click="showRegister = false">
+                        <span class="flex-shrink-0">{{ $t('setting.back') }}</span>
+                    </NButton>
+                </div>
+            </div>
+            <div v-else>
+                <div class="flex items-center space-x-4 mb-2">
+                    <span class="flex-shrink-0">{{ $t('setting.email') }}</span>
+                    <div class="flex-1">
+                        <NInput v-model:value="userInfo.email" placeholder="" />
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 mb-10">
+                    <span class="flex-shrink-0">{{ $t('setting.password') }}</span>
+                    <div class="flex-1">
+                        <NInput v-model:value="userInfo.password" placeholder="" />
+                    </div>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <NButton class="mb-4" type="primary" @click="login">
+                        {{ $t('setting.login') }}
+                    </NButton>
+                    <div class="h-4"></div>
+                    <NButton text type="primary" @click="showRegister = true">
+                        <span class="flex-shrink-0">{{ $t('setting.noAccount') }}</span>
+                    </NButton>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.language') }}</span>
-        <div class="flex flex-wrap items-center gap-4">
-          <NSelect
-            style="width: 140px"
-            :value="language"
-            :options="languageOptions"
-            @update-value="value => appStore.setLanguage(value)"
-          />
-        </div>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.resetUserInfo') }}</span>
-        <NButton size="small" @click="handleReset">
-          {{ $t('common.reset') }}
-        </NButton>
-      </div>
     </div>
-  </div>
 </template>
