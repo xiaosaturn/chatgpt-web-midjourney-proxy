@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
 import md5 from 'md5';
+const jwt = require('jsonwebtoken');
 
 // 存储IP地址和错误计数的字典
 const ipErrorCount = {};
@@ -104,25 +105,46 @@ const clearLimit = (req: Request, res: Response) => {
 }
 
 export const authV2 = async (req: Request, res: Response, next: NextFunction) => {
-    const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
-    if (isNotEmptyString(AUTH_SECRET_KEY)) {
-        try {
-            checkLimit(req, res);
-            const Authorization = req.header('X-Ptoken')
-            if (!Authorization || Authorization.trim() !== AUTH_SECRET_KEY.trim())
-                throw new Error('Error: 无访问权限 | No access rights')
-            clearLimit(req, res);
-            next()
-            //throw new Error('Error: 无访问权限 | No access rights')
-        }
-        catch (error) {
-            res.status(423);
-            res.send({ code: 'token_check', message: error.message ?? 'Please authenticate.', data: null })
-        }
+    const token = req.header('Authorization');
+    console.log('ac:', token)
+    if (!token) {
+        return res.send({
+            code: 401,
+            msg: '无token，请先登录'
+        });
     }
-    else {
-        next()
-    }
+    jwt.verify(token.split(' ')[1], process.env.SECRET_KEY, {
+        algorithms: ['HS256']
+    }, (err, decoded) => {
+        if (err) {
+            res.status(401);
+            return res.send({
+                code: 401,
+                msg: '无效的token'
+            });
+        }
+        console.log('service decoded:', decoded)
+        req.email = decoded.email;
+        next();
+    });
+    // const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
+    // if (isNotEmptyString(AUTH_SECRET_KEY)) {
+    //     try {
+    //         checkLimit(req, res);
+    //         const Authorization = req.header('X-Ptoken')
+    //         if (!Authorization || Authorization.trim() !== AUTH_SECRET_KEY.trim())
+    //             throw new Error('Error: 无访问权限 | No access rights')
+    //         clearLimit(req, res);
+    //         next()
+    //     }
+    //     catch (error) {
+    //         res.status(423);
+    //         res.send({ code: 'token_check', message: error.message ?? 'Please authenticate.', data: null })
+    //     }
+    // }
+    // else {
+    //     next()
+    // }
 }
 
 export const turnstileCheck = async (req: Request, res: Response, next: NextFunction) => {

@@ -2,14 +2,14 @@ import { getUserById, getUserByEmail, insertUser } from '../db/userModel';
 import { Request, Response, NextFunction } from 'express';
 const { getRedisValue, setRedisValue } = require('../db/redis');
 const nodemailer = require('nodemailer');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const transporter = nodemailer.createTransport({
     service: 'QQ',
     auth: {
-        user: '807132689@qq.com',
-        pass: 'snpbvahojjnubcbf'
+        user: process.env.QQ_EMAIL,
+        pass: process.env.QQ_AUTH
     }
 });
 
@@ -57,11 +57,13 @@ exports.login = async (req: Request, res: Response, next: NextFunction) => {
         });
     } else {
         const token = jwt.sign({
+            id: userSearch.id,
             email: req.body.email
         }, process.env.SECRET_KEY, {
             algorithm: 'HS256',
             expiresIn: 60 * 60 * 24
         });
+        setRedisValue(req.body.email, 'Bearer ' + token, 58 * 60 * 24);
         res.send({
             code: 200,
             msg: '登录成功！',

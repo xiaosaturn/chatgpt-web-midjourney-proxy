@@ -21,7 +21,8 @@ exports.getUserByEmail = async (userId) => {
                         updatedTime: user.updatedTime,
                         status: user.status,
                         gender: user.gender,
-                        password: user.password
+                        password: user.password,
+                        expireDate: user.expireDate
                     });
                 } else {
                     resolve(null);
@@ -43,7 +44,18 @@ exports.getUserById = async (userId) => {
             } else {
                 const result = results[0];
                 if (result) {
-                    resolve(resultsWithCamelCase(results[0]));
+                    const user = resultsWithCamelCase(results[0]);
+                    resolve({
+                        email: user.email,
+                        avatar: user.avatar,
+                        mobile: user.mobile,
+                        createTime: user.createTime,
+                        updatedTime: user.updatedTime,
+                        status: user.status,
+                        gender: user.gender,
+                        password: user.password,
+                        expireDate: user.expireDate
+                    });
                 }
             }
         });

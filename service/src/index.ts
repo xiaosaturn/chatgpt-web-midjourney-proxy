@@ -300,12 +300,11 @@ app.use('/openapi', authV2, turnstileCheck, proxy(API_BASE_URL, {
         return req.originalUrl.replace('/openapi', '') // 将URL中的 `/openapi` 替换为空字符串
     },
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-        proxyReqOpts.headers['Authorization'] = proxyReqOpts.headers['authorization'];
+        proxyReqOpts.headers['Authorization'] = 'Bearer '+ process.env.OPENAI_API_KEY;
         proxyReqOpts.headers['Content-Type'] = 'application/json';
         proxyReqOpts.headers['Mj-Version'] = pkg.version;
         return proxyReqOpts;
     },
-    //limit: '10mb'
 }));
 
 //代理sunoApi 接口 
