@@ -8,6 +8,8 @@ import type { UserInfo } from '@/store/modules/user/helper'
 import { getCurrentDate } from '@/utils/functions'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
+import axios from 'axios'
+import request from '@/api/myAxios'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -135,8 +137,22 @@ const login = () => {
     }
 }
 
-const getCaptcha = () => {
-    
+const getCaptcha = async () => {
+    const res = await request.get('/api/app/user/captcha', {
+        email: userInfo.value.email
+    });
+    if (res.code == 200) {
+        notification.success({
+            title: '发送成功',
+            duration: 3000,
+        });
+    } else {
+        notification.error({
+            title: '发送失败',
+            duration: 3000,
+            description: res.msg
+        });
+    }
 }
 
 const register = () => {

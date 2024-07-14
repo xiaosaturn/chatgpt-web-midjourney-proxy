@@ -18,7 +18,7 @@ function goHome() {
           500
         </h2>
         <p class="text-base text-center text-slate-500 dark:text-slate-500">
-          Server error
+          Server Error
         </p>
         <div class="flex items-center justify-center text-center">
           <Icon500 class="w-[300px]" />
