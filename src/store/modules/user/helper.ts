@@ -10,6 +10,7 @@ export interface UserInfo {
     avatar: string
     name?: string
     description?: string
+    expireDate?: string
 }
 
 export interface UserState {

@@ -32,6 +32,12 @@ const showRegister = ref(false)
 
 const notification = useNotification()
 
+let countdown = ref(60);
+let timer: any;
+let isDisabled = ref(false)
+let btnStr = ref('发送验证码')
+
+
 const language = computed({
     get() {
         return appStore.language
@@ -129,11 +135,29 @@ function handleImportButtonClick(): void {
     if (fileInput) fileInput.click()
 }
 
-const login = () => {
+const login = async () => {
     if (validateEmail(userInfo.value.email) &&
         validatePassword(userInfo.value.password)) {
         // 登录
-
+        const res = await request.post('/api/app/user/login', {
+            email: userInfo.value.email,
+            password: userInfo.value.password
+        });
+        if (res.code == 200) {
+            notification.error({
+                title: '登录成功',
+                duration: 3000,
+            });
+            gptServerStore.setMyData({
+                SERVICE_TOKEN: res.data.token
+            })
+            userStore.updateUserInfo(res.data.user)
+        } else {
+            notification.error({
+                title: res.msg,
+                duration: 3000,
+            });
+        }
     }
 }
 
@@ -142,10 +166,26 @@ const getCaptcha = async () => {
         email: userInfo.value.email
     });
     if (res.code == 200) {
-        notification.success({
-            title: '发送成功',
-            duration: 3000,
-        });
+        if (timer != null) {
+            return
+        } else {
+            timer = setInterval(() => {
+                countdown.value--;
+                btnStr.value = `${countdown.value}秒后重新发送`;
+                isDisabled.value = true;
+                if (countdown.value <= 0) {
+                    clearInterval(timer);
+                    timer = null;
+                    btnStr.value = '发送验证码';
+                    isDisabled.value = false;
+                    countdown.value = 60;
+                }
+            }, 1000);
+            notification.success({
+                title: '发送成功',
+                duration: 3000,
+            });
+        }
     } else {
         notification.error({
             title: '发送失败',
@@ -155,7 +195,7 @@ const getCaptcha = async () => {
     }
 }
 
-const register = () => {
+const register = async () => {
     if (validateEmail(userInfo.value.email) &&
         validatePassword(userInfo.value.password) &&
         validatePassword(userInfo.value.rePassword)) {
@@ -168,7 +208,22 @@ const register = () => {
         }
         if (validateVerificationCode(userInfo.value.captcha)) {
             // 发送请求到后端
-
+            const res = await request.post('/api/app/user/register', {
+                email: userInfo.value.email,
+                password: userInfo.value.password,
+                captcha: userInfo.value.captcha
+            });
+            if (res.code == 200) {
+                gptServerStore.setMyData({
+                    SERVICE_TOKEN: res.data.token
+                })
+                userStore.updateUserInfo(res.data.user)
+            } else {
+                notification.error({
+                    title: res.msg,
+                    duration: 3000,
+                });
+            }
         } else {
             notification.error({
                 title: '验证码格式不正确',
@@ -382,8 +437,9 @@ const validateVerificationCode = (code?: string) => {
                     <div class="flex-1">
                         <NInput v-model:value="userInfo.captcha" placeholder="" />
                     </div>
-                    <NButton size="tiny" text type="primary" @click="getCaptcha">
-                        {{ $t('setting.getCaptcha') }}
+                    <NButton :disabled="isDisabled" size="tiny" text type="primary" @click="getCaptcha">
+                        <!-- {{ $t('setting.getCaptcha') }} -->
+                          {{ btnStr }}
                     </NButton>
                 </div>
                 <div class="flex flex-col justify-center items-center">
