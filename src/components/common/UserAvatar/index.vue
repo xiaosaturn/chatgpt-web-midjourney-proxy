@@ -18,7 +18,7 @@ const userInfo = computed(() => userStore.userInfo)
           size="large"
           round
           :src="userInfo.avatar"
-          :fallback-src="defaultAvatar"
+          fallback-src="https://deepimage.polo-e.net/applets/20240510/052220_26bfd6acdcacd555f4ecd7666c5941f.jpg"
         />
       </template>
       <template v-else>

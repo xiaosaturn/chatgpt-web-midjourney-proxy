@@ -106,8 +106,8 @@ const clearLimit = (req: Request, res: Response) => {
 
 export const authV2 = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.header('Authorization');
-    console.log('ac:', token)
     if (!token) {
+        res.status(401);
         return res.send({
             code: 401,
             msg: '无token，请先登录'

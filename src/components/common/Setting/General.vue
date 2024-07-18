@@ -136,21 +136,23 @@ function handleImportButtonClick(): void {
 }
 
 const login = async () => {
-    if (validateEmail(userInfo.value.email) &&
-        validatePassword(userInfo.value.password)) {
+    if (userInfo.value.email && userInfo.value.password) {
         // 登录
         const res = await request.post('/api/app/user/login', {
             email: userInfo.value.email,
             password: userInfo.value.password
         });
         if (res.code == 200) {
-            notification.error({
+            notification.success({
                 title: '登录成功',
                 duration: 3000,
             });
             gptServerStore.setMyData({
                 SERVICE_TOKEN: res.data.token
             })
+            if (!res.data.avatar) {
+                res.data.avatar = 'https://deepimage.polo-e.net/applets/20240510/052220_26bfd6acdcacd555f4ecd7666c5941f.jpg'
+            }
             userStore.updateUserInfo(res.data.user)
         } else {
             notification.error({
@@ -217,6 +219,7 @@ const register = async () => {
                 gptServerStore.setMyData({
                     SERVICE_TOKEN: res.data.token
                 })
+                res.data.avatar = 'https://deepimage.polo-e.net/applets/20240510/052220_26bfd6acdcacd555f4ecd7666c5941f.jpg'
                 userStore.updateUserInfo(res.data.user)
             } else {
                 notification.error({
@@ -328,13 +331,34 @@ const validateVerificationCode = (code?: string) => {
         <div class="space-y-6" v-if="gptServerStore.myData.SERVICE_TOKEN">
             <div class="flex items-center space-x-4">
                 <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
-                <div class="flex-1">
+                <n-avatar
+                    round
+                    size="small"
+                    :src="userInfo.avatar"
+                    fallback-src="https://deepimage.polo-e.net/applets/20240510/052220_26bfd6acdcacd555f4ecd7666c5941f.jpg"
+                />
+                <!-- <div class="flex-1">
                     <NInput v-model:value="avatar" placeholder="" />
                 </div>
                 <NButton size="tiny" text type="primary" @click="updateUserInfo({ avatar })">
                     {{ $t('common.save') }}
-                </NButton>
+                </NButton> -->
             </div>
+            <div class="flex items-center space-x-4">
+                <span class="flex-shrink-0 w-[100px]">{{ $t('setting.email') }}</span>
+                <n-tag type="success">
+                    {{ userInfo.email }}
+                </n-tag>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <span class="flex-shrink-0 w-[100px]">{{ $t('setting.expireTime') }}</span>
+                <n-tag type="warning">
+                    {{ userInfo.expireDate }}
+                </n-tag>
+            </div>
+
+
             <!-- <div class="flex items-center space-x-4">
                 <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
                 <div class="w-[200px]">
@@ -456,13 +480,13 @@ const validateVerificationCode = (code?: string) => {
                 <div class="flex items-center space-x-4 mb-2">
                     <span class="flex-shrink-0">{{ $t('setting.email') }}</span>
                     <div class="flex-1">
-                        <NInput v-model:value="userInfo.email" placeholder="" />
+                        <NInput v-model:value="userInfo.email" :placeholder="$t('setting.plzEmail')" />
                     </div>
                 </div>
                 <div class="flex items-center space-x-4 mb-10">
                     <span class="flex-shrink-0">{{ $t('setting.password') }}</span>
                     <div class="flex-1">
-                        <NInput v-model:value="userInfo.password" placeholder="" />
+                        <NInput v-model:value="userInfo.password" :placeholder="$t('setting.plzPassword')" />
                     </div>
                 </div>
                 <div class="flex flex-col justify-center items-center">

@@ -79,10 +79,13 @@ export default {
     getCaptcha: '获取验证码',
     password: '密码',
     rePassword: '重新输入密码',
+    plzEmail: '请输入邮箱',
+    plzPassword: '请输入密码',
     login: '登录',
     register: '注册',
     noAccount: '没有账号？赶紧去注册吧，GO',
     back: '返回',
+    expireTime: '到期时间',
   },
   store: {
     siderButton: '提示词商店',
