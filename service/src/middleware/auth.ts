@@ -3,8 +3,9 @@ import { Request, Response, NextFunction } from 'express';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
 import md5 from 'md5';
-import { getRedisValue } from '../db/redis';
-import { getUserByEmail } from '../db/userModel';
+
+const { getRedisValue } = require('../db/redis');
+const { getUserByEmail } = require('../db/userModel');
 
 const moment = require('moment'); // 使用moment库来处理日期，更方便
 const jwt = require('jsonwebtoken');

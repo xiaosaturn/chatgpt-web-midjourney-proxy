@@ -4,6 +4,7 @@
   "private": false,
   "description": "ChatGPT Web Midjourney Proxy",
   "author": "ChenZhaoYu <ydlhero@gmail.com>",
+  "type": "module",
   "keywords": [
     "chatgpt-web",
     "chatgpt",

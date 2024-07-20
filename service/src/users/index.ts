@@ -1,4 +1,4 @@
-import { getUserById, getUserByEmail, insertUser } from '../db/userModel';
+const { getUserById, getUserByEmail, insertUser } = require('../db/userModel');
 import { Request, Response, NextFunction } from 'express';
 const { getRedisValue, setRedisValue } = require('../db/redis');
 const nodemailer = require('nodemailer');
