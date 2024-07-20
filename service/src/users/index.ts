@@ -63,7 +63,7 @@ exports.login = async (req: Request, res: Response, next: NextFunction) => {
             algorithm: 'HS256',
             expiresIn: 60 * 60 * 24
         });
-        setRedisValue(req.body.email, 'Bearer ' + token, 58 * 60 * 24);
+        setRedisValue(req.body.email, 'Bearer ' + token);
         res.send({
             code: 200,
             msg: '登录成功！',
@@ -112,6 +112,7 @@ exports.registerUser = async (req: Request, res: Response, next: NextFunction) =
                     algorithm: 'HS256',
                     expiresIn: 60 * 60 * 24
                 });
+                setRedisValue(userInfo.email, 'Bearer ' + token);
                 return res.send({
                     code: 200,
                     msg: '注册成功，将为你自动登录',

@@ -86,6 +86,7 @@ export default {
     noAccount: 'No Account？GO 2 Register!',
     back: 'Back',
     expireTime: 'Expire Time',
+    price: 'Price',
   },
   store: {
     siderButton: 'Prompt Store',

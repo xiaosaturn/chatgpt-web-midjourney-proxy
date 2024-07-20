@@ -86,6 +86,7 @@ export default {
     noAccount: '没有账号？赶紧去注册吧，GO',
     back: '返回',
     expireTime: '到期时间',
+    price: '定价',
   },
   store: {
     siderButton: '提示词商店',

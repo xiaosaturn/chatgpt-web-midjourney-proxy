@@ -328,7 +328,9 @@ export const subModel = async (opt: subModelType) => {
         'Accept': 'text/event-stream',
     }
     headers = { ...headers, ...getHeaderAuthorization() }
-    console.log('abd:', headers)
+    headers = { ...headers, ...{
+        'Authorization': gptServerStore.myData.SERVICE_TOKEN
+    }}
     try {
         await fetchSSE(gptGetUrl('/v1/chat/completions'), {
             method: 'POST',

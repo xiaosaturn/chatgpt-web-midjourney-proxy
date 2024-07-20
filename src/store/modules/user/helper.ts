@@ -11,6 +11,7 @@ export interface UserInfo {
     name?: string
     description?: string
     expireDate?: string
+    expireTime?: string
 }
 
 export interface UserState {

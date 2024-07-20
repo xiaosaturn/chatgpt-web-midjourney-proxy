@@ -6,6 +6,7 @@ import Advanced from './Advanced.vue'
 import aiModel from '@/views/mj/aiModel.vue'
 import aiSetServer from '@/views/mj/aiSetServer.vue'
 import About from './About.vue'
+import Price from './Price.vue'
 import { homeStore, useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
 
@@ -15,6 +16,7 @@ interface Props {
 
 interface Emit {
   (e: 'update:visible', visible: boolean): void
+  (e: 'loginSuccess'): void
 }
 
 const props = defineProps<Props>()
@@ -35,10 +37,15 @@ const show = computed({
     emit('update:visible', visible)
   },
 })
+
+const loginSuccess = () => {
+  emit('loginSuccess')
+}
 </script>
 
 <template>
-  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 640px;border-radius: 20px">
+  <NModal v-model:show="show" :auto-focus="false" preset="card"
+    style="width: 95%; max-width: 640px;border-radius: 20px">
     <div>
       <NTabs v-model:value="active" type="line" animated>
         <NTabPane name="General" tab="General">
@@ -47,7 +54,16 @@ const show = computed({
             <span class="ml-2">{{ $t('setting.general') }}</span>
           </template>
           <div class="min-h-[100px]">
-            <General />
+            <General @loginSuccess="loginSuccess" />
+          </div>
+        </NTabPane>
+        <NTabPane name="Price" tab="Price">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="ri:file-user-line" />
+            <span class="ml-2">{{ $t('setting.price') }}</span>
+          </template>
+          <div class="min-h-[100px]">
+            <Price />
           </div>
         </NTabPane>
         <NTabPane v-if="isChatGPTAPI" name="Advanced" tab="Advanced">
@@ -58,7 +74,7 @@ const show = computed({
           </template>
           <div class="min-h-[100px]">
             <!-- <Advanced /> -->
-            <aiModel/>
+            <aiModel />
           </div>
         </NTabPane>
 

@@ -3,6 +3,10 @@ import { Request, Response, NextFunction } from 'express';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
 import md5 from 'md5';
+import { getRedisValue } from '../db/redis';
+import { getUserByEmail } from '../db/userModel';
+
+const moment = require('moment'); // 使用moment库来处理日期，更方便
 const jwt = require('jsonwebtoken');
 
 // 存储IP地址和错误计数的字典
@@ -113,9 +117,10 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
             msg: '无token，请先登录'
         });
     }
+    
     jwt.verify(token.split(' ')[1], process.env.SECRET_KEY, {
         algorithms: ['HS256']
-    }, (err, decoded) => {
+    }, async (err, decoded) => {
         if (err) {
             res.status(401);
             return res.send({
@@ -123,7 +128,24 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
                 msg: '无效的token，请登录'
             });
         }
-        console.log('service decoded:', decoded)
+        const redisToken = await getRedisValue(decoded.email)
+        if (redisToken != token) {
+            res.status(403);
+            return res.send({
+                code: 403,
+                msg: '无效的token，请重新登录'
+            });
+        }
+        const user = await getUserByEmail(decoded.email);
+        const expiryDate = moment(user.expireTime); // 将数据库日期转换为moment对象
+        const currentDate = moment(); // 获取当前日期
+        if (expiryDate.isBefore(currentDate)) {
+            res.status(403);
+            return res.send({
+                code: 403,
+                msg: '账户已过期，请联系客服充值'
+            });
+        }
         req.email = decoded.email;
         next();
     });

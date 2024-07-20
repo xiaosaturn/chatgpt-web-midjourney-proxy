@@ -145,8 +145,8 @@ export const gptServerStore = reactive({
     setMyData(v: Partial<gptServerType>) {
         this.myData = { ...this.myData, ...v };
         localStorage.setItem('gptServerStore', JSON.stringify(this.myData));
-    }
-    , setInit() {
+    },
+    setInit() {
         this.setMyData(getServerDefault());
     }
 })

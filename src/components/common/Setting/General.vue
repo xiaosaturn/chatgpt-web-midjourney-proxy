@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { NButton, NInput, NPopconfirm, NSelect, useMessage, useNotification } from 'naive-ui'
+import { NButton, NInput, NPopconfirm, NSelect, useMessage, useNotification, NAvatar } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useUserStore, gptServerStore } from '@/store'
@@ -11,8 +11,13 @@ import { t } from '@/locales'
 import axios from 'axios'
 import request from '@/api/myAxios'
 
+interface Emit {
+    (e: 'loginSuccess'): void
+}
+
 const appStore = useAppStore()
 const userStore = useUserStore()
+const emit = defineEmits<Emit>()
 
 const { isMobile } = useBasicLayout()
 
@@ -83,6 +88,7 @@ function updateUserInfo(options: Partial<UserInfo>) {
 
 function handleReset() {
     userStore.resetUserInfo()
+    gptServerStore.setInit()
     ms.success(t('common.success'))
     window.location.reload()
 }
@@ -150,10 +156,8 @@ const login = async () => {
             gptServerStore.setMyData({
                 SERVICE_TOKEN: res.data.token
             })
-            if (!res.data.avatar) {
-                res.data.avatar = 'https://deepimage.polo-e.net/applets/20240510/052220_26bfd6acdcacd555f4ecd7666c5941f.jpg'
-            }
             userStore.updateUserInfo(res.data.user)
+            emit('loginSuccess')
         } else {
             notification.error({
                 title: res.msg,
@@ -216,11 +220,15 @@ const register = async () => {
                 captcha: userInfo.value.captcha
             });
             if (res.code == 200) {
+                notification.success({
+                    title: '注册成功，将为你自动登录',
+                    duration: 3000,
+                });
                 gptServerStore.setMyData({
                     SERVICE_TOKEN: res.data.token
                 })
-                res.data.avatar = 'https://deepimage.polo-e.net/applets/20240510/052220_26bfd6acdcacd555f4ecd7666c5941f.jpg'
                 userStore.updateUserInfo(res.data.user)
+                emit('loginSuccess')
             } else {
                 notification.error({
                     title: res.msg,
@@ -331,12 +339,8 @@ const validateVerificationCode = (code?: string) => {
         <div class="space-y-6" v-if="gptServerStore.myData.SERVICE_TOKEN">
             <div class="flex items-center space-x-4">
                 <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
-                <n-avatar
-                    round
-                    size="small"
-                    :src="userInfo.avatar"
-                    fallback-src="https://deepimage.polo-e.net/applets/20240510/052220_26bfd6acdcacd555f4ecd7666c5941f.jpg"
-                />
+                <n-avatar round size="large" :src="userInfo.avatar"
+                    fallback-src="https://deepimage.polo-e.net/applets/20240510/052220_26bfd6acdcacd555f4ecd7666c5941f.jpg" />
                 <!-- <div class="flex-1">
                     <NInput v-model:value="avatar" placeholder="" />
                 </div>
@@ -354,7 +358,7 @@ const validateVerificationCode = (code?: string) => {
             <div class="flex items-center space-x-4">
                 <span class="flex-shrink-0 w-[100px]">{{ $t('setting.expireTime') }}</span>
                 <n-tag type="warning">
-                    {{ userInfo.expireDate }}
+                    {{ userInfo.expireTime }}
                 </n-tag>
             </div>
 
@@ -447,7 +451,8 @@ const validateVerificationCode = (code?: string) => {
                 <div class="flex items-center space-x-4 mb-2">
                     <span class="flex-shrink-0 w-[100px]">{{ $t('setting.password') }}</span>
                     <div class="flex-1">
-                        <NInput v-model:value="userInfo.password" placeholder="" />
+                        <NInput type="password" show-password-on="mousedown" v-model:value="userInfo.password"
+                            :placeholder="$t('setting.plzPassword') " />
                     </div>
                 </div>
                 <div class="flex items-center space-x-4 mb-2">
@@ -463,7 +468,7 @@ const validateVerificationCode = (code?: string) => {
                     </div>
                     <NButton :disabled="isDisabled" size="tiny" text type="primary" @click="getCaptcha">
                         <!-- {{ $t('setting.getCaptcha') }} -->
-                          {{ btnStr }}
+                        {{ btnStr }}
                     </NButton>
                 </div>
                 <div class="flex flex-col justify-center items-center">
@@ -486,7 +491,8 @@ const validateVerificationCode = (code?: string) => {
                 <div class="flex items-center space-x-4 mb-10">
                     <span class="flex-shrink-0">{{ $t('setting.password') }}</span>
                     <div class="flex-1">
-                        <NInput v-model:value="userInfo.password" :placeholder="$t('setting.plzPassword')" />
+                        <NInput type="password" show-password-on="mousedown" v-model:value="userInfo.password"
+                            :placeholder="$t('setting.plzPassword')" />
                     </div>
                 </div>
                 <div class="flex flex-col justify-center items-center">

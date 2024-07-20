@@ -18,27 +18,18 @@ const userStore = useUserStore()
 
 const st = ref({ 'show': false, showImg: false, menu: [], active: 'chat' })
 
-
 const userInfo = computed(() => userStore.userInfo)
 
-const urouter = useRouter() //
+const urouter = useRouter()
 
 const goHome = computed(() => {
-  //router.push('/')
   return router.currentRoute.value.name
 });
-// const go=(n:string)=>{
-//   if('chat'==n){
-//         router.push('/chat/'+ chatStore.active??'1002')
-//     }
-//     if('draw'==n){
-//         router.push('/draw/'+ chatStore.active??'1002')
-//         st.value.show=true;
-//     }
-// }
-//mlog('g', goHome() );
+
 const chatId = computed(() => chatStore.active ?? '1002');
+
 </script>
+
 <template>
   <div class="flex-shrink-0 w-[60px] z-[1000]  h-full" v-if="!isMobile" data-tauri-drag-region>
     <div
@@ -58,6 +49,7 @@ const chatId = computed(() => chatStore.active ?? '1002');
             AI Chat
           </n-tooltip>
         </a>
+
         <a v-if="!isDisableMenu('gpts')" @click="homeStore.setMyData({ act: 'showgpts' })"
           class=" router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]">
           <n-tooltip placement="right" trigger="hover">
@@ -70,7 +62,6 @@ const chatId = computed(() => chatStore.active ?? '1002');
             ChatGPT Store
           </n-tooltip>
         </a>
-
 
         <a v-if="!isDisableMenu('draws')" @click="st.active = 'draw'; urouter.push(`/draw`)"
           class=" router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]">
@@ -156,7 +147,7 @@ const chatId = computed(() => chatStore.active ?? '1002');
       </div>
     </div>
   </div>
-  <Setting v-if="st.show" v-model:visible="st.show" />
+  <Setting v-if="st.show" v-model:visible="st.show" @loginSuccess="st.show = false" />
 
   <!-- <n-drawer v-model:show="st.showImg" :placement="isMobile?'bottom':'right'"  :class="isMobile?['!h-[90vh]']: ['!w-[80vw]']" style="--n-body-padding:0">
     <n-drawer-content title="GPT store" closable>

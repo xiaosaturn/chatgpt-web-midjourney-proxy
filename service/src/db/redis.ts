@@ -8,7 +8,13 @@ const redis = new Redis({
 });
 
 exports.setRedisValue = (key, value, expire) => {
-    redis.setex(key, expire, value);
+    if (expire) {
+        // 传有效期expire，调用setex
+        redis.setex(key, expire, value);
+    } else {
+        // 不传expire，永久存储
+        redis.set(key, value);
+    }
 }
 
 exports.getRedisValue = async (key) => {
