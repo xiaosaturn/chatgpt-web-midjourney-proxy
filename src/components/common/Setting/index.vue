@@ -74,7 +74,7 @@ const loginSuccess = () => {
           </template>
           <div class="min-h-[100px]">
             <!-- <Advanced /> -->
-            <aiModel />
+            <aiModel @close="show = false" />
           </div>
         </NTabPane>
 

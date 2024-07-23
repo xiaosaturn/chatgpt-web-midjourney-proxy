@@ -117,21 +117,21 @@ onMounted(() => {
 //
 //const f= ref({model:gptConfigStore.myData.model});
 </script>
+
 <template>
     <section class="mb-4 flex justify-between items-center">
         <div><span class="text-red-500">*</span> {{ $t('mjset.model') }}</div>
         <n-select v-model:value="nGptStore.model" :options="modellist" size="small" filterable class="!w-[50%]" />
     </section>
-    <section class="mb-4 flex justify-between items-center">
+    <!-- <section class="mb-4 flex justify-between items-center">
         <n-input :placeholder="$t('mjchat.modlePlaceholder')" v-model:value="gptConfigStore.myData.userModel">
             <template #prefix>
                 {{ $t('mjchat.myModle') }}
             </template>
         </n-input>
-    </section>
+    </section> -->
     <section class=" flex justify-between items-center">
-        <div> {{ $t('mjchat.historyCnt') }}
-        </div>
+        <div> {{ $t('mjchat.historyCnt') }}</div>
         <div class=" flex justify-end items-center w-[80%] max-w-[240px]">
             <div class=" w-[200px]"><n-slider v-model:value="nGptStore.talkCount" :step="1" :max="50" /></div>
             <div class="w-[40px] text-right">{{ nGptStore.talkCount }}</div>
@@ -168,7 +168,6 @@ onMounted(() => {
         </section>
         <div class="mb-4 text-[12px] text-gray-300 dark:text-gray-300/20"> {{ $t('mj.temperatureInfo') }}</div>
 
-
         <section class=" flex justify-between items-center ">
             <div> {{ $t('mj.top_p') }}</div>
             <div class=" flex justify-end items-center w-[80%] max-w-[240px]">
@@ -188,7 +187,6 @@ onMounted(() => {
         </section>
         <div class="mb-4 text-[12px] text-gray-300 dark:text-gray-300/20">{{ $t('mj.presence_penaltyInfo') }} </div>
 
-
         <section class=" flex justify-between items-center ">
             <div>{{ $t('mj.frequency_penalty') }}</div>
             <div class=" flex justify-end items-center w-[80%] max-w-[240px]">
@@ -203,8 +201,6 @@ onMounted(() => {
             <div>{{ $t('mj.tts_voice') }}</div>
             <n-select v-model:value="nGptStore.tts_voice" :options="voiceList" size="small" class="!w-[50%]" />
         </section>
-
-
     </template>
     <div v-else class="text-right cursor-pointer mb-4" @click="st.openMore = true">
         <NTag type="primary" round size="small" :bordered="false" class="!cursor-pointer">More...</NTag>
