@@ -18,6 +18,7 @@ const TaskDown = async (item: ViggleTask) => {
     link.href = item.result;
     link.download = item.taskID + ".mp4";
     link.target = '_blank';
+    link.rel = 'noreferrer'
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -37,8 +38,11 @@ initLoad()
                 <div
                     class="relative flex items-center justify-center bg-white bg-opacity-10 rounded-[16px] overflow-hidden aspect-[16/8.85] ">
                     <video class="bg-[#242424] object-contain w-full h-full transition-all" v-if="item.result"
-                        :src="item.result" :poster="item.resultCover" loop playsinline
-                        :controls="st.pIndex == index"></video>
+                        referrerpolicy="no-referrer" :poster="item.resultCover" loop playsinline
+                        :controls="st.pIndex == index">
+                        <source :src="item.result" referrerpolicy="no-referrer" type="video/mp4"
+                            v-if="st.pIndex == index">
+                    </video>
                     <div class=" text-center" v-else>
 
                         <NButton size="small" type="primary" @click="FeedViggleTask(item.taskID)"

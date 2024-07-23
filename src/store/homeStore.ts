@@ -4,17 +4,18 @@ import { ss } from '@/utils/storage'
 
 export const homeStore = reactive({
     myData: {
-        act: '',//动作
-        act2: '',//动作
-        actData: {} //动作类别 
-        , local: '' //当前所处的版本
-        , session: {} as any
-        , isLoader: false
-        , vtoken: '' //turnstile token
-        , ctoken: '' //cookie
-        , isClient: typeof window !== 'undefined' && window.__TAURI__
-        , ms: {} as any
-        , is_luma_pro: false
+        act: '', //动作
+        act2: '', //动作
+        actData: {}, //动作类别 
+        local: '', //当前所处的版本
+        session: {} as any,
+        isLoader: false,
+        vtoken: '', //turnstile token
+        ctoken: '', //cookie
+        isClient: typeof window !== 'undefined' && window.__TAURI__,
+        ms: {} as any,
+        is_luma_pro: false,
+        is_viggle_pro: false,
     }
 
     , setMyData(v: object) {
@@ -108,6 +109,10 @@ export interface gptServerType {
     IS_LUMA_PRO?: boolean,
     VIGGLE_SERVER: string
     VIGGLE_KEY: string
+    IS_VIGGLE_PRO?: boolean
+    RUNWAY_SERVER?: string
+    RUNWAY_KEY?: string
+    TAB_VIDEO?:string
 }
 
 const getServerDefault = () => {
@@ -126,6 +131,9 @@ const getServerDefault = () => {
         LUMA_KEY: '',
         VIGGLE_SERVER: '',
         VIGGLE_KEY: '',
+        TAB_VIDEO: 'luma',
+        RUNWAY_SERVER: '',
+        RUNWAY_KEY: ''
     }
     return v;
 }
