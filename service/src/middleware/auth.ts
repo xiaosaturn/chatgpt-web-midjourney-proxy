@@ -4,11 +4,11 @@ import FormData from 'form-data';
 import fetch from 'node-fetch';
 import md5 from 'md5';
 
-const { getRedisValue } = require('../db/redis');
-const { getUserByEmail } = require('../db/userModel');
+import { getRedisValue } from '../db/redis';
+import { getUserByEmail } from '../db/userModel';
 
-const moment = require('moment'); // 使用moment库来处理日期，更方便
-const jwt = require('jsonwebtoken');
+import moment from 'moment'; // 使用moment库来处理日期，更方便
+import jwt from 'jsonwebtoken';
 
 // 存储IP地址和错误计数的字典
 const ipErrorCount = {};

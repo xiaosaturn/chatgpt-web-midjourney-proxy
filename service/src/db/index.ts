@@ -1,7 +1,8 @@
-const mysql = require('mysql')
+// const mysql = require('mysql')
+import mysql from 'mysql'
 
 // 数据库
-exports.db = mysql.createPool({
+const db = mysql.createPool({
     host: process.env.MYSQL_HOST,
     port: process.env.MYSQL_PORT,
     user: process.env.MYSQL_USER,
@@ -9,7 +10,7 @@ exports.db = mysql.createPool({
     database: process.env.MYSQL_DB
 })
 
-exports.resultsWithCamelCase = (result) => {
+const resultsWithCamelCase = (result) => {
     const newRow = {};
     Object.keys(result).forEach(key => {
         const camelCaseKey = key.replace(/_([a-z])/g, function (m, p1) {
@@ -34,4 +35,9 @@ const formatDate = (dateString) => {
     let minutes = String(date.getMinutes()).padStart(2, '0');
     let seconds = String(date.getSeconds()).padStart(2, '0');
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+export {
+    db,
+    resultsWithCamelCase
 }

@@ -1,4 +1,4 @@
-const Redis = require('ioredis')
+import { Redis } from 'ioredis'
 
 const redis = new Redis({
     host: process.env.REDIS_HOST, // Redis服务器的主机名
@@ -7,7 +7,7 @@ const redis = new Redis({
     lazyConnect: true
 });
 
-exports.setRedisValue = (key, value, expire) => {
+const setRedisValue = (key, value, expire) => {
     if (expire) {
         // 传有效期expire，调用setex
         redis.setex(key, expire, value);
@@ -17,7 +17,7 @@ exports.setRedisValue = (key, value, expire) => {
     }
 }
 
-exports.getRedisValue = async (key) => {
+const getRedisValue = async (key) => {
     return new Promise((resolve, reject) => {
         redis.get(key, (err, result) => {
             if (err) {
@@ -27,4 +27,9 @@ exports.getRedisValue = async (key) => {
             }
         });
     });
+}
+
+export {
+    setRedisValue,
+    getRedisValue
 }

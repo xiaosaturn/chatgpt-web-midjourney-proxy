@@ -1,9 +1,9 @@
-const { db, resultsWithCamelCase } = require('./index.ts');
+import { db, resultsWithCamelCase } from './index.ts';
 
 /**
  * 根据email获取用户信息
  */
-exports.getUserByEmail = async (userId) => {
+const getUserByEmail = async (userId) => {
     const sql = `select id, email, avatar, mobile, create_time, update_time,
         status, gender, password, DATE_FORMAT(expire_time, '%Y-%m-%d') AS expire_time
         from member_user where email =? `;
@@ -38,7 +38,7 @@ exports.getUserByEmail = async (userId) => {
 /**
  * 根据userId获取用户信息
  */
-exports.getUserById = async (userId) => {
+const getUserById = async (userId) => {
     const sql = "select * from member_user where id=?";
     return new Promise((resolve, reject) => {
         db.query(sql, userId, (err, results) => {
@@ -65,7 +65,7 @@ exports.getUserById = async (userId) => {
     });
 }
 
-exports.insertUser = async (params) => {
+const insertUser = async (params) => {
     const sql = 'insert into member_user \
         (avatar, email, password, register_ip, register_terminal_name)\
         values(?, ?, ?, ?, ?)';
@@ -80,4 +80,10 @@ exports.insertUser = async (params) => {
                 }
             });
     });
+}
+
+export {
+    getUserByEmail,
+    getUserById,
+    insertUser
 }

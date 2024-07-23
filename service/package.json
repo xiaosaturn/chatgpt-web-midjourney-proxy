@@ -54,7 +54,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.3",
     "@types/express": "^4.17.17",
-    "@types/node": "^18.14.6",
+    "@types/node": "^18.19.41",
     "eslint": "^8.35.0",
     "rimraf": "^4.3.0",
     "tsup": "^6.6.3",

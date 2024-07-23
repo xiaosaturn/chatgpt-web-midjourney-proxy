@@ -1,9 +1,9 @@
-const { getUserById, getUserByEmail, insertUser } = require('../db/userModel');
+import { getUserById, getUserByEmail, insertUser } from '../db/userModel';
 import { Request, Response, NextFunction } from 'express';
-const { getRedisValue, setRedisValue } = require('../db/redis');
-const nodemailer = require('nodemailer');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+import { getRedisValue, setRedisValue } from '../db/redis';
+import nodemailer from 'nodemailer';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const transporter = nodemailer.createTransport({
     service: 'QQ',
@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-exports.getUserByIdService = async (req: Request, res: Response, next: NextFunction) => {
+const getUserByIdService = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.query.userId) {
         return res.send({
             msg: 'no userid',
@@ -28,7 +28,7 @@ exports.getUserByIdService = async (req: Request, res: Response, next: NextFunct
     })
 }
 
-exports.login = async (req: Request, res: Response, next: NextFunction) => {
+const login = async (req: Request, res: Response, next: NextFunction) => {
     const userInfo = req.body;
     if (!userInfo.email) {
         return res.send({
@@ -75,7 +75,7 @@ exports.login = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-exports.registerUser = async (req: Request, res: Response, next: NextFunction) => {
+const registerUser = async (req: Request, res: Response, next: NextFunction) => {
     const userInfo = req.body;
     if (!userInfo.email) {
         return res.send({
@@ -141,7 +141,7 @@ exports.registerUser = async (req: Request, res: Response, next: NextFunction) =
     }
 }
 
-exports.verificationCode = async (req, res) => {
+const verificationCode = async (req, res) => {
     const email = req.query.email;
     const info = await sendMail(email);
     if (info && info.response && info.response.includes('250 OK')) {
@@ -191,4 +191,12 @@ const generateRandomSixDigitNumber = () => {
 const imgUrl = function () {
     const randomNum = Math.floor(Math.random() * 50) + 1;
     return `https://image.xiaosaturn.com/avatar/avatar-${randomNum}.png`;
+}
+
+export {
+    getUserByIdService,
+    login,
+    registerUser,
+    verificationCode,
+    sendMail
 }
