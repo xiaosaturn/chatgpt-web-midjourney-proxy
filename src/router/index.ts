@@ -6,6 +6,7 @@ import { ChatLayout } from '@/views/chat/layout'
 import mjlayout from '@/views/mj/layout.vue'
 import sunoLayout from '@/views/suno/layout.vue'
 import lumaLayout from '@/views/luma/layout.vue'
+import mobileMeLayout from '@/views/mobile/layout.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -21,7 +22,7 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-   {
+  {
     path: '/g',
     name: 'g',
     component: ChatLayout,
@@ -34,7 +35,7 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-   {
+  {
     path: '/m',
     name: 'm',
     component: ChatLayout,
@@ -76,7 +77,7 @@ const routes: RouteRecordRaw[] = [
     ],
   },
 
-    {
+  {
     path: '/music',
     name: 'music',
     component: sunoLayout,
@@ -89,10 +90,10 @@ const routes: RouteRecordRaw[] = [
       },
     ],
 
-    
+
 
   },
-   {
+  {
     path: '/video',
     name: 'video',
     component: lumaLayout,
@@ -118,6 +119,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/viggle/dance.vue'),
       },
     ],
+  },
+
+  {
+    path: '/mobile/me',
+    name: 'mobileme',
+    component: mobileMeLayout,
   },
 
   //调试

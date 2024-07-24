@@ -221,7 +221,8 @@ export default {
     "draw": "Drawing",
     "drawinfo": "AI Drawing with Midjourney Engine",
     "gallery": "Gallery",
-    "galleryInfo": "My Gallery"
+    "galleryInfo": "My Gallery",
+    me: 'Me'
   },
   "mjchat": {
     "loading": "Loading Image",

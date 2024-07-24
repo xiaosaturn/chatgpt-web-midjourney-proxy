@@ -116,11 +116,12 @@ export default {
   }
 
   , mjtab: {
-    chat: '对话'
-    , draw: '绘画'
-    , drawinfo: 'AI绘画 Midjourney引擎'
-    , gallery: '画廊'
-    , galleryInfo: '我的画廊'
+    chat: '对话',
+    draw: '绘画',
+    drawinfo: 'AI绘画 Midjourney引擎',
+    gallery: '画廊',
+    galleryInfo: '我的画廊',
+    me: '我的'
   }
   , mjchat: {
     loading: '正在载入图片'
