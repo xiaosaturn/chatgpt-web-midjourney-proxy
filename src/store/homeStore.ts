@@ -50,6 +50,7 @@ export interface gptConfigType {
     presence_penalty?: number
     tts_voice?: string //TTS 人物
 }
+
 const getGptInt = (): gptConfigType => {
     let v: gptConfigType = getDefault();
     let str = localStorage.getItem('gptConfigStore');
@@ -76,6 +77,7 @@ const getDefault = () => {
     }
     return v;
 }
+
 export const gptConfigStore = reactive({
     myData: getGptInt(),
     setMyData(v: Partial<gptConfigType>) {
@@ -90,7 +92,6 @@ export const gptConfigStore = reactive({
         this.setMyData(getDefault());
     }
 })
-
 
 export interface gptServerType {
     SERVICE_TOKEN?: string

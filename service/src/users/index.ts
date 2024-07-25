@@ -1,4 +1,4 @@
-import { getUserById, getUserByEmail, insertUser } from '../db/userModel';
+import { getUserById, getUserByEmail, insertUser, updateUser } from '../db/userModel';
 import { Request, Response, NextFunction } from 'express';
 import { getRedisValue, setRedisValue } from '../db/redis';
 import nodemailer from 'nodemailer';
@@ -13,14 +13,35 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const getUserByIdService = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.query.userId) {
+const updateUserInfo = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.query.id) {
         return res.send({
             msg: 'no userid',
             code: 10000,
         });
     }
-    const user = await getUserById(req.query.userId)
+    const result = await updateUser(req.body);
+    if (result == 1) {
+        res.send({
+            msg: 'success',
+            code: 200,
+        });
+    } else {
+        res.send({
+            msg: 'Internal Server Error',
+            code: 500,
+        });
+    }
+}
+
+const getUserByIdService = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.query.id) {
+        return res.send({
+            msg: 'no userid',
+            code: 10000,
+        });
+    }
+    const user = await getUserById(req.query.id)
     res.send({
         msg: 'success',
         code: 200,
@@ -198,5 +219,6 @@ export {
     login,
     registerUser,
     verificationCode,
-    sendMail
+    sendMail,
+    updateUserInfo
 }

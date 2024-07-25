@@ -37,14 +37,17 @@ watch(() => homeStore.myData.act, (n: string) => {
   if ('showme' == n) {
     router.push('/mobile/me')
   }
+  if ('showprice' == n) {
+    router.push('/mobile/price')
+  }
 });
 </script>
 
 <template>
-  <div class="bg-gray-100 dark:bg-[#282832] h-[55px] flex  justify-around items-center dark:text-white/70 ">
+  <div class="bg-gray-100 dark:bg-[#282832] h-[55px] flex justify-around items-center dark:text-white/70 bottom-0 w-[100%]" style="position:fixed">
     <div class="flex items-center justify-center flex-col" @click="homeStore.setMyData({ act: 'showChat' })"
       :class="[goHome == 'Chat' ? 'active' : '']">
-      <SvgIcon icon="ri:wechat-line" class="text-3xl"></SvgIcon>
+      <SvgIcon icon="arcticons:openai-chatgpt" class="text-3xl"></SvgIcon>
       <div class="text-[13px]">{{ $t('mjtab.chat') }}</div>
     </div>
     <div v-if="!isDisableMenu('gpts')" class="flex items-center justify-center flex-col "
@@ -62,12 +65,19 @@ watch(() => homeStore.myData.act, (n: string) => {
       <SvgIcon icon="material-symbols:imagesmode-outline" class="text-3xl"></SvgIcon>
       <div class="text-[13px]">{{ $t('mjtab.gallery') }}</div>
     </div>
+    <div class="flex items-center justify-center flex-col" @click="homeStore.setMyData({ act: 'showprice' })"
+      :class="[goHome == 'mobileprice' ? 'active' : '']">
+      <SvgIcon icon="arcticons:priceconverter" class="text-3xl"></SvgIcon>
+      <div class="text-[13px]">{{ $t('mjtab.price') }}</div>
+    </div>
     <div class="flex items-center justify-center flex-col" @click="homeStore.setMyData({ act: 'showme' })"
       :class="[goHome == 'mobileme' ? 'active' : '']">
-      <SvgIcon icon="weui:me-filled" class="text-3xl"></SvgIcon>
+      <SvgIcon icon="weui:me-outlined" class="text-3xl"></SvgIcon>
       <div class="text-[13px]">{{ $t('mjtab.me') }}</div>
     </div>
   </div>
+
+  <!-- <Icon icon="arcticons:openai-chatgpt" /> -->
 
   <n-drawer v-model:show="st.show" class="!h-[90vh] !max-h-[660px]" placement="bottom" v-if="goHome == 'draw'">
     <n-drawer-content style="--n-body-padding:0" class="h-full">

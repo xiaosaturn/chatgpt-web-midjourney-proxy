@@ -1,13 +1,17 @@
 import { Redis } from 'ioredis'
 
-const redis = new Redis({
-    host: process.env.REDIS_HOST, // Redis服务器的主机名
-    port: process.env.REDIS_PORT, // Redis服务器的端口号
-    password: process.env.REDIS_AUTH, // Redis服务器的密码（如果有的话）
-    lazyConnect: true
-});
+const redis = new Redis(Number(process.env.REDIS_PORT), process.env.REDIS_HOST, {
+    password: process.env.REDIS_AUTH
+})
 
-const setRedisValue = (key, value, expire) => {
+// const redis = new Redis({
+//     host: process.env.REDIS_HOST, // Redis服务器的主机名
+//     port: process.env.REDIS_PORT, // Redis服务器的端口号
+//     password: process.env.REDIS_AUTH, // Redis服务器的密码（如果有的话）
+//     lazyConnect: true
+// });
+
+const setRedisValue = (key, value, expire = '') => {
     if (expire) {
         // 传有效期expire，调用setex
         redis.setex(key, expire, value);

@@ -1,5 +1,19 @@
 import { db, resultsWithCamelCase } from './index.ts';
 
+interface User {
+    id?: number
+    email?: string
+    avatar?: string
+    nickname?: string
+    mobile?: string
+    createTime?: string
+    updatedTime?: string
+    status?: string
+    gender?: string
+    password?: string
+    expireTime?: string
+}
+
 /**
  * 根据email获取用户信息
  */
@@ -14,10 +28,11 @@ const getUserByEmail = async (userId) => {
             } else {
                 const result = results[0];
                 if (result) {
-                    const user = resultsWithCamelCase(results[0]);
+                    const user: User = resultsWithCamelCase(results[0]);
                     resolve({
                         id: user.id,
                         email: user.email,
+                        nickname: user.nickname,
                         avatar: user.avatar,
                         mobile: user.mobile,
                         createTime: user.createTime,
@@ -47,8 +62,10 @@ const getUserById = async (userId) => {
             } else {
                 const result = results[0];
                 if (result) {
-                    const user = resultsWithCamelCase(results[0]);
+                    const user: User = resultsWithCamelCase(results[0]);
                     resolve({
+                        id: user.id,
+                        nickname: user.nickname,
                         email: user.email,
                         avatar: user.avatar,
                         mobile: user.mobile,
@@ -57,7 +74,7 @@ const getUserById = async (userId) => {
                         status: user.status,
                         gender: user.gender,
                         password: user.password,
-                        expireDate: user.expireDate
+                        expireTime: user.expireTime
                     });
                 }
             }
@@ -82,8 +99,26 @@ const insertUser = async (params) => {
     });
 }
 
+const updateUser = async (params) => {
+    const sql = `update member_user 
+                set avatar = ?, nickname = ? where id = ?`;
+    return new Promise((resolve, reject) => {
+        db.query(sql, 
+            [params.avatar, params.nickname, params.id],
+            (err, result) => {
+                if (err) {
+                    throw Error(err);
+                } else {
+                    resolve(1);
+                }
+            });
+    });
+}
+
 export {
     getUserByEmail,
     getUserById,
-    insertUser
+    insertUser,
+    updateUser,
+    type User
 }

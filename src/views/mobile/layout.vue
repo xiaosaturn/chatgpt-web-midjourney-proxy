@@ -1,38 +1,69 @@
 <template>
-    <div class="dark:bg-[#24272e] transition-all p-0" :class="[isMobile ? 'h55' : 'h-full']">
-        <div class="h-full overflow-hidden" :class="getMobileClass">
-            <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
+    <div class="container dark:bg-[#24272e] transition-all p-0" :class="[isMobile ? 'h55' : 'h-full']">
+        <div class="h-full overflow-hidden">
+            <NLayout class="z-40 transition" has-sider>
                 <NLayoutContent class="h-full">
-                    <div class="register-container flex flex-col justify-center">
-                        <h1 class="title text-center ">注册账号</h1>
-                        <n-form ref="formRef" :model="formModel" :rules="rules" label-placement="top">
-                            <n-form-item label="邮箱" path="email">
-                                <n-input v-model:value="formModel.email" placeholder="请输入邮箱" />
-                            </n-form-item>
-                            <n-form-item label="密码" path="password">
-                                <n-input v-model:value="formModel.password" type="password" placeholder="请输入密码"
-                                    show-password-on="click" />
-                            </n-form-item>
-                            <n-form-item label="确认密码" path="confirmPassword">
-                                <n-input v-model:value="formModel.confirmPassword" type="password"
-                                    placeholder="请再次输入密码" show-password-on="click" />
-                            </n-form-item>
-                            <n-form-item label="验证码" path="verificationCode">
-                                <n-input-group>
-                                    <n-input v-model:value="formModel.verificationCode" placeholder="请输入验证码" />
-                                    <n-button :disabled="isCountingDown" @click="sendVerificationCode"
-                                        :loading="isCountingDown">
-                                        {{ countDownText }}
-                                    </n-button>
-                                </n-input-group>
-                            </n-form-item>
-                        </n-form>
-                        <n-button type="primary" block @click="handleRegister"
-                            :disabled="isSubmitting">注册</n-button>
-                        <div class="login-link">
-                            已有账号？<n-button text @click="goToLogin">立即登录</n-button>
-                        </div>
+                    <div v-if="userInfo.id" class="pt-[40px] flex flex-col justify-center items-center" style="overflow: scroll;">
+                        <UserInfo />
                     </div>
+                    <template v-else>
+                        <div v-if="showRegister" class="register-container flex flex-col items-center">
+                            <n-space vertical>
+                                <h1 class="title text-center">注册账号</h1>
+                                <n-form ref="formRef" inline :model="formModel" :rules="rules" label-placement="top">
+                                    <n-space vertical>
+                                        <n-form-item label="邮箱" path="email">
+                                            <n-input v-model:value="userInfo.email" placeholder="请输入邮箱" />
+                                        </n-form-item>
+                                        <n-form-item label="密码" path="password">
+                                            <n-input v-model:value="userInfo.password" type="password" placeholder="请输入密码"
+                                                show-password-on="click" />
+                                        </n-form-item>
+                                        <n-form-item label="确认密码" path="confirmPassword">
+                                            <n-input v-model:value="userInfo.rePassword" type="password"
+                                                placeholder="请再次输入密码" show-password-on="click" />
+                                        </n-form-item>
+                                        <n-form-item label="验证码" path="verificationCode">
+                                            <div class="flex justify-between">
+                                                <n-space>
+                                                    <n-input v-model:value="userInfo.captcha" placeholder="请输入验证码" />
+                                                    <n-button :disabled="isCountingDown" type="primary" @click="sendVerificationCode">
+                                                        {{ countDownText }}
+                                                    </n-button>
+                                                </n-space>
+                                            </div>
+                                        </n-form-item>
+                                    </n-space>
+                                </n-form>
+                                <n-button type="primary" block @click="handleRegister"
+                                    :disabled="isSubmitting" size="large">注册</n-button>
+                                <div class="login-link">
+                                    已有账号？<n-button text @click="showRegister = false" color="#2080f0">立即登录</n-button>
+                                </div>
+                            </n-space>
+                        </div>
+                        <div v-else class="register-container flex flex-col items-center">
+                            <n-space vertical>
+                                <h1 class="title text-center">登录</h1>
+                                <n-form ref="formRef2" inline :model="formModel" :rules="rules" label-placement="top">
+                                    <n-space vertical>
+                                        <n-form-item label="邮箱" path="email">
+                                            <n-input v-model:value="userInfo.email" placeholder="请输入邮箱" />
+                                        </n-form-item>
+                                        <n-form-item label="密码" path="password">
+                                            <n-input v-model:value="userInfo.password" type="password" placeholder="请输入密码"
+                                                show-password-on="click" />
+                                        </n-form-item>
+                                    </n-space>
+                                </n-form>
+                                <n-button type="primary" block @click="handleLogin"
+                                    :disabled="isSubmitting" size="large">登录</n-button>
+                                <div class="login-link">
+                                    没有账号？<n-button text @click="showRegister = true" color="#2080f0">立即注册</n-button>
+                                </div>
+                            </n-space>
+                        </div>
+                    </template>
                 </NLayoutContent>
             </NLayout>
         </div>
@@ -43,14 +74,23 @@
 <script lang="ts" setup>
 import aiMobileMenu from '@/views/mj/aiMobileMenu.vue';
 import { useBasicLayout } from '@/hooks/useBasicLayout';
-import { NLayout, NLayoutContent, NCard, NButton, NForm, NInput, useMessage, darkTheme } from 'naive-ui'
+import { NLayout, NLayoutContent, NCard, NButton, NForm, NInput, useMessage, useNotification, darkTheme, NSpace } from 'naive-ui'
 import { useRouter, useRoute } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { debounce } from 'lodash-es'
+import { useAppStore, useUserStore, gptServerStore } from '@/store'
+import request from '@/api/myAxios'
+import { validateEmail, validatePassword, validateVerificationCode } from '@/utils/validator'
+import UserInfo from './userInfo.vue'
 
+const userStore = useUserStore()
 const { isMobile } = useBasicLayout()
 const theme = ref(null) // 如果需要暗色主题，可以设置为 darkTheme
 const message = useMessage()
+const notification = useNotification()
+const showRegister = ref(false)
+const route = useRoute()
+const router = useRouter()
 
 const formRef = ref(null)
 const formModel = ref({
@@ -59,6 +99,13 @@ const formModel = ref({
     confirmPassword: '',
     verificationCode: ''
 })
+
+const { isLogin } = route.params as { isLogin: boolean }
+
+const userInfo = computed(() => userStore.userInfo)
+let timer: any;
+let isDisabled = ref(false)
+let btnStr = ref('发送验证码')
 
 const rules = {
     email: [
@@ -89,8 +136,7 @@ const handleRegister = debounce(() => {
     isSubmitting.value = true
     formRef.value?.validate((errors) => {
         if (!errors) {
-            message.success('注册成功')
-            // 这里可以添加注册逻辑
+            realRegister()
         } else {
             message.error('请填写正确的信息')
         }
@@ -98,34 +144,143 @@ const handleRegister = debounce(() => {
     })
 }, 300)
 
+const realRegister = async () => {
+    if (validateEmail(userInfo.value.email) &&
+        validatePassword(userInfo.value.password) &&
+        validatePassword(userInfo.value.rePassword)) {
+        if (userInfo.value.password != userInfo.value.rePassword) {
+            notification.error({
+                title: '两次密码输入不一致',
+                duration: 3000,
+            });
+            return false
+        }
+        if (validateVerificationCode(userInfo.value.captcha)) {
+            // 发送请求到后端
+            const res = await request.post('/api/app/user/register', {
+                email: userInfo.value.email,
+                password: userInfo.value.password,
+                captcha: userInfo.value.captcha
+            });
+            if (res.code == 200) {
+                notification.success({
+                    title: '注册成功，将为你自动登录',
+                    duration: 3000,
+                });
+                gptServerStore.setMyData({
+                    SERVICE_TOKEN: res.data.token
+                })
+                userStore.updateUserInfo(res.data.user)
+                // emit('loginSuccess')
+            } else {
+                notification.error({
+                    title: res.msg,
+                    duration: 3000,
+                });
+            }
+        } else {
+            notification.error({
+                title: '验证码格式不正确',
+                duration: 3000,
+            });
+        }
+    }
+}
 const goToLogin = () => {
     // 跳转到登录页面的逻辑
+
 }
 
-const countDown = ref(0)
-const isCountingDown = computed(() => countDown.value > 0)
-const countDownText = computed(() => isCountingDown.value ? `${countDown.value}s后重新发送` : '发送验证码')
+const countdown = ref(0)
+const isCountingDown = computed(() => countdown.value > 0)
+const countDownText = computed(() => isCountingDown.value ? `${countdown.value}s后重新发送` : '发送验证码')
 
-const sendVerificationCode = debounce(() => {
-    if (isCountingDown.value) return
-    // 这里可以添加发送验证码的逻辑
-    message.success('验证码已发送')
-    countDown.value = 60
-    const timer = setInterval(() => {
-        countDown.value--
-        if (countDown.value === 0) {
-            clearInterval(timer)
+// const sendVerificationCode = debounce(() => {
+//     if (isCountingDown.value) return
+//     // 这里可以添加发送验证码的逻辑
+//     message.success('验证码已发送')
+//     countDown.value = 60
+//     const timer = setInterval(() => {
+//         countDown.value--
+//         if (countDown.value === 0) {
+//             clearInterval(timer)
+//         }
+//     }, 1000)
+// }, 300)
+
+const handleLogin = async () => {
+    if (userInfo.value.email && userInfo.value.password) {
+        // 登录
+        const res = await request.post('/api/app/user/login', {
+            email: userInfo.value.email,
+            password: userInfo.value.password
+        });
+        if (res.code == 200) {
+            notification.success({
+                title: '登录成功',
+                duration: 3000,
+            });
+            gptServerStore.setMyData({
+                SERVICE_TOKEN: res.data.token
+            })
+            userStore.updateUserInfo(res.data.user)
+            // emit('loginSuccess')
+        } else {
+            notification.error({
+                title: res.msg,
+                duration: 3000,
+            });
         }
-    }, 1000)
-}, 300)
+    }
+}
+
+const sendVerificationCode = async () => {
+    const isEmail = validateEmail(userInfo.value.email)
+    if (!isEmail) {
+        return
+    }
+    countdown.value = 60;
+    const res = await request.get('/api/app/user/captcha', {
+        email: userInfo.value.email
+    });
+    if (res.code == 200) {
+        if (timer != null) {
+            return
+        } else {
+            timer = setInterval(() => {
+                countdown.value--;
+                if (countdown.value <= 0) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+            }, 1000);
+            notification.success({
+                title: '发送成功',
+                duration: 3000,
+            });
+        }
+    } else {
+        notification.error({
+            title: '发送失败',
+            duration: 3000,
+            description: res.msg
+        });
+    }
+}
+
+onMounted(() => {
+    
+})
+
 </script>
 
 <style lang="scss" scoped>
 .container {
     .register-container {
+        padding: 60px 20px;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        // justify-content: center;
+        // align-items: center;
         min-height: 100vh;
         background-color: #f5f7fa;
         font-size: 16px;
@@ -146,7 +301,7 @@ const sendVerificationCode = debounce(() => {
     }
 
     .login-link {
-        margin-top: 24px;
+        margin-top: 20px;
         text-align: center;
         font-size: 14px;
         color: #606266;

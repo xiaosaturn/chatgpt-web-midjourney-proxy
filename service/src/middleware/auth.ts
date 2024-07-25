@@ -10,6 +10,8 @@ import { getUserByEmail } from '../db/userModel';
 import moment from 'moment'; // 使用moment库来处理日期，更方便
 import jwt from 'jsonwebtoken';
 
+import type { User } from '../db/userModel'
+
 // 存储IP地址和错误计数的字典
 const ipErrorCount = {};
 
@@ -133,11 +135,11 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
         if (redisToken != token) {
             res.status(403);
             return res.send({
-                code: 403,
+                code: 401,
                 msg: '无效的token，请重新登录'
             });
         }
-        const user = await getUserByEmail(decoded.email);
+        const user: User = await getUserByEmail(decoded.email);
         const expiryDate = moment(user.expireTime); // 将数据库日期转换为moment对象
         const currentDate = moment(); // 获取当前日期
         if (expiryDate.isBefore(currentDate)) {
@@ -147,7 +149,8 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
                 msg: '账户已过期，请联系客服充值'
             });
         }
-        req.email = decoded.email;
+        // req.query.email = decoded.email;
+        req.query.id = decoded.id; // 从token里解析出用户id，放到query上
         next();
     });
     // const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY

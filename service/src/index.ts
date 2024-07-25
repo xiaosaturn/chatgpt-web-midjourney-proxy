@@ -15,7 +15,7 @@ import FormData from 'form-data'
 import axios from 'axios';
 import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
-import { getUserByIdService, verificationCode, registerUser, login } from './users/index'
+import { getUserByIdService, verificationCode, registerUser, login, updateUserInfo } from './users/index'
 import { viggleProxyFileDo, viggleProxy, lumaProxy  } from './myfun'
 
 const app = express()
@@ -363,14 +363,14 @@ app.use('/pro/viggle', authV2, viggleProxy);
 //     },
 // }));
 
-router.get('/app/user/info', getUserByIdService)
-router.get('/app/user/captcha', verificationCode)
-router.post('/app/user/register', registerUser)
+router.get('/app/user', authV2, getUserByIdService);
+router.get('/app/user/captcha', verificationCode);
+router.post('/app/user/register', registerUser);
 router.post('/app/user/login', login);
+router.put('/app/user', authV2, updateUserInfo);
 
-app.use('', router)
-app.use('/api', router)
-app.set('trust proxy', 1)
+app.use('', router);
+app.use('/api', router);
+app.set('trust proxy', 1);
 
-
-app.listen(3002, () => globalThis.console.log('Server is running on port 3002'))
+app.listen(3002, () => globalThis.console.log('Server is running on port 3002'));

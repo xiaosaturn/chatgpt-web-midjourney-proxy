@@ -222,6 +222,7 @@ export default {
     "drawinfo": "AI Drawing with Midjourney Engine",
     "gallery": "Gallery",
     "galleryInfo": "My Gallery",
+    price: 'Price',
     me: 'Me'
   },
   "mjchat": {

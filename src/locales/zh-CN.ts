@@ -109,18 +109,19 @@ export default {
 
 
   mjset: {
-    server: '服务端'
-    , about: '关于'
-    , model: '模型'
-    , sysname: 'AI绘图'
-  }
+    server: '服务端',
+    about: '关于',
+    model: '模型',
+    sysname: 'AI大脑'
+  },
 
-  , mjtab: {
+  mjtab: {
     chat: '对话',
     draw: '绘画',
     drawinfo: 'AI绘画 Midjourney引擎',
     gallery: '画廊',
     galleryInfo: '我的画廊',
+    price: '定价',
     me: '我的'
   }
   , mjchat: {
