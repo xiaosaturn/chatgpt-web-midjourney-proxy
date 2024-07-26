@@ -16,7 +16,7 @@ import axios from 'axios';
 import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { getUserByIdService, verificationCode, registerUser, login, updateUserInfo } from './users/index'
-import { viggleProxyFileDo, viggleProxy, lumaProxy  } from './myfun'
+import { viggleProxyFileDo, viggleProxy, lumaProxy } from './myfun'
 import { uploadFile, uploadFile2 } from './utils/uploadfile'
 
 const app = express()
@@ -302,7 +302,7 @@ app.use('/openapi', authV2, turnstileCheck, proxy(API_BASE_URL, {
         return req.originalUrl.replace('/openapi', '') // 将URL中的 `/openapi` 替换为空字符串
     },
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-        proxyReqOpts.headers['Authorization'] = 'Bearer '+ process.env.OPENAI_API_KEY;
+        proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.OPENAI_API_KEY;
         proxyReqOpts.headers['Content-Type'] = 'application/json';
         proxyReqOpts.headers['Mj-Version'] = pkg.version;
         return proxyReqOpts;
@@ -379,3 +379,14 @@ app.use('/api', router);
 app.set('trust proxy', 1);
 
 app.listen(3002, () => globalThis.console.log('Server is running on port 3002'));
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+    // 执行任何必要的清理操作
+    // ...
+
+    // 如果你想让进程继续运行, 不要再做任何操作
+    // 如果你想重新启动应用程序, 可以执行:
+    // process.exit(1); // 退出并重新启动
+});
+
