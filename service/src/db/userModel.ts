@@ -12,17 +12,18 @@ interface User {
     gender?: string
     password?: string
     expireTime?: string
+    level?: number // 会员等级， 1-月付会员，2-年度会员
 }
 
 /**
  * 根据email获取用户信息
  */
-const getUserByEmail = async (userId) => {
+const getUserByEmail = async (email) => {
     const sql = `select id, email, avatar, mobile, create_time, update_time,
         status, gender, password, DATE_FORMAT(expire_time, '%Y-%m-%d') AS expire_time
-        from member_user where email =? `;
+        from member_user where email = ?`;
     return new Promise((resolve, reject) => {
-        db.query(sql, userId, (err, results) => {
+        db.query(sql, email, (err, results) => {
             if (err) {
                 throw Error(err)
             } else {
@@ -54,7 +55,11 @@ const getUserByEmail = async (userId) => {
  * 根据userId获取用户信息
  */
 const getUserById = async (userId) => {
-    const sql = "select * from member_user where id=?";
+    const sql = `select mu.id, mu.nickname, mu.email, mu.avatar, mu.mobile, 
+    DATE_FORMAT(mu.create_time, '%Y-%m-%d') as createTime, DATE_FORMAT(mu.update_time, '%Y-%m-%d') as updateTime, 
+    mu.status, mu.gender, mu.password, mu.expire_time as expireTime, mlr.level as level from member_user mu
+    left join member_level_record mlr on mlr.user_id = mu.id
+    where mu.id=?`;
     return new Promise((resolve, reject) => {
         db.query(sql, userId, (err, results) => {
             if (err) {
@@ -62,20 +67,8 @@ const getUserById = async (userId) => {
             } else {
                 const result = results[0];
                 if (result) {
-                    const user: User = resultsWithCamelCase(results[0]);
-                    resolve({
-                        id: user.id,
-                        nickname: user.nickname,
-                        email: user.email,
-                        avatar: user.avatar,
-                        mobile: user.mobile,
-                        createTime: user.createTime,
-                        updatedTime: user.updatedTime,
-                        status: user.status,
-                        gender: user.gender,
-                        password: user.password,
-                        expireTime: user.expireTime
-                    });
+                    const user: User = results[0];
+                    resolve(user);
                 }
             }
         });
@@ -93,7 +86,7 @@ const insertUser = async (params) => {
                 if (err) {
                     throw Error(err);
                 } else {
-                    resolve(1);
+                    resolve(result.insertId);
                 }
             });
     });
@@ -130,10 +123,25 @@ const updateUser = async (params) => {
     });
 }
 
+const insertUserPoint = (userId) => {
+    const sql = `insert into member_point_record (user_id, title, description, point, total_point) values (?, ?, ?, ?, ?)`;
+    return new Promise((resolve, reject) => {
+        db.query(sql, [userId, '首次注册', '首次注册赠送5次消息体验', 5, 5],
+            (err, result) => {
+                if (err) {
+                    throw Error(err);
+                } else {
+                    resolve(result.insertId);
+                }
+            });
+    });
+}
+
 export {
     getUserByEmail,
     getUserById,
     insertUser,
     updateUser,
+    insertUserPoint,
     type User
 }

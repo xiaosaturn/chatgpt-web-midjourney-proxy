@@ -2,7 +2,7 @@ import express from 'express'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
-import { auth, authV2, mlog, regCookie, turnstileCheck, verify } from './middleware/auth'
+import { auth, authV2, authV3, mlog, regCookie, turnstileCheck, verify } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString, formattedDate } from './utils/is'
 import multer from "multer"
@@ -296,7 +296,7 @@ app.use(
 );
 
 //代理openai 接口
-app.use('/openapi', authV2, turnstileCheck, proxy(API_BASE_URL, {
+app.use('/openapi', authV2, authV3, turnstileCheck, proxy(API_BASE_URL, {
     https: false, limit: '10mb',
     proxyReqPathResolver: function (req) {
         return req.originalUrl.replace('/openapi', '') // 将URL中的 `/openapi` 替换为空字符串
@@ -306,7 +306,7 @@ app.use('/openapi', authV2, turnstileCheck, proxy(API_BASE_URL, {
         proxyReqOpts.headers['Content-Type'] = 'application/json';
         proxyReqOpts.headers['Mj-Version'] = pkg.version;
         return proxyReqOpts;
-    },
+    }
 }));
 
 //代理sunoApi 接口 

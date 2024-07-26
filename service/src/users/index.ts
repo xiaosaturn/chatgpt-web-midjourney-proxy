@@ -1,4 +1,4 @@
-import { getUserById, getUserByEmail, insertUser, updateUser } from '../db/userModel';
+import { getUserById, getUserByEmail, insertUser, updateUser, insertUserPoint } from '../db/userModel';
 import { Request, Response, NextFunction } from 'express';
 import { getRedisValue, setRedisValue } from '../db/redis';
 import nodemailer from 'nodemailer';
@@ -124,8 +124,8 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
             userInfo.avatar = imgUrl();
             userInfo.password = bcrypt.hashSync(userInfo.password, 10);
             userInfo.registerIp = req.headers['x-forwarded-for'] || '127.0.0.1';
-            const insertResult = await insertUser(userInfo);
-            if (insertResult == 1) {
+            const insertResultId = await insertUser(userInfo);
+            if (insertResultId) {
                 // 成功了
                 const token = jwt.sign({
                     email: userInfo.email
@@ -133,7 +133,8 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
                     algorithm: 'HS256',
                     expiresIn: 60 * 60 * 24
                 });
-                setRedisValue(userInfo.email, 'Bearer ' + token);
+                setRedisValue(userInfo.email, 'Bearer ' + token); // 存储token，key是邮箱
+                initUserLevel(insertResultId); // 初始化用户的使用额度，一次性赠送5条尝鲜
                 return res.send({
                     code: 200,
                     msg: '注册成功，将为你自动登录',
@@ -212,6 +213,10 @@ const generateRandomSixDigitNumber = () => {
 const imgUrl = function () {
     const randomNum = Math.floor(Math.random() * 50) + 1;
     return `https://image.xiaosaturn.com/avatar/avatar-${randomNum}.png`;
+}
+
+const initUserLevel = async (userId) => {
+    const res = await insertUserPoint(userId);
 }
 
 export {

@@ -4,8 +4,8 @@ import FormData from 'form-data';
 import fetch from 'node-fetch';
 import md5 from 'md5';
 
-import { getRedisValue } from '../db/redis';
-import { getUserByEmail } from '../db/userModel';
+import { getRedisValue, setRedisValue, setRedisValueKeepTTL } from '../db/redis';
+import { getUserByEmail, getUserById } from '../db/userModel';
 
 import moment from 'moment'; // 使用moment库来处理日期，更方便
 import jwt from 'jsonwebtoken';
@@ -120,7 +120,7 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
             msg: '无token，请先登录'
         });
     }
-    
+
     jwt.verify(token.split(' ')[1], process.env.SECRET_KEY, {
         algorithms: ['HS256']
     }, async (err, decoded) => {
@@ -139,38 +139,70 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
                 msg: '无效的token，请重新登录'
             });
         }
-        const user: User = await getUserByEmail(decoded.email);
+        req.query.email = decoded.email; // 从token里解析出用户email，放到query上
+        req.query.id = decoded.id; // 从token里解析出用户id，放到query上
+        next({
+            email: decoded.email,
+            id: decoded.id
+        });
+    });
+}
+
+export const authV3 = async (obj: any, req: Request, res: Response, next: NextFunction) => {
+    const user: User = await getUserById(obj.id);
+    let tempMsgCount = await getRedisValue(obj.id + '-' + obj.email);
+    let msgCount = Number(tempMsgCount)
+    console.log('user.expireTime', JSON.stringify(user))
+    if (user.expireTime) {
+        // 有值，说明充钱了
         const expiryDate = moment(user.expireTime); // 将数据库日期转换为moment对象
         const currentDate = moment(); // 获取当前日期
         if (expiryDate.isBefore(currentDate)) {
+            // 过期了，需要重新充值
             res.status(403);
             return res.send({
                 code: 403,
                 msg: '账户已过期，请联系客服充值'
             });
+        } else {
+            // 没过期，判断24小时是否超过指定次数
+            if (user.level == 1) {
+                // 月付会员，不超过50次
+                if (Number(msgCount) > 50) {
+                    res.status(405);
+                    return res.send({
+                        code: 405,
+                        msg: '已超过24小时最大使用次数，请过段时间再试，谢谢'
+                    });
+                }
+            } else if (user.level == 2) {
+                // 年度会员，不超过100次
+                if (Number(msgCount) > 100) {
+                    res.status(405);
+                    return res.send({
+                        code: 405,
+                        msg: '已超过24小时最大使用次数，请过段时间再试，谢谢'
+                    });
+                }
+            }
         }
-        // req.query.email = decoded.email;
-        req.query.id = decoded.id; // 从token里解析出用户id，放到query上
-        next();
-    });
-    // const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
-    // if (isNotEmptyString(AUTH_SECRET_KEY)) {
-    //     try {
-    //         checkLimit(req, res);
-    //         const Authorization = req.header('X-Ptoken')
-    //         if (!Authorization || Authorization.trim() !== AUTH_SECRET_KEY.trim())
-    //             throw new Error('Error: 无访问权限 | No access rights')
-    //         clearLimit(req, res);
-    //         next()
-    //     }
-    //     catch (error) {
-    //         res.status(423);
-    //         res.send({ code: 'token_check', message: error.message ?? 'Please authenticate.', data: null })
-    //     }
-    // }
-    // else {
-    //     next()
-    // }
+    } else {
+        // 没值，体验5次
+        if (Number(msgCount) <= 0) {
+            res.status(405);
+            return res.send({
+                code: 405,
+                msg: '体验次数已用完，请联系客服充值后再使用，谢谢'
+            });
+        }
+    }
+    req.query.email = obj.email; // 从token里解析出用户email，放到query上
+    req.query.id = obj.id; // 从token里解析出用户id，放到query上
+
+    // 将msgCount--
+    msgCount--;
+    await setRedisValueKeepTTL(obj.id + '-' + obj.email, msgCount);
+    next()
 }
 
 export const turnstileCheck = async (req: Request, res: Response, next: NextFunction) => {

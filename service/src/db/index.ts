@@ -24,8 +24,12 @@ const resultsWithCamelCase = (result) => {
         }
         if (camelCaseKey == 'expireTime') {
             // format time YYYY-MM-dd
-            const dateTime = formatDate2(result[key]);
-            newRow[camelCaseKey] = dateTime;
+            if (result[key]) {
+                const dateTime = formatDate2(result[key]);
+                newRow[camelCaseKey] = dateTime;
+            } else {
+                newRow[camelCaseKey] = '';
+            }
         }
     });
     return newRow;
