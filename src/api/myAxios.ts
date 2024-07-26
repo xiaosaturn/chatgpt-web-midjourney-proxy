@@ -9,6 +9,7 @@ const { isMobile } = useBasicLayout()
 // 定义请求配置的接口
 interface RequestConfig extends AxiosRequestConfig {
     retryTimes?: number;
+    headers?: {}
 }
 
 // 定义响应数据的接口

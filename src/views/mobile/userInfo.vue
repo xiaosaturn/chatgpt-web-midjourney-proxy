@@ -47,6 +47,8 @@ import { gptServerStore, useUserStore } from '@/store'
 import { useNotification, NImage, NButton, NDialog, NInput, useDialog } from 'naive-ui'
 import { SvgIcon } from '@/components/common'
 import request from '@/api/myAxios'
+import { uploadFile } from '@/utils/uploadfile'
+import { randomString } from '@/utils/common'
 
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
@@ -57,6 +59,7 @@ const nickName = ref(userInfo.value.nickname)
 const fileInput = ref<HTMLInputElement | null>(null);
 const dialogVisible = ref(false)
 const previewUrl = ref<string>('');
+const fileBuffer = ref<ArrayBuffer | null>(null);
 
 const go2WX = () => {
     const wxid = 'mengxinxianhai'; // 替换为实际的微信号
@@ -86,15 +89,29 @@ const handleFileChange = (event: Event) => {
     const target = event.target as HTMLInputElement;
     const file: File | undefined = target.files?.[0];
     if (file) {
-        const reader = new FileReader();
-        reader.onload = (e: ProgressEvent<FileReader>) => {
-            if (e.target?.result) {
-                previewUrl.value = e.target.result as string;
-            }
-        };
-        reader.readAsDataURL(file);
+        confirmUpload(file)
     }
 };
+
+const confirmUpload = async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    const res = await request.post('/app/upload', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    });
+    if (res.code == 200) {
+        userStore.updateUserInfo({
+            avatar: res.data
+        });
+        submitAvatar()
+    } else {
+        notification.error({
+            title: res.msg
+        });
+    }
+}
 
 const updateAvatar = (): void => {
     if (fileInput.value) {
@@ -149,6 +166,26 @@ const submitNickname = async () => {
     } else {
         notification.warning({
             title: '修改失败',
+            content: res.msg
+        });
+    }
+}
+
+const submitAvatar = async () => {
+    const res = await request.put('/app/user', {
+        id: userInfo.value.id,
+        avatar: userInfo.value.avatar,
+    });
+    if (res.code == 200) {
+        notification.success({
+            title: '修改头像成功'
+        });
+        userStore.updateUserInfo({
+            nickname: nickName?.value?.trim()
+        });
+    } else {
+        notification.warning({
+            title: '修改头像失败',
             content: res.msg
         });
     }

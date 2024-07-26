@@ -1,4 +1,3 @@
-import { useMessage, useNotification } from 'naive-ui'
 import { createDiscreteApi } from 'naive-ui'
 
 const { notification } = createDiscreteApi(['notification'])
