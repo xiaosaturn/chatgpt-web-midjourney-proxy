@@ -84,11 +84,11 @@ const getUserById = async (userId) => {
 
 const insertUser = async (params) => {
     const sql = 'insert into member_user \
-        (avatar, email, password, register_ip, register_terminal_name)\
-        values(?, ?, ?, ?, ?)';
+        (nickname, avatar, email, password, register_ip, register_terminal_name)\
+        values(?, ?, ?, ?, ?, ?)';
     return new Promise((resolve, reject) => {
         db.query(sql,
-            [params.avatar, params.email, params.password, params.registerIp, params.registerTerminalName],
+            [params.nickname, params.avatar, params.email, params.password, params.registerIp, params.registerTerminalName],
             (err, result) => {
                 if (err) {
                     throw Error(err);
@@ -100,11 +100,26 @@ const insertUser = async (params) => {
 }
 
 const updateUser = async (params) => {
-    const sql = `update member_user 
-                set avatar = ?, nickname = ? where id = ?`;
+    let sql = 'update member_user set ';
+    let updateFields = [];
+    let values = [];
+    if (params.avatar) {
+        updateFields.push('avatar = ?');
+        values.push(params.avatar);
+    }
+    if (params.nickname) {
+        updateFields.push('nickname = ?');
+        values.push(params.nickname);
+    }
+    if (updateFields.length == 0) {
+        console.log('No fields to update');
+        return 0; // 或者抛出一个错误，取决于你的需求
+    }
+    sql += updateFields.join(', ');
+    sql += ' WHERE id = ?';
+    values.push(params.id); 
     return new Promise((resolve, reject) => {
-        db.query(sql, 
-            [params.avatar, params.nickname, params.id],
+        db.query(sql, values,
             (err, result) => {
                 if (err) {
                     throw Error(err);

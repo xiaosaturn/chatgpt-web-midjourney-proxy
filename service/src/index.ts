@@ -17,6 +17,7 @@ import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { getUserByIdService, verificationCode, registerUser, login, updateUserInfo } from './users/index'
 import { viggleProxyFileDo, viggleProxy, lumaProxy  } from './myfun'
+import { uploadFile, uploadFile2 } from './utils/uploadfile'
 
 const app = express()
 const router = express.Router()
@@ -368,6 +369,10 @@ router.get('/app/user/captcha', verificationCode);
 router.post('/app/user/register', registerUser);
 router.post('/app/user/login', login);
 router.put('/app/user', authV2, updateUserInfo);
+
+// 创建 multer 的实例
+const upload3 = multer();
+router.post('/app/upload', authV2, upload3.single('file'), uploadFile2);
 
 app.use('', router);
 app.use('/api', router);
