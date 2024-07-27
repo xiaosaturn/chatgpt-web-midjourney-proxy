@@ -10,6 +10,8 @@ import { getUserByEmail, getUserById } from '../db/userModel';
 import moment from 'moment'; // 使用moment库来处理日期，更方便
 import jwt from 'jsonwebtoken';
 
+import { logger } from '../utils/logger';
+
 import type { User } from '../db/userModel'
 
 // 存储IP地址和错误计数的字典
@@ -113,6 +115,10 @@ const clearLimit = (req: Request, res: Response) => {
 
 export const authV2 = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.header('Authorization');
+    logger.info({
+        msg: req,
+        label: 'authV2开始认证',
+    });
     if (!token) {
         res.status(401);
         return res.send({
@@ -120,7 +126,6 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
             msg: '无token，请先登录'
         });
     }
-
     jwt.verify(token.split(' ')[1], process.env.SECRET_KEY, {
         algorithms: ['HS256']
     }, async (err, decoded) => {
@@ -150,6 +155,10 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
 
 export const authV3 = async (obj: any, req: Request, res: Response, next: NextFunction) => {
     const user: User = await getUserById(obj.id);
+    logger.info({
+        msg: user,
+        label: 'authV3开始认证',
+    });
     let tempMsgCount;
     let redisCountKey;
     if (user.level == 0) {
@@ -163,14 +172,13 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
         tempMsgCount = await getRedisValue(redisCountKey);
     }
     let msgCount = Number(tempMsgCount)
-    console.log('user.expireTime', JSON.stringify(user))
     if (user.expireTime) {
         // 有值，说明充钱了
         const expiryDate = moment(user.expireTime); // 将数据库日期转换为moment对象
         const currentDate = moment(); // 获取当前日期
         if (user.level == 0) {
             // 没充值，不需要判断会员是否过期，每天免费送5条
-            if (msgCount > 5) {
+            if (msgCount <= 0) {
                 res.status(405);
                 return res.send({
                     code: 405,
@@ -198,7 +206,7 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
                     }
                 } else if (user.level == 2) {
                     // 年度会员，不超过100次
-                    if (msgCount <= 100) {
+                    if (msgCount <= 0) {
                         res.status(405);
                         return res.send({
                             code: 405,
