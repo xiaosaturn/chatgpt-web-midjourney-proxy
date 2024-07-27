@@ -216,7 +216,8 @@ const imgUrl = function () {
 }
 
 const initUserLevel = async (userId) => {
-    const res = await insertUserPoint(userId);
+    const res = await insertUserPoint(userId); // 只是记录下，不作他用
+    const res2 = await setRedisValue('expireTimeLevel0-' + userId, 5); // 初始注册，赠送5条消息
 }
 
 export {
