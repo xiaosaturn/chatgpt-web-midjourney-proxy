@@ -150,49 +150,71 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
 
 export const authV3 = async (obj: any, req: Request, res: Response, next: NextFunction) => {
     const user: User = await getUserById(obj.id);
-    let tempMsgCount = await getRedisValue(obj.id + '-' + obj.email);
+    let tempMsgCount;
+    let redisCountKey;
+    if (user.level == 0) {
+        redisCountKey = 'expireTimeLevel0-' + obj.id;
+        tempMsgCount = await getRedisValue(redisCountKey);
+    } else if (user.level == 1) {
+        redisCountKey = 'expireTimeLevel1-' + obj.id;
+        tempMsgCount = await getRedisValue(redisCountKey);
+    } else if (user.level == 2) {
+        redisCountKey = 'expireTimeLevel2-' + obj.id;
+        tempMsgCount = await getRedisValue(redisCountKey);
+    }
     let msgCount = Number(tempMsgCount)
     console.log('user.expireTime', JSON.stringify(user))
     if (user.expireTime) {
         // 有值，说明充钱了
         const expiryDate = moment(user.expireTime); // 将数据库日期转换为moment对象
         const currentDate = moment(); // 获取当前日期
-        if (expiryDate.isBefore(currentDate)) {
-            // 过期了，需要重新充值
-            res.status(403);
-            return res.send({
-                code: 403,
-                msg: '账户已过期，请联系客服充值'
-            });
+        if (user.level == 0) {
+            // 没充值，不需要判断会员是否过期，每天免费送5条
+            if (msgCount > 5) {
+                res.status(405);
+                return res.send({
+                    code: 405,
+                    msg: '已超过24小时最大使用次数，请0点之后再试，谢谢'
+                });
+            }
         } else {
-            // 没过期，判断24小时是否超过指定次数
-            if (user.level == 1) {
-                // 月付会员，不超过50次
-                if (Number(msgCount) > 50) {
-                    res.status(405);
-                    return res.send({
-                        code: 405,
-                        msg: '已超过24小时最大使用次数，请过段时间再试，谢谢'
-                    });
-                }
-            } else if (user.level == 2) {
-                // 年度会员，不超过100次
-                if (Number(msgCount) > 100) {
-                    res.status(405);
-                    return res.send({
-                        code: 405,
-                        msg: '已超过24小时最大使用次数，请过段时间再试，谢谢'
-                    });
+            if (expiryDate.isBefore(currentDate)) {
+                // 过期了，需要重新充值
+                res.status(403);
+                return res.send({
+                    code: 403,
+                    msg: '账户已过期，请联系客服充值'
+                });
+            } else {
+                // 没过期，判断24小时是否超过指定次数
+                if (user.level == 1) {
+                    // 月付会员，不超过50次
+                    if (msgCount <= 0) {
+                        res.status(405);
+                        return res.send({
+                            code: 405,
+                            msg: '已超过24小时最大使用次数，请0点之后再试，谢谢'
+                        });
+                    }
+                } else if (user.level == 2) {
+                    // 年度会员，不超过100次
+                    if (msgCount <= 100) {
+                        res.status(405);
+                        return res.send({
+                            code: 405,
+                            msg: '已超过24小时最大使用次数，请0点之后再试，谢谢'
+                        });
+                    }
                 }
             }
         }
     } else {
-        // 没值，体验5次
-        if (Number(msgCount) <= 0) {
+        // 没值，每天体验5次
+        if (msgCount <= 0) {
             res.status(405);
             return res.send({
                 code: 405,
-                msg: '体验次数已用完，请联系客服充值后再使用，谢谢'
+                msg: '已超过24小时最大使用次数，请0点之后再试，谢谢'
             });
         }
     }
@@ -201,7 +223,7 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
 
     // 将msgCount--
     msgCount--;
-    await setRedisValueKeepTTL(obj.id + '-' + obj.email, msgCount);
+    await setRedisValue(redisCountKey, msgCount);
     next()
 }
 

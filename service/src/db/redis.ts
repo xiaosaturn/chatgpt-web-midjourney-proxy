@@ -1,5 +1,5 @@
 import { Redis } from 'ioredis'
-const cron = require('node-cron');
+import cron from 'node-cron';
 
 const redis = new Redis(Number(process.env.REDIS_PORT), process.env.REDIS_HOST, {
     password: process.env.REDIS_AUTH
@@ -38,37 +38,43 @@ const getRedisValue = async (key) => {
     });
 }
 
-// // 用于匹配要重置的键的模式
-// const RESET_PATTERN_LEVEL1 = 'expireTimeLevel1:*'; // 月度会员
-// const RESET_PATTERN_LEVEL2 = 'expireTimeLevel2:*'; // 年度会员
+const resetArr = [{
+    level: 'expireTimeLevel0-*', // 用于匹配要重置的键的模式 *暂定为用户id
+    value: '5' // 重置后的值
+}, {
+    level: 'expireTimeLevel1-*',
+    value: '50'
+}, {
+    level: 'expireTimeLevel2-*',
+    value: '100'
+}]
 
-// // 重置后的值
-// const RESET_VALUE_LEVEL1 = '50';
-// const RESET_VALUE_LEVEL2 = '100';
+// 扫描并重置键值的函数
+const scanAndResetKeys = async () => {
+    console.log('开始扫描并重置键值...');
+    let cursor = '0';
+    for (let item of resetArr) {
+        do {
+            const [newCursor, keys] = await redis.scan(cursor, 'MATCH', item.level, 'COUNT', 100);
+            cursor = newCursor;
 
-// // 扫描并重置键值的函数
-// async function scanAndResetKeys() {
-//     console.log('开始扫描并重置键值...');
-//     let cursor = '0';
-//     do {
-//         const [newCursor, keys] = await redis.scan(cursor, 'MATCH', RESET_PATTERN, 'COUNT', 100);
-//         cursor = newCursor;
-        
-//         for (const key of keys) {
-//             await redis.set(key, RESET_VALUE);
-//             console.log(`重置键 ${key} 的值为 ${RESET_VALUE}`);
-//         }
-//     } while (cursor !== '0');
-//     console.log('扫描并重置完成');
-// }
+            for (const key of keys) {
+                await redis.set(key, item.value);
+                console.log(`重置键 ${key} 的值为 ${item.value}`);
+            }
+        } while (cursor !== '0');
+        console.log('扫描并重置完成', item.level);
+    }
+}
 
-// cron.schedule('0 0 * * *', async () => {
-//     try {
-//         // await setRedisValue(resetValue);
-//     } catch (error) {
-//         console.error('Error resetting Redis key:', error);
-//     }
-// });
+// 定时任务确保每天 0 点准时执行重置操作。
+cron.schedule('0 0 * * *', async () => {
+    try {
+        await scanAndResetKeys()
+    } catch (error) {
+        console.error('Error resetting Redis key:', error);
+    }
+});
 
 export {
     setRedisValue,
