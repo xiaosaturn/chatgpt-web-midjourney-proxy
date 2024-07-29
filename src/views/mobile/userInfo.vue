@@ -193,7 +193,6 @@ const submitAvatar = async () => {
 
 const getUserInfo = async () => {
     const res = await request.get('/app/user');
-    console.log('ressssss:', res)
     if (res.code == 200) {
         userStore.updateUserInfo(res.data);
     } else if (res.code == 401 || res.code == 403) {
