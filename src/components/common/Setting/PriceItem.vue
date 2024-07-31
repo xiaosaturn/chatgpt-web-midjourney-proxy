@@ -10,10 +10,11 @@
             </div>
             <p class="mt-6 flex items-baseline gap-x-1">
                 <span class="text-5xl font-bold tracking-tight">
-                    
+
                     {{ '$' + rObj.price }}
                 </span>
-                <span class="text-sm font-semibold leading-6 text-slate-700 dark:text-slate-400">{{ rObj.priceWay }}</span>
+                <span class="text-sm font-semibold leading-6 text-slate-700 dark:text-slate-400">{{ rObj.priceWay
+                    }}</span>
             </p>
             <ul role="list" class="mt-8 space-y-3 text-sm leading-6 text-slate-700 dark:text-slate-400">
                 <li class="flex gap-x-3">
@@ -48,27 +49,36 @@
                 </li>
             </ul>
         </div>
-        <n-button
-          v-if="props.type > 1"
-          @click="checkoutStripe"
-          round
-          :loading="loading"
-          aria-describedby="tier-pro"
-          type="primary"
-          class="cursor-pointer mt-8 block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold leading-6 text-blue-50 shadow-sm hover:bg-blue-700"
-          >Buy plan</n-button>
+
+        <n-popselect v-if="props.type > 1" v-model:value="rObj.selectValue" :options="rObj.options" :on-update:value="checkoutStripe">
+            <n-button round :loading="loading" aria-describedby="tier-pro"
+                type="primary"
+                class="cursor-pointer mt-8 block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold leading-6 text-blue-50 shadow-sm hover:bg-blue-700">Buy
+                plan</n-button>
+        </n-popselect>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import request from '@/api/myAxios'
-import { useNotification, NImage, NButton, NDialog, NInput, useDialog } from 'naive-ui'
+import { useNotification, NImage, NButton, NSpace, NPopselect, NPopconfirm, NDialog, NInput, useDialog } from 'naive-ui'
 const notification = useNotification()
 
 const loading = ref(false)
 const props = defineProps(['type'])
 const rObj = reactive({
+    selectValue: '',
+    options: [{
+        label: '信用卡/借记卡',
+        value: 'usd'
+    }, {
+        label: '微信支付',
+        value: 'cny1'
+    }, {
+        label: '支付宝支付',
+        value: 'cny2'
+    }],
     type: '免费版',
     typeStr: '✨ 免费体验',
     price: '0',
@@ -78,10 +88,15 @@ const rObj = reactive({
           (包括GPT-4o-mini、GPT-4o、GPT-4、GPT-3.5、Claude-3.5、Gemini-Pro、GLM、Moonshot等等)`
 })
 
-const checkoutStripe = async () => {
+const checkoutStripe = async (value: string) => {
+    // console.log('addd', props.type)
+    // console.log('value', value)
+    // console.log('addd22', rObj.selectValue)
+    // return;
     loading.value = true;
     const res = await request.post('/app/money/create-checkout-session', {
-        level: props.type
+        level: props.type,
+        currency: value
     });
     loading.value = false;
     if (res.code == 200) {

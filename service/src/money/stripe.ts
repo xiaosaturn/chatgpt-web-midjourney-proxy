@@ -3,8 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import exp from 'constants';
 import { logger } from '../utils/logger';
 
-const stripe2 = new stripe
-    ('sk_test_51NFoodQPQTn5KJriUS5tQZ8sgmdcbXIRsomLbS1R4J3eaBU8N9Ey5Gc0WDCRSNBREkgvf6mrPsgD88pi5sdZX2a400sJNxl9AM')
+const stripe2 = new stripe(process.env.StripeKey)
 
 // Use the secret provided by Stripe CLI for local testing
 // or your webhook endpoint's secret.
@@ -15,7 +14,10 @@ const createCheckoutSession = async (obj: any, req: Request, res: Response, next
         msg: 'stripe',
         label: '调用stripe开始',
     });
-    const price = await createPrice(req.body.level)
+    const price = await createPrice({
+        level: req.body.level,
+        currency: req.body.currency
+    })
     const session = await stripe2.checkout.sessions.create({
         line_items: [
             {
@@ -24,6 +26,12 @@ const createCheckoutSession = async (obj: any, req: Request, res: Response, next
             }
         ],
         mode: 'payment',
+        payment_method_types: req.body.currency == 'usd' ? ['card', 'link'] : ['wechat_pay', 'alipay'],
+        payment_method_options: {
+            wechat_pay: {
+                client: 'web'
+            }
+        },
         success_url: 'https://all-ai.chat',
         cancel_url: 'https://all-ai.chat',
         automatic_tax: {
@@ -41,14 +49,14 @@ const createCheckoutSession = async (obj: any, req: Request, res: Response, next
     });
 }
 
-const createPrice = async (level) => {
+const createPrice = async (obj) => {
     const product = await stripe2.products.create({
-        name: levelName(level),
+        name: levelName(obj.level),
     });
     const price = await stripe2.prices.create({
         product: product.id,
-        unit_amount: levelPrice(level),
-        currency: 'usd',
+        unit_amount: levelPrice(obj),
+        currency: obj.currency == 'usd' ? 'usd' : 'cny',
     });
     return price;
 }
@@ -91,15 +99,23 @@ const webhookStripe = async (obj: any, req: Request, res: Response, next: NextFu
 }
 
 const levelName = (level) => {
-    if (level === 2) return '按月付费';
+    if (level == 2) return '按月付费';
     if (level == 3) return '按年付费';
 }
 
-const levelPrice = (level) => {
-    switch (level) {
-        case 1: return 0;
-        case 2: return 990;
-        case 3: return 9900;
+const levelPrice = (obj) => {
+    if (obj.currency == 'usd') {
+        switch (obj.level) {
+            case 1: return 0;
+            case 2: return 99;
+            case 3: return 9900;
+        }
+    } else {
+        switch (obj.level) {
+            case 1: return 0;
+            case 2: return 1900;
+            case 3: return 19900;
+        }
     }
     return 0;
 }
