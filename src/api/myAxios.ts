@@ -125,7 +125,6 @@ interface RequestMethods {
 const request: RequestMethods = {
     async get<T>(url: string, params?: any, config?: RequestConfig): Promise<ResponseData<T>> {
         const response = await instance.get<ResponseData<T>>(url, { params, ...config });
-        console.log('response,', response);
         return response.data;
     },
     async post<T>(url: string, data?: any, config?: RequestConfig): Promise<ResponseData<T>> {

@@ -10,14 +10,15 @@ const loading = ref(false)
 <template>
     <NSpin :show="loading">
         <div class="p-4 space-y-4 flex flex-col items-center">
-            <div class="flex justify-between">
-                
+            <div class="grid grid-cols-3 gap-6">
+                <PriceItem :type="1" />
+                <PriceItem :type="2" />
+                <PriceItem :type="3" />
             </div>
-            <PriceItem :type="1" />
-            <PriceItem :type="2" />
-            <PriceItem :type="3" />
-            <div class="text-[18px] font-bold">微信扫描下方二维码，联系客服开通使用权限</div>
-            <n-image width="300" src="https://image.xiaosaturn.com/Photo/2024720/123315/xqfaorni9d1721449995145.png"></n-image>
+            <div class="flex items-center">
+                <div class="text-[18px] font-bold">支付遇到问题，联系客服：</div>
+                <div class="text-[28px] font-bold">mpcexiao@gmail.com</div>
+            </div>
         </div>
     </NSpin>
 </template>

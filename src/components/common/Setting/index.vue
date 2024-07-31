@@ -45,7 +45,7 @@ const loginSuccess = () => {
 
 <template>
   <NModal v-model:show="show" :auto-focus="false" preset="card"
-    style="width: 95%; max-width: 640px;border-radius: 20px">
+    :style="'width: 95%;border-radius: 20px;' + (active == 'Price' ? 'max-width: 1240px;' : 'max-width:640px')">
     <div>
       <NTabs v-model:value="active" type="line" animated>
         <NTabPane name="General" tab="General">
