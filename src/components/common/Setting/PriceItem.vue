@@ -94,7 +94,7 @@ const checkoutStripe = async (value: string) => {
     // console.log('addd22', rObj.selectValue)
     // return;
     loading.value = true;
-    const res = await request.post('/app/money/create-checkout-session', {
+    const res = await request.post('/api/app/money/create-checkout-session', {
         level: props.type,
         currency: value
     });
