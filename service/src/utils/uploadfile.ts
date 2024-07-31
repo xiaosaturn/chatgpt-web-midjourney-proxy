@@ -36,7 +36,7 @@ const uploadFile = async (fileName, fileBuffer, directory = 'Photo') => {
     });
 }
 
-const uploadFile2 = async (req: Request, res: Response) => {
+const uploadFile2 = async (obj:any, req: Request, res: Response) => {
     return new Promise(async (resolve, reject) => {
         if (req.file.buffer) {
             const url = await uploadFile(randomString(), req.file.buffer);

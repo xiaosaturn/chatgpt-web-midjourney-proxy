@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { getUserByIdService, verificationCode, registerUser, login, updateUserInfo } from './users/index'
 import { viggleProxyFileDo, viggleProxy, lumaProxy } from './myfun'
 import { uploadFile, uploadFile2 } from './utils/uploadfile'
+import { createCheckoutSession, webhookStripe } from './money/stripe'
 
 const app = express()
 const router = express.Router()
@@ -370,6 +371,9 @@ router.post('/app/user/register', registerUser);
 router.post('/app/user/login', login);
 router.put('/app/user', authV2, updateUserInfo);
 
+router.post('/app/money/create-checkout-session', authV2, createCheckoutSession);
+router.post('/webhook', webhookStripe);
+
 // 创建 multer 的实例
 const upload3 = multer();
 router.post('/app/upload', authV2, upload3.single('file'), uploadFile2);
@@ -377,6 +381,7 @@ router.post('/app/upload', authV2, upload3.single('file'), uploadFile2);
 app.use('', router);
 app.use('/api', router);
 app.set('trust proxy', 1);
+
 
 app.listen(3002, () => globalThis.console.log('Server is running on port 3002'));
 

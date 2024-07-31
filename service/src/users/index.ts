@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const updateUserInfo = async (req: Request, res: Response, next: NextFunction) => {
+const updateUserInfo = async (obj: any, req: Request, res: Response, next: NextFunction) => {
     if (!req.query.id) {
         return res.send({
             msg: 'no userid',
@@ -34,7 +34,7 @@ const updateUserInfo = async (req: Request, res: Response, next: NextFunction) =
     }
 }
 
-const getUserByIdService = async (req: Request, res: Response, next: NextFunction) => {
+const getUserByIdService = async (obj: any, req: Request, res: Response, next: NextFunction) => {
     if (!req.query.id) {
         return res.send({
             msg: 'no userid',

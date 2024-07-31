@@ -13,6 +13,7 @@ import jwt from 'jsonwebtoken';
 import { logger } from '../utils/logger';
 
 import type { User } from '../db/userModel'
+import { log } from 'console';
 
 // 存储IP地址和错误计数的字典
 const ipErrorCount = {};
@@ -115,6 +116,7 @@ const clearLimit = (req: Request, res: Response) => {
 
 export const authV2 = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.header('Authorization');
+    console.log('token', token)
     logger.info({
         msg: req,
         label: 'authV2开始认证',
@@ -144,6 +146,10 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
                 msg: '无效的token，请重新登录'
             });
         }
+        logger.info({
+            msg: 'decoded开工',
+            label: 'authV2开始认证',
+        });
         req.query.email = decoded.email; // 从token里解析出用户email，放到query上
         req.query.id = decoded.id; // 从token里解析出用户id，放到query上
         next({
