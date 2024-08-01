@@ -114,6 +114,7 @@ export interface gptServerType {
     RUNWAY_SERVER?: string
     RUNWAY_KEY?: string
     TAB_VIDEO?:string
+    RRUNWAY_VERSION?: string
 }
 
 const getServerDefault = () => {

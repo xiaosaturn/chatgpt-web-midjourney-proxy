@@ -139,7 +139,7 @@ export default {
     "customTitle": "自定義變焦",
     "zoominfo": "修改zoom值，範圍在 1.0 到 2.0，默认设置為1.8",
 
-  "modleSuccess": "模型成功載入",
+    "modleSuccess": "模型成功載入",
     "setingSuccess": "設定成功",
 
     "tokenInfo1": "剩餘Tokens = 模型長度 - 角色設定 - 上下文（對話歷史） - 回覆數 - 目前輸入",
@@ -193,8 +193,8 @@ export default {
     "micRec": "開始錄音，請說話！2秒內無聲音將自動關閉",
     "micRecEnd": "錄音已結束",
     subtle: '高清2倍'
-    ,creative: '高清2倍. 創意'
-    ,gpt_gx: 'GPTs 用 g-*'
+    , creative: '高清2倍. 創意'
+    , gpt_gx: 'GPTs 用 g-*'
   },
   "mjset": {
     "server": "服務端",
@@ -287,94 +287,94 @@ export default {
     "gidError": "未找到有效的 gid，请重新填寫",
     "success3": "新增 GPTs 成功！"
   },
-	draw: {
-		qualityList: {
-			general: "一般",
-			clear: "清晰",
-			hd: "高清",
-			ultraHd: "超高清",
-		},
-		styleList: {
-			cyberpunk: "賽博朋克",
-			star: "星際",
-			anime: "動漫",
-			japaneseComicsManga: "日本漫畫",
-			inkWashPaintingStyle: "水墨畫風格",
-			original: "原創",
-			landscape: "風景畫",
-			illustration: "插畫",
-			manga: "漫畫",
-			modernOrganic: "現代自然",
-			genesis: "創世紀",
-			posterstyle: "海報風格",
-			surrealism: "超現實主義",
-			sketch: "素描",
-			realism: "寫實",
-			watercolorPainting: "水彩畫",
-			cubism: "立體主義",
-			blackAndWhite: "黑白",
-			fmPhotography: "膠片攝影風格",
-			cinematic: "電影化",
-			clearFacialFeatures: "清晰的面部特徵",
-		},
-		viewList: {
-			wideView: "寬視角",
-			birdView: "鳥瞰視角",
-			topView: "頂視角",
-			upview: "仰視角",
-			frontView: "正面視角",
-			headshot: "頭部特寫",
-			ultrawideshot: "超廣角視角",
-			mediumShot: "中景",
-			longShot: "遠景",
-			depthOfField: "景深",
-		},
-		shotList: {
-			faceShot: "臉部特寫",
-			bigCloseUp: "大特寫",
-			closeUp: "特寫",
-			waistShot: "腰部以上",
-			kneeShot: "膝蓋以上",
-			fullLengthShot: "全身照",
-			extraLongShot: "極遠景",
-		},
-		stylesList: {
-			styleLow: "低強度風格",
-			styleMed: "中等強度風格",
-			styleHigh: "高強度風格",
-			styleVeryHigh: "非常高強度風格",
-		},
-		lightList: {
-			coldLight: "冷光",
-			warmLight: "暖光",
-			hardLighting: "硬光",
-			dramaticLight: "戲劇性光線",
-			reflectionLight: "反射光",
-			mistyFoggy: "薄霧",
-			naturalLight: "自然光",
-			sunLight: "陽光",
-			moody: "情緒化",
-		},
-		versionList: {
-			mjV6: "MJ V6",
-			mjV52: "MJ V5.2",
-			mjV51: "MJ V5.1",
-			nijiV6: "Niji V6",
-			nijiV5: "Niji V5",
-			nijiV4: "Niji V4",
-			nijiJourney: "Niji Journey",
-		},
-		botList: {
-			midjourneyBot: "Midjourney 機器人",
-			nijiJourney: "Niji Journey",
-		},
-		dimensionsList: {
-			square: "正方形 (1:1)",
-			portrait: "肖像 (2:3)",
-			landscape: "風景 (3:2)",
-		},
-	}
-  ,suno:{
+  draw: {
+    qualityList: {
+      general: "一般",
+      clear: "清晰",
+      hd: "高清",
+      ultraHd: "超高清",
+    },
+    styleList: {
+      cyberpunk: "賽博朋克",
+      star: "星際",
+      anime: "動漫",
+      japaneseComicsManga: "日本漫畫",
+      inkWashPaintingStyle: "水墨畫風格",
+      original: "原創",
+      landscape: "風景畫",
+      illustration: "插畫",
+      manga: "漫畫",
+      modernOrganic: "現代自然",
+      genesis: "創世紀",
+      posterstyle: "海報風格",
+      surrealism: "超現實主義",
+      sketch: "素描",
+      realism: "寫實",
+      watercolorPainting: "水彩畫",
+      cubism: "立體主義",
+      blackAndWhite: "黑白",
+      fmPhotography: "膠片攝影風格",
+      cinematic: "電影化",
+      clearFacialFeatures: "清晰的面部特徵",
+    },
+    viewList: {
+      wideView: "寬視角",
+      birdView: "鳥瞰視角",
+      topView: "頂視角",
+      upview: "仰視角",
+      frontView: "正面視角",
+      headshot: "頭部特寫",
+      ultrawideshot: "超廣角視角",
+      mediumShot: "中景",
+      longShot: "遠景",
+      depthOfField: "景深",
+    },
+    shotList: {
+      faceShot: "臉部特寫",
+      bigCloseUp: "大特寫",
+      closeUp: "特寫",
+      waistShot: "腰部以上",
+      kneeShot: "膝蓋以上",
+      fullLengthShot: "全身照",
+      extraLongShot: "極遠景",
+    },
+    stylesList: {
+      styleLow: "低強度風格",
+      styleMed: "中等強度風格",
+      styleHigh: "高強度風格",
+      styleVeryHigh: "非常高強度風格",
+    },
+    lightList: {
+      coldLight: "冷光",
+      warmLight: "暖光",
+      hardLighting: "硬光",
+      dramaticLight: "戲劇性光線",
+      reflectionLight: "反射光",
+      mistyFoggy: "薄霧",
+      naturalLight: "自然光",
+      sunLight: "陽光",
+      moody: "情緒化",
+    },
+    versionList: {
+      mjV6: "MJ V6",
+      mjV52: "MJ V5.2",
+      mjV51: "MJ V5.1",
+      nijiV6: "Niji V6",
+      nijiV5: "Niji V5",
+      nijiV4: "Niji V4",
+      nijiJourney: "Niji Journey",
+    },
+    botList: {
+      midjourneyBot: "Midjourney 機器人",
+      nijiJourney: "Niji Journey",
+    },
+    dimensionsList: {
+      square: "正方形 (1:1)",
+      portrait: "肖像 (2:3)",
+      landscape: "風景 (3:2)",
+    },
+  }
+  , suno: {
     "description": "描述模式",
     "custom": "專業模式",
     "style": "歌曲風格",
@@ -409,8 +409,8 @@ export default {
     fail: '失敗',
     info: '說明：<br>上載音頻的持續時間必須在6秒到60秒之間'
 
-   }
-   ,video:{
+  },
+  video: {
     "menu": "視頻",
     "menuinfo": "Luma及其他視頻創作",
     "descpls": "視頻創作描述",
@@ -424,9 +424,18 @@ export default {
     "plsInput": "請輸入內容！",
     "submitSuccess": "提交成功！",
     "process": "視頻生成中...",
-    "repeat": "重新獲取"
+    "repeat": "重新獲取",
+    "lumainfo": "說明：<ul><li>1. Pro 和 relax 演示視頻都有水印的鏈接</li><li>2. Pro 無水印版本需要通過「下載按鈕」得到下載鏈接</li><li>3. Pro 得到的鏈接有時限；請及時保存 MP4 文件到本地</li><li>4. Pro 請在生成後的 30 分鐘內；將 MP4 保存到本地，渠道號也可能被封或者下線</li><li>5. Pro 當下載鏈接無效時會給出帶水印的視頻鏈接</li></ul>",
+    "runwayabout": "Runway 相關",
+    "runwayserver": "Runway 接口地址",
+    "setOpenKeyPlaceholder2": "Runway API 的key, 可不填",
+    "endImg": "尾幀圖",
+    "runwayinfo": "說明：<ul><li>1. Runway 圖片與視頻都有有效期</li><li>2. 請在生成視頻後 30 分鐘內將 MP4 保存到本地</li></ul>",
+    "nosup": "暫不支持",
+    "rwgen2": "版本: Gen-2, 價格實惠",
+    "rwgen3": "版本: Gen-3 Alpha"
   },
-   
+
   dance: {
     menu: "跳舞",
     menuinfo: "使用 Viggle 等創作舞蹈影片。",

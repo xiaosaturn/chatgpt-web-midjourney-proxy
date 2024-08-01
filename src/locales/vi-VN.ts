@@ -143,7 +143,7 @@ export default {
 
     "totalUsage": "Tổng số tiền đăng ký",
     "disableGpt4": "GPT4 đã tắt",
-    "setTextInfo": "Lỗi Khóa API OpenAI, nhấp vào đây để thử lại" ,
+    "setTextInfo": "Lỗi Khóa API OpenAI, nhấp vào đây để thử lại",
 
     "attr1": "Đính",
     "ulink": "Liên kết Ảnh gốc",
@@ -179,7 +179,7 @@ export default {
     "presence_penaltyInfo": "Khi giá trị (presence_penalty) tăng, có khả năng mở rộng đến các chủ đề mới cao hơn",
     "frequency_penalty": "Hình Phạt Tần Số",
     "frequency_penaltyInfo": "Khi giá trị (frequency_penalty) tăng, có khả năng giảm sự lặp lại của các từ nhiều hơn"
-   ,"tts_voice": "Nhân vật giọng TTS",
+    , "tts_voice": "Nhân vật giọng TTS",
     "typing": "Đang nhập",
     "authErro": "Xác thực không thành công",
     "authBt": "Vui lòng nhập lại mật khẩu truy cập xác thực",
@@ -190,8 +190,8 @@ export default {
     "micRecEnd": "Ghi âm đã kết thúc",
 
     subtle: 'Cao độ phân giải cao gấp 2 lần'
-    ,creative: 'Cao độ phân giải cao gấp 2 lần. Sáng tạo'
-    ,gpt_gx: 'GPTs sử dụng g-*'
+    , creative: 'Cao độ phân giải cao gấp 2 lần. Sáng tạo'
+    , gpt_gx: 'GPTs sử dụng g-*'
 
   },
   "mjset": {
@@ -287,94 +287,94 @@ export default {
     "gidError": "Không tìm thấy GID hợp lệ, vui lòng điền lại",
     "success3": "Thêm GPTs thành công!"
   },
-	draw: {
-		qualityList: {
-			general: "General",
-			clear: "Clear",
-			hd: "HD",
-			ultraHd: "Ultra HD",
-		},
-		styleList: {
-			cyberpunk: "Cyberpunk",
-			star: "Star",
-			anime: "Anime",
-			japaneseComicsManga: "Japanese Comics/Manga",
-			inkWashPaintingStyle: "Ink Wash Painting Style",
-			original: "Original",
-			landscape: "Landscape",
-			illustration: "Illustration",
-			manga: "Manga",
-			modernOrganic: "Modern Organic",
-			genesis: "Genesis",
-			posterstyle: "Poster Style",
-			surrealism: "Surrealism",
-			sketch: "Sketch",
-			realism: "Realism",
-			watercolorPainting: "Watercolor Painting",
-			cubism: "Cubism",
-			blackAndWhite: "Black and White",
-			fmPhotography: "Film Photography Style",
-			cinematic: "Cinematic",
-			clearFacialFeatures: "Clear Facial Features",
-		},
-		viewList: {
-			wideView: "Wide View",
-			birdView: "Bird's Eye View",
-			topView: "Top View",
-			upview: "Upview",
-			frontView: "Front View",
-			headshot: "Headshot",
-			ultrawideshot: "Ultrawide Shot",
-			mediumShot: "Medium Shot (MS)",
-			longShot: "Long Shot (LS)",
-			depthOfField: "Depth of Field (DOF)",
-		},
-		shotList: {
-			faceShot: "Face Shot (VCU)",
-			bigCloseUp: "Big Close-Up (BCU)",
-			closeUp: "Close-Up (CU)",
-			waistShot: "Waist Shot (WS)",
-			kneeShot: "Knee Shot (KS)",
-			fullLengthShot: "Full Length Shot (FLS)",
-			extraLongShot: "Extra Long Shot (ELS)",
-		},
-		stylesList: {
-			styleLow: "Style Low",
-			styleMed: "Style Medium",
-			styleHigh: "Style High",
-			styleVeryHigh: "Style Very High",
-		},
-		lightList: {
-			coldLight: "Cold Light",
-			warmLight: "Warm Light",
-			hardLighting: "Hard Lighting",
-			dramaticLight: "Dramatic Light",
-			reflectionLight: "Reflection Light",
-			mistyFoggy: "Misty/Foggy",
-			naturalLight: "Natural Light",
-			sunLight: "Sun Light",
-			moody: "Moody",
-		},
-		versionList: {
-			mjV6: "MJ V6",
-			mjV52: "MJ V5.2",
-			mjV51: "MJ V5.1",
-			nijiV6: "Niji V6",
-			nijiV5: "Niji V5",
-			nijiV4: "Niji V4",
-			nijiJourney: "Niji Journey",
-		},
-		botList: {
-			midjourneyBot: "Midjourney Bot",
-			nijiJourney: "Niji Journey",
-		},
-		dimensionsList: {
-			square: "Square (1:1)",
-			portrait: "Portrait (2:3)",
-			landscape: "Landscape (3:2)",
-		},
-	}
-  ,suno:{
+  draw: {
+    qualityList: {
+      general: "General",
+      clear: "Clear",
+      hd: "HD",
+      ultraHd: "Ultra HD",
+    },
+    styleList: {
+      cyberpunk: "Cyberpunk",
+      star: "Star",
+      anime: "Anime",
+      japaneseComicsManga: "Japanese Comics/Manga",
+      inkWashPaintingStyle: "Ink Wash Painting Style",
+      original: "Original",
+      landscape: "Landscape",
+      illustration: "Illustration",
+      manga: "Manga",
+      modernOrganic: "Modern Organic",
+      genesis: "Genesis",
+      posterstyle: "Poster Style",
+      surrealism: "Surrealism",
+      sketch: "Sketch",
+      realism: "Realism",
+      watercolorPainting: "Watercolor Painting",
+      cubism: "Cubism",
+      blackAndWhite: "Black and White",
+      fmPhotography: "Film Photography Style",
+      cinematic: "Cinematic",
+      clearFacialFeatures: "Clear Facial Features",
+    },
+    viewList: {
+      wideView: "Wide View",
+      birdView: "Bird's Eye View",
+      topView: "Top View",
+      upview: "Upview",
+      frontView: "Front View",
+      headshot: "Headshot",
+      ultrawideshot: "Ultrawide Shot",
+      mediumShot: "Medium Shot (MS)",
+      longShot: "Long Shot (LS)",
+      depthOfField: "Depth of Field (DOF)",
+    },
+    shotList: {
+      faceShot: "Face Shot (VCU)",
+      bigCloseUp: "Big Close-Up (BCU)",
+      closeUp: "Close-Up (CU)",
+      waistShot: "Waist Shot (WS)",
+      kneeShot: "Knee Shot (KS)",
+      fullLengthShot: "Full Length Shot (FLS)",
+      extraLongShot: "Extra Long Shot (ELS)",
+    },
+    stylesList: {
+      styleLow: "Style Low",
+      styleMed: "Style Medium",
+      styleHigh: "Style High",
+      styleVeryHigh: "Style Very High",
+    },
+    lightList: {
+      coldLight: "Cold Light",
+      warmLight: "Warm Light",
+      hardLighting: "Hard Lighting",
+      dramaticLight: "Dramatic Light",
+      reflectionLight: "Reflection Light",
+      mistyFoggy: "Misty/Foggy",
+      naturalLight: "Natural Light",
+      sunLight: "Sun Light",
+      moody: "Moody",
+    },
+    versionList: {
+      mjV6: "MJ V6",
+      mjV52: "MJ V5.2",
+      mjV51: "MJ V5.1",
+      nijiV6: "Niji V6",
+      nijiV5: "Niji V5",
+      nijiV4: "Niji V4",
+      nijiJourney: "Niji Journey",
+    },
+    botList: {
+      midjourneyBot: "Midjourney Bot",
+      nijiJourney: "Niji Journey",
+    },
+    dimensionsList: {
+      square: "Square (1:1)",
+      portrait: "Portrait (2:3)",
+      landscape: "Landscape (3:2)",
+    },
+  }
+  , suno: {
     "description": "Chế độ mô tả",
     "custom": "Chế độ chuyên nghiệp",
     "style": "Phong cách bài hát",
@@ -409,8 +409,8 @@ export default {
     fail: 'Thất bại',
     info: 'Hướng dẫn:<br>Thời lượng tải lên âm thanh phải từ 6 giây đến 60 giây'
 
-   }
-   ,video:{
+  },
+  video: {
     "menu": "Video",
     "menuinfo": "Tạo video Luma và các video khác",
     "descpls": "Mô tả tạo video",
@@ -424,9 +424,18 @@ export default {
     "plsInput": "Vui lòng nhập nội dung!",
     "submitSuccess": "Đã gửi thành công!",
     "process": "Đang tạo video...",
-    "repeat": "Thử lại"
+    "repeat": "Thử lại",
+    "lumainfo": "Giải thích: <ul><li>1. Video demo Pro và relax có liên kết có watermark.</li><li>2. Phiên bản Pro không có watermark cần phải lấy liên kết tải xuống qua nút 'Tải về'.</li><li>3. Các liên kết phiên bản Pro có thời hạn; vui lòng lưu trữ tập tin MP4 vào máy cục bộ kịp thời.</li><li>4. Đối với phiên bản Pro, lưu tập tin MP4 vào máy cục bộ trong vòng 30 phút sau khi tạo ra, vì kênh có thể bị chặn hoặc ngừng hoạt động.</li><li>5. Nếu liên kết tải xuống cho phiên bản Pro không hợp lệ, sẽ cung cấp liên kết video có watermark.</li></ul>",
+    "runwayabout": "Liên quan đến Runway",
+    "runwayserver": "Địa chỉ API Runway",
+    "setOpenKeyPlaceholder2": "Khóa API Runway, không bắt buộc",
+    "endImg": "Hình cuối",
+    "runwayinfo": "Giải thích: <ul><li>1. Các hình ảnh và video của Runway có thời hạn.</li><li>2. Vui lòng lưu trữ tập tin MP4 vào máy cục bộ trong vòng 30 phút sau khi tạo video.</li></ul>",
+    "nosup": "Tạm thời không hỗ trợ",
+    "rwgen2": "Phiên bản: Gen-2, hiệu quả chi phí",
+    "rwgen3": "Phiên bản: Gen-3 Alpha"
   },
-   
+
   dance: {
     menu: "Nhảy múa",
     menuinfo: "Tạo video nhảy múa với Viggle và các dịch vụ khác.",
