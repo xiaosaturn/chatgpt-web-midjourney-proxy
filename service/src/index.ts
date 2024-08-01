@@ -16,7 +16,7 @@ import axios from 'axios';
 import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { getUserByIdService, verificationCode, registerUser, login, updateUserInfo } from './users/index'
-import { viggleProxyFileDo, viggleProxy, lumaProxy } from './myfun'
+import { viggleProxyFileDo, viggleProxy, lumaProxy, runwayProxy  } from './myfun'
 import { uploadFile, uploadFile2 } from './utils/uploadfile'
 import { createCheckoutSession, webhookStripe } from './money/stripe'
 
@@ -344,7 +344,7 @@ app.use('/sunoapi', authV2, proxy(process.env.SUNO_SERVER ?? API_BASE_URL, {
 
 app.use('/luma', authV2, lumaProxy);
 app.use('/pro/luam', authV2, lumaProxy);
-
+app.use('/runway' , authV2, runwayProxy);
 
 app.use('/viggle/asset', authV2, upload2.single('file'), viggleProxyFileDo);
 app.use('/pro/viggle/asset', authV2, upload2.single('file'), viggleProxyFileDo);
