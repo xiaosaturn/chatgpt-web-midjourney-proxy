@@ -124,14 +124,15 @@ const API_BASE_URL = isNotEmptyString(process.env.OPENAI_API_BASE_URL)
 
 console.log('API_BASE_URL', API_BASE_URL)
 
-app.use('/mjapi', authV2, proxy(process.env.MJ_SERVER ? process.env.MJ_SERVER : 'https://api.aijuli.com', {
+app.use('/mjapi', authV2, authV3, proxy(process.env.MJ_SERVER ? process.env.MJ_SERVER : 'https://api.aijuli.com', {
     https: false, limit: '10mb',
     proxyReqPathResolver: function (req) {
         return req.originalUrl.replace('/mjapi', '') // 将URL中的 `/mjapi` 替换为空字符串
     },
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
         proxyReqOpts.headers['mj-api-secret'] = proxyReqOpts.headers['authorization'],
-            proxyReqOpts.headers['Content-Type'] = 'application/json';
+        proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.OPENAI_API_KEY;
+        proxyReqOpts.headers['Content-Type'] = 'application/json';
         proxyReqOpts.headers['Mj-Version'] = pkg.version;
         return proxyReqOpts;
     },

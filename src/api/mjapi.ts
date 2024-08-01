@@ -149,7 +149,11 @@ const getUrl = (url: string) => {
 export const mjFetch = (url: string, data?: any) => {
     mlog('mjFetch2024', url);
     let header = { 'Content-Type': 'application/json' };
-    header = { ...header, ...getHeaderApiSecret() }
+    header = {
+        ...header, ...getHeaderApiSecret(), ...{
+            'Authorization': gptServerStore.myData.SERVICE_TOKEN
+        }
+    }
 
     return new Promise<any>((resolve, reject) => {
         let opt: RequestInit = { method: 'GET' };
@@ -407,12 +411,12 @@ function isStringOnlyDigits(input: string): boolean {
     const regex = /^[0-9]+$/;
     return regex.test(input);
 }
+
 export const loadGallery = async () => {
     let localKey = 'mj-list-condition';
     const d2: any = await localGet(localKey);
     //mlog('d2',d2 , (Date.now()- d2.ctime));
     if (d2 && (Date.now() - d2.ctime) < 300 * 1000) {
-
         return d2.d as any[];
     }
     let d = await mjFetch(`/mj/gallery`);
@@ -447,6 +451,5 @@ export function getFileFromClipboard(event: any) {
 
         }
     }
-    //console.log('passs>>' ,rz );
     return rz;
 }

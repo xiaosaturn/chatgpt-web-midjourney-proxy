@@ -89,6 +89,7 @@ const shorten = () => {
     }
     homeStore.setMyData({ act: 'draw', actData: obj });
 }
+
 function drawSent(rz: any) {
     let rz2 = rz;
     if (st.value.fileBase64) {
@@ -100,12 +101,12 @@ function drawSent(rz: any) {
     $emit('drawSent', rz2)
     st.value.fileBase64 = [];
 }
+
 function createPrompt(rz: string) {
     if (rz == '') {
         msgRef.value.showError(t('mjchat.placeInput'));
         return '';
     }
-
 
     // for(let v of farr){
     //     if( ! f.value[v.k] || f.value[v.k]==null || f.value[v.k]=='' ) continue;
@@ -153,6 +154,7 @@ function createPrompt(rz: string) {
 // const copy2= ()=>{
 //     copyRef.value.click();
 // }
+
 function selectFile(input: any) {
     if (st.value.fileBase64.length >= 5) {
         ms.error(t('mjchat.more5sb'));
@@ -172,7 +174,6 @@ function selectFile(input: any) {
 
 //图生文
 function selectFile2(input: any) {
-
     upImg(input.target.files[0]).then(d => {
         mlog('f2base64>> ', d);
         let obj = {
@@ -185,7 +186,6 @@ function selectFile2(input: any) {
         homeStore.setMyData({ act: 'draw', actData: obj });
         //input.value.value='';
         fsRef2.value.value = '';
-
     })
         .catch(e => msgRef.value.showError(e))
 }
@@ -195,15 +195,15 @@ const same2 = () => {
     f.value.version = '';
     f.value.quality = '';
 }
+
 watch(() => homeStore.myData.act, (n) => {
     // n=='copy' && copy2();
     n == 'same2' && same2();
 });
+
 onMounted(() => {
     homeStore.myData.act == 'same2' && same2();
 });
-
-
 
 const exportToTxt = async () => {
     let txtContent = '';
@@ -284,6 +284,7 @@ const selectFile3 = (input: any) => {
         .catch(e => msgRef.value.showError(e))
 }
 </script>
+
 <template>
     <AiMsg ref="msgRef" />
     <input type="file" @change="selectFile" ref="fsRef" style="display: none"
@@ -294,7 +295,6 @@ const selectFile3 = (input: any) => {
         accept="image/jpeg, image/jpg, image/png, image/gif" />
 
     <div class="overflow-y-auto bg-[#fafbfc] px-4 dark:bg-[#18181c] h-full ">
-
         <section class="mb-4">
             <div class="mr-1  mb-2 flex justify-between items-center">
                 <div class="text-sm">{{ $t('mjchat.imgBili') }}</div>
@@ -308,7 +308,7 @@ const selectFile3 = (input: any) => {
                     </NPopover>
                 </div>
             </div>
-            <div class=" flex items-center justify-between space-x-1">
+            <div class="flex items-center justify-between space-x-1">
                 <template v-for="(item, index) in vf">
                     <section class="aspect-item flex-1 rounded border-2 dark:border-neutral-700 cursor-pointer"
                         :class="{ 'active': index == f.bili }" @click="f.bili = index">
@@ -382,7 +382,8 @@ const selectFile3 = (input: any) => {
                                 <div class="p-1" v-for="(v ) in st.fileBase64">
                                     <img class="w-[60px]" :src="v">
                                     <br />
-                                    <NButton size="small" @click="st.fileBase64 = st.fileBase64.filter((item) => item != v)"
+                                    <NButton size="small"
+                                        @click="st.fileBase64 = st.fileBase64.filter((item) => item != v)"
                                         type="warning">{{ $t('mjchat.del') }}</NButton>
                                 </div>
 
