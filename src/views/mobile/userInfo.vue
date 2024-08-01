@@ -6,38 +6,35 @@
                 <div class="relative inline-flex flex flex-col items-center">
                     <n-image :src="userInfo.avatar" alt="user"
                         class="h-20 w-20 rounded-full bg-slate-400 dark:border-slate-700 mb-2" />
-                    <n-button @click="updateAvatar" type="primary">更新头像</n-button>
+                    <n-button @click="updateAvatar" type="primary" round>更新头像</n-button>
                     <input type="file" ref="fileInput" accept="image/*" style="display: none;"
                         @change="handleFileChange">
                 </div>
                 <div class="ml-4 flex flex-col justify-between">
-                    <div class="flex items-center">
+                    <div class="flex items-center mb-2">
                         <h3 class="text-xl font-bold text-slate-900 dark:text-slate-200 mr-2">
                             {{ userInfo.nickname }}
                         </h3>
                         <SvgIcon @click="updateNickname" class="text-lg" icon="lucide:edit" />
                     </div>
 
-                    <span class="text-lg text-slate-400">{{ userInfo.email }}</span>
-                    <span
-                        class="rounded-full bg-green-600/10 px-2.5 py-1 text-xs font-semibold leading-5 text-green-600">
-                        到期时间 {{ userInfo.expireTime }}
-                    </span>
+                    <span class="text-lg text-slate-400 mb-2">{{ userInfo.email }}</span>
+                    <div>
+                        <span v-if="userInfo.expireTime" class="rounded-full bg-green-600/10 px-2.5 py-1 text-xs font-semibold leading-5 text-green-600">
+                            到期时间 {{ userInfo.expireTime }}
+                        </span>
+                        <span v-else class="rounded-full bg-green-600/10 px-3 py-1 text-xs font-semibold leading-5 text-green-600">
+                            免费用户
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div></div>
-        <button
-            class="mt-6 w-full rounded-lg border border-slate-300 p-4 text-center text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-blue-600 hover:text-slate-50 focus:outline-none dark:border-slate-700 dark:text-slate-200"
-            type="button" @click="copyToClipboard">
-            ✨ 联系客服开通会员权限
-        </button>
-        <div class="text-3xl text-center py-2 font-bold">或</div>
-        <div class="text-center">微信扫描下方二维码，添加客服微信</div>
-        <div class="flex justify-center">
-            <n-image width="300"
-                src="https://image.xiaosaturn.com/Photo/2024720/123315/xqfaorni9d1721449995145.png"></n-image>
-        </div>
+        <!-- <div></div>
+        <div class="flex items-center">
+            <div class="text-[18px] font-bold">支付遇到问题，联系客服：</div>
+            <div class="text-[28px] font-bold">mpcexiao@gmail.com</div>
+        </div> -->
     </div>
 </template>
 

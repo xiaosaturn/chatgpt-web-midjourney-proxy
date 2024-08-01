@@ -241,6 +241,48 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
     next()
 }
 
+export const authV4 = async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.header('Authorization');
+    console.log('token', token)
+    logger.info({
+        msg: req,
+        label: 'authV2开始认证',
+    });
+    if (!token) {
+        res.status(401);
+        return res.send({
+            code: 401,
+            msg: '无token，请先登录'
+        });
+    }
+    jwt.verify(token.split(' ')[1], process.env.SECRET_KEY, {
+        algorithms: ['HS256']
+    }, async (err, decoded) => {
+        if (err) {
+            res.status(401);
+            return res.send({
+                code: 401,
+                msg: '无效的token，请登录'
+            });
+        }
+        const redisToken = await getRedisValue(decoded.email)
+        if (redisToken != token) {
+            res.status(403);
+            return res.send({
+                code: 401,
+                msg: '无效的token，请重新登录'
+            });
+        }
+        logger.info({
+            msg: 'redisToken',
+            label: 'authV2开始认证',
+        });
+        req.query.email = decoded.email; // 从token里解析出用户email，放到query上
+        req.query.id = decoded.id; // 从token里解析出用户id，放到query上
+        next();
+    });
+}
+
 export const turnstileCheck = async (req: Request, res: Response, next: NextFunction) => {
     const TURNSTILE_SITE = process.env.TURNSTILE_SITE
     if (!isNotEmptyString(TURNSTILE_SITE)) {

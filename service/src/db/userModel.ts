@@ -57,7 +57,7 @@ const getUserByEmail = async (email) => {
 const getUserById = async (userId) => {
     const sql = `select mu.id, mu.nickname, mu.email, mu.avatar, mu.mobile, 
     DATE_FORMAT(mu.create_time, '%Y-%m-%d') as createTime, DATE_FORMAT(mu.update_time, '%Y-%m-%d') as updateTime, 
-    mu.status, mu.gender, mu.password, mu.expire_time as expireTime, mlr.level as level from member_user mu
+    mu.status, mu.gender, mu.password, DATE_FORMAT(mu.expire_time, '%Y-%m-%d') as expireTime, mlr.level as level from member_user mu
     left join member_level_record mlr on mlr.user_id = mu.id
     where mu.id=?`;
     return new Promise((resolve, reject) => {

@@ -27,6 +27,8 @@ export default {
     verify: '驗證',
     unauthorizedTips: '未經授權，請先進行驗證。',
     stopResponding: '停止回應',
+    updateAvatar: '更新頭像',
+    updateNickname: '更新暱稱',
   },
   chat: {
     newChatButton: '新增對話',
@@ -53,11 +55,12 @@ export default {
     showRawText: '顯示原文',
   },
   setting: {
+    nickname: '暱稱',
     setting: '設定',
     general: '總覽',
     advanced: '進階',
     config: '設定',
-    avatarLink: '頭貼連結',
+    avatarLink: '頭貼',
     name: '名稱',
     description: '描述',
     role: '角色設定',
@@ -74,6 +77,8 @@ export default {
     httpsProxy: 'HTTPS Proxy',
     balance: 'API Credit 餘額',
     monthlyUsage: '本月使用量',
+    expireTime: '到期時間',
+    price: '定價',
   },
   store: {
     siderButton: '提示詞商店',

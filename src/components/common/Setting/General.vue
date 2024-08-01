@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
-import { NButton, NInput, NPopconfirm, NSelect, useMessage, useNotification, NAvatar } from 'naive-ui'
+import { computed, onMounted, ref, h } from 'vue'
+import { NButton, NInput, NPopconfirm, NSelect, useMessage, useNotification, NAvatar, NTag, useDialog } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useUserStore, gptServerStore } from '@/store'
@@ -18,6 +18,7 @@ interface Emit {
 const appStore = useAppStore()
 const userStore = useUserStore()
 const emit = defineEmits<Emit>()
+const dialog = useDialog()
 
 const { isMobile } = useBasicLayout()
 
@@ -36,6 +37,10 @@ const description = ref(userInfo.value.description ?? '')
 const showRegister = ref(false)
 
 const notification = useNotification()
+
+const nickName = ref(userInfo.value.nickname)
+
+const fileInput = ref<HTMLInputElement | null>(null);
 
 let countdown = ref(60);
 let timer: any;
@@ -332,6 +337,131 @@ const validateVerificationCode = (code?: string) => {
     const regex = /^\d{6}$/;
     return regex.test(code);
 }
+
+const getUserInfo = async () => {
+    const res = await request.get('/app/user');
+    if (res.code == 200) {
+        userStore.updateUserInfo(res.data);
+    } else if (res.code == 401 || res.code == 403) {
+        // 401未授权，403 token 过期，都跳转到登录
+        gptServerStore.setInit();
+        userStore.resetUserInfo();
+    } else {
+        // 其他错误
+
+    }
+}
+
+const handleFileChange = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    const file: File | undefined = target.files?.[0];
+    if (file) {
+        confirmUpload(file)
+    }
+};
+
+const confirmUpload = async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    const res = await request.post('/app/upload', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    });
+    if (res.code == 200) {
+        userStore.updateUserInfo({
+            avatar: res.data
+        });
+        submitAvatar()
+    } else {
+        notification.error({
+            title: res.msg ? res.msg : 'Internal Server Error',
+            duration: 3000
+        });
+    }
+}
+
+const updateAvatar = (): void => {
+    if (fileInput.value) {
+        fileInput.value?.click();
+    }
+}
+
+const updateNickname = () => {
+    dialog.create({
+        showIcon: false,
+        title: '修改昵称',
+        style: {
+            borderRadius: '20px'
+        },
+        content: () =>
+            h('div', null, [
+                h(NInput, {
+                    value: nickName.value,
+                    onUpdateValue: (value) => {
+                        nickName.value = value;
+                    },
+                    placeholder: '请输入昵称'
+                })
+            ]),
+        positiveText: '确认',
+        negativeText: '取消',
+        onPositiveClick: () => {
+            if (nickName.value && nickName.value.trim()) {
+                submitNickname();
+            } else {
+                notification.warning({
+                    title: '请输入昵称'
+                });
+            }
+        }
+    })
+}
+
+const submitNickname = async () => {
+    const res = await request.put('/app/user', {
+        id: userInfo.value.id,
+        avatar: userInfo.value.avatar,
+        nickname: nickName?.value?.trim()
+    });
+    if (res.code == 200) {
+        notification.success({
+            title: '修改成功'
+        });
+        userStore.updateUserInfo({
+            nickname: nickName?.value?.trim()
+        });
+    } else {
+        notification.warning({
+            title: '修改失败',
+            content: res.msg
+        });
+    }
+}
+
+const submitAvatar = async () => {
+    const res = await request.put('/app/user', {
+        id: userInfo.value.id,
+        avatar: userInfo.value.avatar,
+    });
+    if (res.code == 200) {
+        notification.success({
+            title: '修改头像成功'
+        });
+        userStore.updateUserInfo({
+            nickname: nickName?.value?.trim()
+        });
+    } else {
+        notification.warning({
+            title: '修改头像失败',
+            content: res.msg
+        });
+    }
+}
+
+onMounted(() => {
+    getUserInfo();
+})
 </script>
 
 <template>
@@ -341,12 +471,20 @@ const validateVerificationCode = (code?: string) => {
                 <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
                 <n-avatar round size="large" :src="userInfo.avatar"
                     fallback-src="https://deepimage.polo-e.net/applets/20240510/052220_26bfd6acdcacd555f4ecd7666c5941f.jpg" />
-                <!-- <div class="flex-1">
-                    <NInput v-model:value="avatar" placeholder="" />
-                </div>
-                <NButton size="tiny" text type="primary" @click="updateUserInfo({ avatar })">
-                    {{ $t('common.save') }}
-                </NButton> -->
+                <NButton size="tiny" type="primary" round @click="updateAvatar">
+                    {{ $t('common.updateAvatar') }}
+                </NButton>
+                <input type="file" ref="fileInput" accept="image/*" style="display: none;"
+                        @change="handleFileChange">
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="flex-shrink-0 w-[100px]">{{ $t('setting.nickname') }}</span>
+                <n-tag v-if="userInfo.expireTime" type="success" round>
+                    {{ userInfo.nickname }}
+                </n-tag>
+                <NButton size="tiny" type="primary" round @click="updateNickname">
+                    {{ $t('common.updateNickname') }}
+                </NButton>
             </div>
             <div class="flex items-center space-x-4">
                 <span class="flex-shrink-0 w-[100px]">{{ $t('setting.email') }}</span>
@@ -357,8 +495,11 @@ const validateVerificationCode = (code?: string) => {
 
             <div class="flex items-center space-x-4">
                 <span class="flex-shrink-0 w-[100px]">{{ $t('setting.expireTime') }}</span>
-                <n-tag type="warning">
+                <n-tag v-if="userInfo.expireTime" type="warning" round>
                     {{ userInfo.expireTime }}
+                </n-tag>
+                <n-tag v-else type="warning" round>
+                    免费用户
                 </n-tag>
             </div>
 
@@ -452,7 +593,7 @@ const validateVerificationCode = (code?: string) => {
                     <span class="flex-shrink-0 w-[100px]">{{ $t('setting.password') }}</span>
                     <div class="flex-1">
                         <NInput type="password" show-password-on="mousedown" v-model:value="userInfo.password"
-                            :placeholder="$t('setting.plzPassword') " />
+                            :placeholder="$t('setting.plzPassword')" />
                     </div>
                 </div>
                 <div class="flex items-center space-x-4 mb-2">

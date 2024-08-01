@@ -27,6 +27,8 @@ export default {
     verify: '验证',
     unauthorizedTips: '未经授权，请先进行验证。',
     stopResponding: '停止响应',
+    updateAvatar: '更新头像',
+    updateNickname: '更新昵称',
   },
   chat: {
     newChatButton: '新建聊天',
@@ -53,11 +55,12 @@ export default {
     showRawText: '显示原文',
   },
   setting: {
+    nickname: '昵称',
     setting: '设置',
     general: '总览',
     advanced: '高级',
     config: '配置',
-    avatarLink: '头像链接',
+    avatarLink: '头像',
     name: '名称',
     description: '描述',
     role: '角色设定',

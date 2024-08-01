@@ -2,7 +2,7 @@ import express from 'express'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
-import { auth, authV2, authV3, mlog, regCookie, turnstileCheck, verify } from './middleware/auth'
+import { auth, authV2, authV3, authV4, mlog, regCookie, turnstileCheck, verify } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString, formattedDate } from './utils/is'
 import multer from "multer"
@@ -376,7 +376,7 @@ router.post('/webhook', webhookStripe);
 
 // 创建 multer 的实例
 const upload3 = multer();
-router.post('/app/upload', authV2, upload3.single('file'), uploadFile2);
+router.post('/app/upload', authV4, upload3.single('file'), uploadFile2);
 
 app.use('', router);
 app.use('/api', router);

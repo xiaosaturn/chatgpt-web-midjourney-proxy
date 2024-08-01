@@ -27,6 +27,8 @@ export default {
     verify: 'Verify',
     unauthorizedTips: 'Unauthorized, please verify first.',
     stopResponding: 'Stop Responding',
+    updateAvatar: 'Update Avatar',
+    updateNickname: 'Update Nickname',
   },
   chat: {
     newChatButton: 'New Chat',
@@ -53,11 +55,12 @@ export default {
     showRawText: 'Show as raw text',
   },
   setting: {
+    nickname: 'Nickname',
     setting: 'Setting',
     general: 'General',
     advanced: 'Advanced',
     config: 'Config',
-    avatarLink: 'Avatar Link',
+    avatarLink: 'Avatar',
     name: 'Name',
     description: 'Description',
     role: 'Role',

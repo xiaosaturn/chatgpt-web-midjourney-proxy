@@ -20,15 +20,9 @@
                 <PriceItem :type="1" />
                 <PriceItem :type="2" />
                 <PriceItem :type="3" />
-                <button
-                    class="mt-6 w-full rounded-lg border border-slate-300 p-4 text-center text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-blue-600 hover:text-slate-50 focus:outline-none dark:border-slate-700 dark:text-slate-200"
-                    type="button" @click="copyToClipboard">
-                    ✨ 联系客服开通会员权限
-                </button>
-                <div class="text-3xl text-center py-2 font-bold">或</div>
-                <div class="text-center">微信扫描下方二维码，添加客服微信</div>
-                <div class="flex justify-center">
-                    <n-image width="300" src="https://image.xiaosaturn.com/Photo/2024720/123315/xqfaorni9d1721449995145.png"></n-image>
+                <div class="flex flex-col items-center">
+                    <div class="text-[18px] font-bold">支付遇到问题，联系客服</div>
+                    <div class="text-[28px] font-bold">mpcexiao@gmail.com</div>
                 </div>
             </n-space>
         </div>
