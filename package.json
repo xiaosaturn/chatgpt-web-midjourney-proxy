@@ -43,6 +43,7 @@
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
     "markdown-it": "^13.0.1",
+    "moment-timezone": "^0.5.45",
     "naive-ui": "^2.34.3",
     "pinia": "^2.0.33",
     "sass": "^1.77.8",
@@ -50,7 +51,8 @@
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.6",
     "vue-turnstile": "^1.0.8",
-    "vue-waterfall-plugin-next": "^2.3.1"
+    "vue-waterfall-plugin-next": "^2.3.1",
+    "winston": "^3.13.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.21.1",

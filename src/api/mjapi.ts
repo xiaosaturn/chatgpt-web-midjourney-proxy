@@ -6,6 +6,7 @@ import { copyToClip } from "@/utils/copy";
 import { isNumber } from "@/utils/is";
 import { localGet, localSaveAny } from "./mjsave";
 import { t } from "@/locales";
+
 //import { useMessage } from "naive-ui";
 export interface gptsType {
     gid: string
@@ -15,6 +16,7 @@ export interface gptsType {
     use_cnt?: string
     bad?: string | number
 }
+
 //const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 export function upImg(file: any): Promise<any> {
     const maxSize = homeStore.myData.session.uploadImgSize ? (+homeStore.myData.session.uploadImgSize) : 1
@@ -37,7 +39,6 @@ export function upImg(file: any): Promise<any> {
         reader.onload = (e: any) => h(e.target.result);
         reader.readAsDataURL(file);
     })
-
 }
 
 export const file2blob = (selectedFile: any) => {
@@ -53,12 +54,9 @@ export const file2blob = (selectedFile: any) => {
             resolve({ blob, filename: selectedFile.name });
         };
         reader.onerror = (e) => reject(e);
-
         // 开始读取文件
         reader.readAsArrayBuffer(selectedFile);
-
     })
-
 }
 
 export const blob2file = (blob: Blob, fileName: string) => {
@@ -83,15 +81,11 @@ function containsChinese(str: string) {
 }
 
 export async function train(text: string) {
-
     return new Promise<string>((resolve, reject) => {
-
-
         if (text.trim() == '') {
             reject(t('mjchat.placeInput'));
             return;
         }
-
 
         if (!containsChinese(text.trim())) {
             resolve(text.trim());
@@ -147,7 +141,6 @@ const getUrl = (url: string) => {
 }
 
 export const mjFetch = (url: string, data?: any) => {
-    mlog('mjFetch2024', url);
     let header = { 'Content-Type': 'application/json' };
     header = {
         ...header, ...getHeaderApiSecret(), ...{
@@ -171,7 +164,6 @@ export const mjFetch = (url: string, data?: any) => {
             }).catch(e => reject({ error: e ? e.toString() : 'json_error', code: 'json_error', url: getUrl(url), status: d2.status }))
             ).catch(e => reject({ error: e ? e.toString() : 'fetch fail', data, code: 'fetch_fail', url: getUrl(url) }))
     })
-
 }
 
 export const myFetch = (url: string, data?: any) => {
@@ -191,8 +183,8 @@ export const myFetch = (url: string, data?: any) => {
                 .catch(e => reject(e)))
             .catch(e => reject(e))
     })
-
 }
+
 export const my2Fetch = (url: string, data?: any) => {
     mlog('mjFetch', url);
     let header = { 'Content-Type': 'application/json' };
@@ -210,9 +202,7 @@ export const my2Fetch = (url: string, data?: any) => {
                 .catch(e => reject(e)))
             .catch(e => reject(e))
     })
-
 }
-
 
 export const flechTask = (chat: Chat.Chat) => {
     let cnt = 0;
@@ -229,18 +219,22 @@ export const flechTask = (chat: Chat.Chat) => {
         chat.loading = (cnt >= 99) ? false : true;
         //chat.progress=ts.progress;
 
-        if (ts.progress && ts.progress == "100%") chat.loading = false;
+        if (ts.progress && ts.progress == "100%") {
+            chat.loading = false;
+            // 将图片上传到COS，并存储到数据库，ts.imageUrl
+            // const imgRes = await 
+        }
 
         homeStore.setMyData({ act: 'updateChat', actData: chat });
         //"NOT_START" //["SUBMITTED","IN_PROGRESS"].indexOf(ts.status)>-1
         if (["FAILURE", "SUCCESS"].indexOf(ts.status) == -1 && cnt < 100) {
-
             setTimeout(() => check(), 5000)
         }
         mlog('task', ts.progress, ts, chat.uuid, chat.index);
     }
     check();
 }
+
 export const subTask = async (data: any, chat: Chat.Chat) => {
     let d: any;
     try {
@@ -286,6 +280,7 @@ export const subTask = async (data: any, chat: Chat.Chat) => {
                 toData.botType = data.bot;
             }
             d = await mjFetch('/mj/submit/imagine', toData);
+            console.log('ddddd:', d)
             mlog('submit', d);
             //return ;
         }
