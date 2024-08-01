@@ -107,14 +107,14 @@ const levelPrice = (obj) => {
     if (obj.currency == 'usd') {
         switch (obj.level) {
             case 1: return 0;
-            case 2: return 99;
+            case 2: return 990;
             case 3: return 9900;
         }
     } else {
         switch (obj.level) {
             case 1: return 0;
-            case 2: return 1900;
-            case 3: return 19900;
+            case 2: return 6900;
+            case 3: return 69900;
         }
     }
     return 0;
