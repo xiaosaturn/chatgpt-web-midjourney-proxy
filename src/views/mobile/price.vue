@@ -22,7 +22,10 @@
                 <PriceItem :type="3" />
                 <div class="flex flex-col items-center">
                     <div class="text-[18px] font-bold">支付遇到问题，联系客服</div>
-                    <div class="text-[28px] font-bold">mpcexiao@gmail.com</div>
+                    <div class="text-[20px] font-bold">电报：@MasterH0</div>
+                    <div class="text-[20px] font-bold">微信：XKSaturn</div>
+                    <div class="text-[20px] font-bold">推特：@MasterHXK</div>
+                    <div class="text-[20px] font-bold">邮箱：mpcexiao@gmail.com</div>
                 </div>
             </n-space>
         </div>
