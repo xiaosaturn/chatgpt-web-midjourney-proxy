@@ -147,7 +147,7 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
             });
         }
         logger.info({
-            msg: 'decoded开工',
+            msg: 'redisToken',
             label: 'authV2开始认证',
         });
         req.query.email = decoded.email; // 从token里解析出用户email，放到query上

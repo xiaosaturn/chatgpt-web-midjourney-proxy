@@ -137,11 +137,26 @@ const insertUserPoint = (userId) => {
     });
 }
 
+const insertUserLevelRecord = (userId) => {
+    const sql = `insert into member_level_record (user_id, level_id, level) values (?, ?, ?)`;
+    return new Promise((resolve, reject) => {
+        db.query(sql, [userId, 3, 0],
+            (err, result) => {
+                if (err) {
+                    throw Error(err);
+                } else {
+                    resolve(result.insertId);
+                }
+            });
+    });
+}
+
 export {
     getUserByEmail,
     getUserById,
     insertUser,
     updateUser,
     insertUserPoint,
+    insertUserLevelRecord,
     type User
 }

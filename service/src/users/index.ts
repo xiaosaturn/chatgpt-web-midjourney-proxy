@@ -1,4 +1,4 @@
-import { getUserById, getUserByEmail, insertUser, updateUser, insertUserPoint } from '../db/userModel';
+import { getUserById, getUserByEmail, insertUser, updateUser, insertUserPoint, insertUserLevelRecord } from '../db/userModel';
 import { Request, Response, NextFunction } from 'express';
 import { getRedisValue, setRedisValue } from '../db/redis';
 import nodemailer from 'nodemailer';
@@ -218,6 +218,7 @@ const imgUrl = function () {
 const initUserLevel = async (userId) => {
     const res = await insertUserPoint(userId); // 只是记录下，不作他用
     const res2 = await setRedisValue('expireTimeLevel0-' + userId, 5); // 初始注册，赠送5条消息
+    const res3 = await insertUserLevelRecord(userId); // 插入lelve等级
 }
 
 export {
