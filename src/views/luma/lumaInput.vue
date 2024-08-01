@@ -209,7 +209,7 @@ const mvOption = [
                 </div>
             </div>
         </div>
-        
+
         <div class="pt-1">
             <div class="flex justify-between items-end">
                 <div class="pb-1 text-right">
@@ -226,7 +226,7 @@ const mvOption = [
             </div>
         </div>
 
-        <div class="pt-2 text-[12px]" v-html="$t('video.lumainfo')">
+        <div v-if="isHK" class="pt-2 text-[12px]" v-html="$t('video.lumainfo')">
 
         </div>
     </div>
