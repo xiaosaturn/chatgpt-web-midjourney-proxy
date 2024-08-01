@@ -19,7 +19,7 @@ function getHeaderAuthorization() {
         return headers
     }
     const bmi = {
-        'Authorization': 'Bearer ' + gptServerStore.myData.LUMA_KEY
+        'Authorization': gptServerStore.myData.SERVICE_TOKEN
     }
     headers = { ...headers, ...bmi }
     return headers
@@ -86,7 +86,6 @@ export const lumaFetch = (url: string, data?: any, opt2?: any) => {
                 reject(e)
             })
     })
-
 }
 
 export const FeedLumaTask = async (id: string) => {

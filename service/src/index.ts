@@ -342,7 +342,7 @@ app.use('/sunoapi', authV2, proxy(process.env.SUNO_SERVER ?? API_BASE_URL, {
 //     },
 // }));
 
-app.use('/luma', authV2, lumaProxy);
+app.use('/luma', authV2, authV3, lumaProxy);
 app.use('/pro/luam', authV2, lumaProxy);
 app.use('/runway' , authV2, runwayProxy);
 

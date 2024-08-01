@@ -47,7 +47,11 @@ const generate = async () => {
         //if(homeStore)
         const is_luma_pro = homeStore.myData.is_luma_pro
         if (is_luma_pro) url = '/pro' + url
-        const d: any = await lumaFetch(url, luma.value);
+        const d: any = await lumaFetch(url, luma.value, {
+            headers: {
+                'Authorization': gptServerStore.myData.SERVICE_TOKEN
+            }
+        });
         mlog("d", d)
         // if(d.id ) FeedLumaTask(d.id )
         // else FeedLumaTask(d[0].id )
@@ -57,8 +61,6 @@ const generate = async () => {
             const hk = new lumaHkStore();
             hk.save({ id: taskID, isHK: true })
         }
-
-
         ms.success(t('video.submitSuccess'))
         await sleep(500)
         FeedLumaTask(taskID)
@@ -68,14 +70,15 @@ const generate = async () => {
     st.value.isDo = false
     //FeedLumaTask('33ace512-9a46-40ab-9d08-a05eff989831')
 }
-function selectFile(input: any) {
 
+function selectFile(input: any) {
     upImg(input.target.files[0]).then(d => {
         luma.value.image_url = d;
         fsRef.value = ''
     }).catch(e => ms.error(e));
 
 }
+
 function selectFile2(input: any) {
     upImg(input.target.files[0]).then(d => {
         luma.value.image_end_url = d;
@@ -83,12 +86,14 @@ function selectFile2(input: any) {
     }).catch(e => ms.error(e));
 
 }
+
 const clearInput = () => {
     luma.value.user_prompt = ''
     luma.value.image_url = ''
     luma.value.image_end_url = ''
     exLuma.value = undefined
 }
+
 //luma.extend
 watch(() => homeStore.myData.act, (n) => {
     if (n == 'luma.extend') {
@@ -99,6 +104,7 @@ watch(() => homeStore.myData.act, (n) => {
         // cs.value.continue_at= Math.ceil(s.metadata.duration/2) 
     }
 });
+
 const isHK = computed(() => {
     const url = gptServerStore.myData.LUMA_SERVER.toLocaleLowerCase();
     if (url != '') {
@@ -108,16 +114,19 @@ const isHK = computed(() => {
     return (homeStore.myData.session && homeStore.myData.session.isHk);
 
 });
+
 const saveMyDate = (is_pro: boolean) => {
     homeStore.setMyData({ is_luma_pro: is_pro })
     gptServerStore.setMyData({ IS_LUMA_PRO: is_pro })
 }
+
 watch(() => isHK.value, (n) => saveMyDate(n && st.value.version == 'pro'));
 watch(() => st.value.version, () => saveMyDate(isHK.value && st.value.version == 'pro'));
 const mvOption = [
     { label: '版本: relax, 价格实惠', value: 'relax' }
     , { label: '版本: pro, 快且无水印', value: 'pro' }
 ]
+
 </script>
 
 <template>
