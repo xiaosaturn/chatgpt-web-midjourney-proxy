@@ -103,6 +103,11 @@ const levelName = (level) => {
     if (level == 3) return '按年付费';
 }
 
+/**
+ * 月度会员，赠送20张midjournary
+ * 年度会员，赠送300张midjournary
+ * 其他情况，另行购买
+ * */
 const levelPrice = (obj) => {
     if (obj.currency == 'usd') {
         switch (obj.level) {
