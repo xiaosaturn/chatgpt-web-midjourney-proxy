@@ -15,13 +15,21 @@ import FormData from 'form-data'
 import axios from 'axios';
 import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
-import { getUserByIdService, verificationCode, registerUser, login, updateUserInfo } from './users/index'
-import { viggleProxyFileDo, viggleProxy, lumaProxy, runwayProxy  } from './myfun'
+import { getUserByIdService, verificationCode, registerUser, login, updateUserInfo, queryAllImages } from './users/index'
+import { viggleProxyFileDo, viggleProxy, lumaProxy, runwayProxy } from './myfun'
 import { uploadFile, uploadFile2, uploadFile3 } from './utils/uploadfile'
 import { createCheckoutSession, webhookStripe } from './money/stripe'
+import cors from 'cors'
 
 const app = express()
 const router = express.Router()
+const corsOptions = {
+    origin: ['https://image.xiaosaturn.com'], // 指定允许的源
+    methods: ['GET', 'POST'], // 指定允许的 HTTP 方法
+    allowedHeaders: ['Content-Type', 'Authorization'] // 指定允许的请求头
+}
+
+app.use(cors(corsOptions));
 
 app.use(express.static('public', {
     // 设置响应头，允许带有查询参数的请求访问静态文件
@@ -33,7 +41,7 @@ app.use(express.static('public', {
 //app.use(express.json())
 app.use(bodyParser.json({ limit: '10mb' })); //大文件传输
 
-app.all('*', (_, res, next) => {
+app.all('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'authorization, Content-Type')
     res.header('Access-Control-Allow-Methods', '*')
@@ -131,7 +139,7 @@ app.use('/mjapi', authV2, authV3, proxy(process.env.MJ_SERVER ? process.env.MJ_S
     },
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
         proxyReqOpts.headers['mj-api-secret'] = proxyReqOpts.headers['authorization'],
-        proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.OPENAI_API_KEY;
+            proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.OPENAI_API_KEY;
         proxyReqOpts.headers['Content-Type'] = 'application/json';
         proxyReqOpts.headers['Mj-Version'] = pkg.version;
         return proxyReqOpts;
@@ -345,7 +353,7 @@ app.use('/sunoapi', authV2, proxy(process.env.SUNO_SERVER ?? API_BASE_URL, {
 
 app.use('/luma', authV2, authV3, lumaProxy);
 app.use('/pro/luam', authV2, lumaProxy);
-app.use('/runway' , authV2, runwayProxy);
+app.use('/runway', authV2, runwayProxy);
 
 app.use('/viggle/asset', authV2, upload2.single('file'), viggleProxyFileDo);
 app.use('/pro/viggle/asset', authV2, upload2.single('file'), viggleProxyFileDo);
@@ -379,6 +387,7 @@ router.post('/webhook', webhookStripe);
 const upload3 = multer();
 router.post('/app/upload', authV4, upload3.single('file'), uploadFile2);
 router.post('/app/upload-url', authV4, uploadFile3);
+router.get('/app/image-list', authV2, queryAllImages);
 
 app.use('', router);
 app.use('/api', router);

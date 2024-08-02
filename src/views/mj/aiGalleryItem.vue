@@ -12,6 +12,7 @@ import { homeStore, useChatStore } from "@/store"
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 //import { ViewCard } from 'vue-waterfall-plugin-next/dist/types/types/waterfall'
 import { getMjAll, localGet, mlog, loadGallery, url2base64 } from '@/api'
+import request from '@/api/myAxios'
 
 const chatStore = useChatStore()
 
@@ -45,10 +46,14 @@ const breakpoints = {
     }
 }
 
-const loadImg = () => {
-    //mlog('local',homeStore.myData.session.isApiGallery );  
-    if (homeStore.myData.session.isApiGallery) loadApiGallery();
-    else loadImagFormLocal();
+const loadImg = async () => {
+    const res = await request.get('/app/image-list');
+    if (res.code == 200) {
+        list.value = res.data.list;
+    }
+    //mlog('local',homeStore.myData.session.isApiGallery );
+    // if (homeStore.myData.session.isApiGallery) loadApiGallery();
+    // else loadImagFormLocal();
 }
 
 const loadApiGallery = async () => {
@@ -86,8 +91,6 @@ const loadApiGallery = async () => {
             mlog('图片保存失败', error);
         }
     }
-
-
     list.value = rz.sort((a: any, b: any) => (b.time - a.time));
 }
 
@@ -132,6 +135,7 @@ const loadImagFormLocal = async () => {
     //     } )
 
 }
+
 const goShow = (item: any) => {
     //console.log('goShow', isMobile );
     if (isMobile.value) return;
@@ -140,6 +144,7 @@ const goShow = (item: any) => {
     //console.log('goShow', item);
     nextTick(() => showImg.value?.click());
 }
+
 // function copy( item:any){ 
 //   //console.log('copy', item.prompt );
 // 	//copyText3(  item.prompt ).then(()=>msgRef.value.showMsg('复制成功！'));
@@ -154,15 +159,16 @@ const same = (item: any, act: string) => {
     homeStore.setMyData({ act, actData: JSON.parse(JSON.stringify(item)) }); //:'same'
     emit('close');
 }
+
 loadImg();
 
 </script>
-<template>
 
-    <Waterfall :list="list" :breakpoints="breakpoints" class=" !bg-transparent" v-if="list.length">
+<template>
+    <Waterfall :list="list" :breakpoints="breakpoints" class="!bg-transparent" v-if="list.length">
         <template #item="{ item, url, index }">
             <div class="bg-white dark:bg-[#24272e] rounded-md   overflow-hidden cursor-pointer group/item relative">
-                <LazyImg :url="item.image_url" @success="item.isLoad = 1" @click="goShow(item)" />
+                <LazyImg :url="item.imageUrl" @success="item.isLoad = 1" @click="goShow(item)" />
                 <!-- <LazyImg :url="item.image_hd_url"  @success="item.isLoad=1" /> -->
                 <div class="absolute top-0 left-0 right-0 bottom-0" v-if="item.isLoad == 0">
                     <div class="flex justify-center items-center w-full h-full">
@@ -170,7 +176,7 @@ loadImg();
                     </div>
                 </div>
                 <div
-                    class="absolute w-full bottom-0   backdrop-blur-sm text-white/70 invisible group-hover/item:visible ">
+                    class="absolute w-full bottom-0 backdrop-blur-sm text-white/70 invisible group-hover/item:visible ">
                     <div class="p-3">
                         <div class="line-clamp-2 text-[13px]">
                             <template v-if="item.prompt">{{ item.prompt }}</template>
@@ -180,19 +186,12 @@ loadImg();
                                 v-html="$t('mjchat.blend')"></NTag>
                             <NTag v-else type="success" size="small" round>{{ item.action }}</NTag>
                         </div>
-                        <div class="line-clamp-1 text-[12px] text-right">{{ new Date(item.time).toLocaleString() }}
+                        <div class="line-clamp-1 text-[12px] text-right">{{ new Date(item.createTime).toLocaleString()
+                            }}
                         </div>
-                        <div class="space-x-2">
-
-                            <!-- <NButton type="primary" size="small" @click="copy(item )" >复制</NButton> -->
-
-                            <!-- <NButton type="primary" size="small" @click="same(item,'same2' )" >引用</NButton>
-                <NButton type="primary" size="small"  @click="same(item,'same' )">画同款</NButton> -->
-
-                        </div>
+                        <div class="space-x-2"></div>
                     </div>
                 </div>
-                <!-- <p class="text">这是具体内容</p> -->
             </div>
         </template>
     </Waterfall>
@@ -203,12 +202,7 @@ loadImg();
     <div v-else class="w-full h-full flex justify-center items-center">
         <n-empty :description="$t('mjchat.noproduct')" />
     </div>
-
-
     <NImage :src="st.showImg" ref="showImg" v-if="st.showImg" :width="1" />
-    <!-- <NButton type="primary" size="small" @click="copy2('abdd' )" >复制</NButton> -->
-
-    <!-- <div @click="copy2('abdd' )">复制测试</div> -->
 </template>
 
 <style>

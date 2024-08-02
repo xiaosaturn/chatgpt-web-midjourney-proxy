@@ -1,4 +1,8 @@
-import { getUserById, getUserByEmail, insertUser, updateUser, insertUserPoint, insertUserLevelRecord } from '../db/userModel';
+import {
+    getUserById, getUserByEmail, insertUser, updateUser, insertUserPoint,
+    insertUserLevelRecord, insertImage,
+    selectImagesByUserId
+} from '../db/userModel';
 import { Request, Response, NextFunction } from 'express';
 import { getRedisValue, setRedisValue } from '../db/redis';
 import nodemailer from 'nodemailer';
@@ -163,6 +167,30 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
     }
 }
 
+// const insertImage = async (obj: any, req: Request, res: Response, next: NextFunction) => { 
+//     const result = await insertImages({
+//         id: obj.id,
+//         imageUrl: req.body.r
+//         prompt: req.body.prompt,
+//         action: req.body.action
+//     });
+//     return res.send({
+//         code: 200,
+//         msg: 'success',
+//     });
+// }
+
+const queryAllImages = async (obj: any, req: Request, res: Response, next: NextFunction) => {
+    const result = await selectImagesByUserId(obj.id);
+    return res.send({
+        code: 200,
+        msg: 'success',
+        data: {
+            list: result
+        }
+    });
+}
+
 const verificationCode = async (req, res) => {
     const email = req.query.email;
     const info = await sendMail(email);
@@ -227,5 +255,6 @@ export {
     registerUser,
     verificationCode,
     sendMail,
-    updateUserInfo
+    updateUserInfo,
+    queryAllImages
 }

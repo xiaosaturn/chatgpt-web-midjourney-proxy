@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import moment from 'moment'; // 使用moment库来处理日期，更方便
 import https from 'https'
 import http from 'http'
+import { insertImage } from '../db/userModel'
 
 // const { logger } = require('./serviceLogger');
 
@@ -63,7 +64,13 @@ const uploadFile3 = async (req: Request, res: Response) => {
         const imageData = await downloadImage(imageUrl); // 下载图片数据
 
         if (imageData) {
-            const url = await uploadFile(randomString(), imageData);
+            const url = await uploadFile(randomString(), imageData); // url有了，然后存数据库
+            const result = await insertImage({
+                id: req.query.id,
+                imageUrl: url,
+                prompt: req.body.prompt,
+                action: req.body.action
+            });
             res.send({
                 code: 200,
                 msg: 'success',
@@ -73,7 +80,7 @@ const uploadFile3 = async (req: Request, res: Response) => {
             res.send({
                 code: 405,
                 msg: 'file not exist',
-            })
+            });
         }
     });
 }

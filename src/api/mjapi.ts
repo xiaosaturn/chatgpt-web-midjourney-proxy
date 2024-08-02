@@ -6,6 +6,7 @@ import { copyToClip } from "@/utils/copy";
 import { isNumber } from "@/utils/is";
 import { localGet, localSaveAny } from "./mjsave";
 import { t } from "@/locales";
+import request from '@/api/myAxios'
 
 //import { useMessage } from "naive-ui";
 export interface gptsType {
@@ -222,7 +223,11 @@ export const flechTask = (chat: Chat.Chat) => {
         if (ts.progress && ts.progress == "100%") {
             chat.loading = false;
             // 将图片上传到COS，并存储到数据库，ts.imageUrl
-            // const imgRes = await 
+            request.post('/app/upload-url', {
+                imageUrl: ts.imageUrl,
+                prompt: ts.promptEn ? ts.promptEn : ts.prompt,
+                action: ts.action
+            });
         }
 
         homeStore.setMyData({ act: 'updateChat', actData: chat });
@@ -280,9 +285,7 @@ export const subTask = async (data: any, chat: Chat.Chat) => {
                 toData.botType = data.bot;
             }
             d = await mjFetch('/mj/submit/imagine', toData);
-            console.log('ddddd:', d)
             mlog('submit', d);
-            //return ;
         }
         if (d.code == 21) {
             d = await mjFetch('/mj/submit/modal', { taskId: d.result });

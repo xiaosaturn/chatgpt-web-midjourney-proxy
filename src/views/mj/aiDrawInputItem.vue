@@ -252,6 +252,7 @@ const uploader = (type: string) => {
     st.value.upType = type;
     fsRef3.value.click();
 }
+
 const selectFile3 = (input: any) => {
     ms.loading('上传中...');
     upImg(input.target.files[0]).then(async (d) => {

@@ -151,6 +151,36 @@ const insertUserLevelRecord = (userId) => {
     });
 }
 
+const insertImage = async (obj) => {
+    const sql = `insert into member_user_photo (user_id, image_url, prompt, action) values (?, ?, ?, ?)`;
+    return new Promise((resolve, reject) => {
+        db.query(sql, [obj.id, obj.imageUrl, obj.prompt, obj.action],
+            (err, result) => {
+                if (err) {
+                    throw Error(err);
+                } else {
+                    resolve(result);
+                }
+            });
+    });
+}
+
+const selectImagesByUserId = async (userId) => {
+    const sql = `select id, user_id as userId, image_url as imageUrl, prompt, action, type, 
+    create_time as createTime, update_time as updateTime
+     from member_user_photo where user_id = ?`;
+    return new Promise((resolve, reject) => {
+        db.query(sql, [userId],
+            (err, result) => {
+                if (err) {
+                    throw Error(err);
+                } else {
+                    resolve(result);
+                }
+            });
+    });
+}
+
 export {
     getUserByEmail,
     getUserById,
@@ -158,5 +188,7 @@ export {
     updateUser,
     insertUserPoint,
     insertUserLevelRecord,
+    selectImagesByUserId,
+    insertImage,
     type User
 }
