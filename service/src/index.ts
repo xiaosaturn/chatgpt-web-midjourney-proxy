@@ -2,7 +2,7 @@ import express from 'express'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
-import { auth, authV2, authV3, authV4, mlog, regCookie, turnstileCheck, verify } from './middleware/auth'
+import { auth, authV2, authV3, authV4, authV5, mlog, regCookie, turnstileCheck, verify } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString, formattedDate } from './utils/is'
 import multer from "multer"
@@ -132,7 +132,7 @@ const API_BASE_URL = isNotEmptyString(process.env.OPENAI_API_BASE_URL)
 
 console.log('API_BASE_URL', API_BASE_URL)
 
-app.use('/mjapi', authV2, authV3, proxy(process.env.MJ_SERVER ? process.env.MJ_SERVER : 'https://api.aijuli.com', {
+app.use('/mjapi', authV2, authV5, proxy(process.env.MJ_SERVER ? process.env.MJ_SERVER : 'https://api.aijuli.com', {
     https: false, limit: '10mb',
     proxyReqPathResolver: function (req) {
         return req.originalUrl.replace('/mjapi', '') // 将URL中的 `/mjapi` 替换为空字符串

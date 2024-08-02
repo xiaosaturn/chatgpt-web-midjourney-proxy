@@ -106,7 +106,7 @@ const levelName = (level) => {
 /**
  * 月度会员，赠送20张midjournary
  * 年度会员，赠送300张midjournary
- * 其他情况，另行购买
+ * 其他情况，另行购买，RMB 0.5/次，
  * */
 const levelPrice = (obj) => {
     if (obj.currency == 'usd') {

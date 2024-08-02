@@ -114,6 +114,7 @@ const clearLimit = (req: Request, res: Response) => {
     ipErrorCount[ipAddress] = 0;
 }
 
+// authV2认证token后，next({ id, email })传参，用户的email和id
 export const authV2 = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.header('Authorization');
     console.log('token', token)
@@ -159,6 +160,7 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
     });
 }
 
+// authV3 校验gpt使用次数，接收 next({ id, email })传参，用户的email和id
 export const authV3 = async (obj: any, req: Request, res: Response, next: NextFunction) => {
     const user: User = await getUserById(obj.id);
     logger.info({
@@ -241,6 +243,7 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
     next()
 }
 
+// authV4只认证token，next()不传参
 export const authV4 = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.header('Authorization');
     console.log('token', token)
@@ -281,6 +284,80 @@ export const authV4 = async (req: Request, res: Response, next: NextFunction) =>
         req.query.id = decoded.id; // 从token里解析出用户id，放到query上
         next();
     });
+}
+
+// authV5 校验midjournary使用次数，接收 next({ id, email })传参，用户的email和id
+export const authV5 = async (obj: any, req: Request, res: Response, next: NextFunction) => {
+    const user: User = await getUserById(obj.id);
+    logger.info({
+        msg: user,
+        label: 'authV5开始认证',
+    });
+    if (req.url.includes('submit') || req.url.includes('insight-face/swap')) {
+        // submit是提交任务，insight-face/swap是换脸，都需要扣除次数，其他查询不扣次数
+        let tempMsgCount;
+        let redisCountKey;
+        if (user.level == 0) {
+            redisCountKey = 'midLevel0-' + obj.id;
+            res.status(405);
+            return res.send({
+                code: 405,
+                msg: 'midjournary仅限月度会员或年度会员，请充值后使用，谢谢'
+            });
+        } else if (user.level == 1) {
+            redisCountKey = 'midLevel1-' + obj.id;
+            tempMsgCount = await getRedisValue(redisCountKey);
+        } else if (user.level == 2) {
+            redisCountKey = 'midLevel2-' + obj.id;
+            tempMsgCount = await getRedisValue(redisCountKey);
+        }
+        let msgCount = Number(tempMsgCount);
+        if (user.expireTime) {
+            // 有值，说明充钱了
+            const expiryDate = moment(user.expireTime); // 将数据库日期转换为moment对象
+            const currentDate = moment(); // 获取当前日期
+            if (user.level == 0) {
+                // 没充值，不给使用
+                return res.send({
+                    code: 405,
+                    msg: 'midjournary仅限月度会员或年度会员，请充值后使用，谢谢'
+                });
+            } else {
+                if (expiryDate.isBefore(currentDate)) {
+                    // 过期了，需要重新充值
+                    res.status(403);
+                    return res.send({
+                        code: 403,
+                        msg: '账户已过期，请联系客服充值'
+                    });
+                } else {
+                    // 没过期，判断是否超过为0
+                    if (msgCount <= 0) {
+                        res.status(405);
+                        return res.send({
+                            code: 405,
+                            msg: 'midjournary使用次数已用完，请充值后使用，谢谢'
+                        });
+                    }
+                }
+            }
+        } else {
+            // 没值，不可体验midjournary
+            if (msgCount <= 0) {
+                res.status(405);
+                return res.send({
+                    code: 405,
+                    msg: 'midjournary仅限月度会员或年度会员，请充值后使用，谢谢'
+                });
+            }
+        }
+        // 将msgCount--
+        msgCount--;
+        await setRedisValue(redisCountKey, msgCount);
+    }
+    req.query.email = obj.email; // 从token里解析出用户email，放到query上
+    req.query.id = obj.id; // 从token里解析出用户id，放到query上
+    next()
 }
 
 export const turnstileCheck = async (req: Request, res: Response, next: NextFunction) => {
