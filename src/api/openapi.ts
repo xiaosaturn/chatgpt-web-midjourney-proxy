@@ -23,7 +23,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
     "gpt-4-turbo-2024-04-09": "2023-12",
     "gpt-4o-2024-05-13": "2023-10",
     "gpt-4o": "2023-10",
-    "gpt-4o-mini": "2023-10", 
+    "gpt-4o-mini": "2023-10",
     "gpt-4-turbo": "2023-12",
     "gpt-4-turbo-preview": "2023-12",
     "claude-3-opus-20240229": "2023-08",
@@ -50,7 +50,11 @@ export const gptFetch = (url: string, data?: any, opt2?: any) => {
     let headers = { 'Content-Type': 'application/json' }
     if (opt2 && opt2.headers) headers = opt2.headers;
 
-    headers = { ...headers, ...getHeaderAuthorization() }
+    headers = {
+        ...headers, ...getHeaderAuthorization(), ...{
+            'Authorization': gptServerStore.myData.SERVICE_TOKEN
+        }
+    }
     return new Promise<any>((resolve, reject) => {
         let opt: RequestInit = { method: 'GET' };
         opt.headers = headers;
@@ -86,6 +90,7 @@ export const regCookie = async (n: string) => {
 
     mlog('regCookie:', ck, n)
 }
+
 // 前端直传 cloudflare r2
 function uploadR2(file: File) {
     return new Promise<any>((resolve, reject) => {
@@ -214,7 +219,6 @@ export const subGPT = async (data: any, chat: Chat.Chat) => {
     //chat.myid=  `${Date.now()}`;
     if (action == 'gpt.dall-e-3') { //执行变化
         // chat.model= 'dall-e-3';
-
         let d = await gptFetch('/v1/images/generations', data.data);
         try {
             const rz: any = d.data[0];
@@ -329,9 +333,11 @@ export const subModel = async (opt: subModelType) => {
         'Accept': 'text/event-stream',
     }
     headers = { ...headers, ...getHeaderAuthorization() }
-    headers = { ...headers, ...{
-        'Authorization': gptServerStore.myData.SERVICE_TOKEN
-    }}
+    headers = {
+        ...headers, ...{
+            'Authorization': gptServerStore.myData.SERVICE_TOKEN
+        }
+    }
     try {
         await fetchSSE(gptGetUrl('/v1/chat/completions'), {
             method: 'POST',
