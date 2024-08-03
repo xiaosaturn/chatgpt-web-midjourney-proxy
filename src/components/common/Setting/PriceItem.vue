@@ -27,6 +27,7 @@
                     </svg>
                     {{ rObj.numberStr }}
                 </li>
+                <!-- 
                 <li v-if="props.type != 1" class="flex gap-x-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 flex-none text-blue-600" viewBox="0 0 24 24"
                         stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
@@ -36,7 +37,8 @@
                         <path d="M9 12l2 2l4 -4"></path>
                     </svg>
                     次数不够，可联系客服免费增加次数
-                </li>
+                </li> -->
+
                 <li class="flex gap-x-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 flex-none text-blue-600" viewBox="0 0 24 24"
                         stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
@@ -45,16 +47,26 @@
                         <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
                         <path d="M9 12l2 2l4 -4"></path>
                     </svg>
-                    {{ rObj.text }}
+                    {{ $t('price.text2') }}
+                </li>
+                <li v-if="props.type != 1" class="flex gap-x-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 flex-none text-blue-600" viewBox="0 0 24 24"
+                        stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+                        <path d="M9 12l2 2l4 -4"></path>
+                    </svg>
+                    {{ rObj.midjournaryText }}
                 </li>
             </ul>
         </div>
 
-        <n-popselect v-if="props.type > 1" v-model:value="rObj.selectValue" :options="rObj.options" :on-update:value="checkoutStripe">
-            <n-button round :loading="loading" aria-describedby="tier-pro"
-                type="primary"
-                class="cursor-pointer mt-8 block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold leading-6 text-blue-50 shadow-sm hover:bg-blue-700">Buy
-                plan</n-button>
+        <n-popselect v-if="props.type > 1" v-model:value="rObj.selectValue" :options="rObj.options"
+            :on-update:value="checkoutStripe">
+            <n-button round :loading="loading" aria-describedby="tier-pro" type="primary"
+                class="cursor-pointer mt-8 block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold leading-6 text-blue-50 shadow-sm hover:bg-blue-700">{{
+                    $t('price.buy') }}</n-button>
         </n-popselect>
     </div>
 </template>
@@ -63,6 +75,8 @@
 import { ref, onMounted, reactive } from 'vue'
 import request from '@/api/myAxios'
 import { useNotification, NImage, NButton, NSpace, NPopselect, NPopconfirm, NDialog, NInput, useDialog } from 'naive-ui'
+import { t } from '@/locales'
+
 const notification = useNotification()
 
 const loading = ref(false)
@@ -85,14 +99,11 @@ const rObj = reactive({
     priceWay: '/一次性',
     numberStr: '5条消息',
     text: `所有AI模型均可使用
-          (包括GPT-4o-mini、GPT-4o、GPT-4、GPT-3.5、Claude-3.5、Gemini-Pro、GLM、Moonshot等等)`
+          (包括GPT-4o-mini、GPT-4o、GPT-4、GPT-3.5、Claude-3.5、Gemini-Pro、GLM、Moonshot等等)`,
+    midjournaryText: ''
 })
 
 const checkoutStripe = async (value: string) => {
-    // console.log('addd', props.type)
-    // console.log('value', value)
-    // console.log('addd22', rObj.selectValue)
-    // return;
     loading.value = true;
     const res = await request.post('/api/app/money/create-checkout-session', {
         level: props.type,
@@ -117,25 +128,27 @@ const checkoutStripe = async (value: string) => {
 onMounted(() => {
     if (props.type == 1) {
         // 5次体验，一次性
-        rObj.type = '免费版'
-        rObj.typeStr = '✨ 免费体验'
+        rObj.type = t('price.free')
+        rObj.typeStr = `✨ ${t('price.freeUse')}`
         rObj.price = '0'
-        rObj.priceWay = '/一次性'
-        rObj.numberStr = '赠送5条消息，免费尝鲜'
+        rObj.priceWay = `/${t('price.oneTime')}`
+        rObj.numberStr = t('price.text1')
     } else if (props.type == 2) {
         // 1个月 9.9，限制每天50次
-        rObj.type = '按月付费'
-        rObj.typeStr = '🚀 小试牛刀'
+        rObj.type = t('price.monthly')
+        rObj.typeStr = `🚀 ${t('price.monthlyUse')}`
         rObj.price = '9.9'
-        rObj.priceWay = '/月'
-        rObj.numberStr = '每天50条消息'
+        rObj.priceWay = `/${t('price.month')}`
+        rObj.numberStr = t('price.text3')
+        rObj.midjournaryText = t('price.text5')
     } else if (props.type == 3) {
         // 1年99， 限制每天100次
-        rObj.type = '按年付费'
-        rObj.typeStr = '最划算'
+        rObj.type = t('price.yearly')
+        rObj.typeStr = t('price.yearlyUse')
         rObj.price = '99'
-        rObj.priceWay = '/年'
-        rObj.numberStr = '每天100条消息'
+        rObj.priceWay = `/${t('price.year')}`
+        rObj.numberStr = t('price.text4')
+        rObj.midjournaryText = t('price.text6')
     }
 })
 

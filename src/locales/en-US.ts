@@ -486,11 +486,33 @@ export default {
         moban: "Dance Template",
         moban2: "Template Name",
         use: "Use"
+    },
+
+    price: {
+        free: 'Free',
+        freeUse: 'Free Trial',
+        oneTime: 'One-Time',
+        monthly: 'Monthly',
+        monthlyUse: 'Most popular',
+        month: 'month',
+        yearly: 'Yearly',
+        yearlyUse: 'The Best Way',
+        year: 'year',
+        text1: '5 free messages daily, Experience it at no cost',
+        text2: 'All AI model can use（include GPT-4o、GPT-4o-mini、GPT-3.5、Claude-3.5、Gemini-Pro、GLM、Moonshot, etc）',
+        text3: '50 free messages daily（Contact customer service for free additional uses）',
+        text4: '100 free messages daily（Contact customer service for free additional uses）',
+        text5: 'Gift of 20 free drawing attempts',
+        text6: 'Gift of 300 free drawing attempts',
+        buy: 'Buy',
+        contact: 'If you have any questions, please contact customer service',
+        telegram: 'Telegram',
+        wechat: 'WeChat',
+        twitter: 'X(Twitter)',
+        email: 'Email',
+        creditCard: 'Credit Card/Debit Card',
+        wechatpay: 'WeChat Pay',
+        alipay: 'Alipay'
     }
-
-
-
-
-
 
 }

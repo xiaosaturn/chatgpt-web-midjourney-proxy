@@ -21,7 +21,7 @@
                 <PriceItem :type="2" />
                 <PriceItem :type="3" />
                 <div class="flex flex-col items-center">
-                    <div class="text-[18px] font-bold">支付遇到问题，联系客服</div>
+                    <div class="text-[16px] font-bold">如有问题，请联系客服</div>
                     <div class="text-[20px] font-bold">电报：@MasterH0</div>
                     <div class="text-[20px] font-bold">微信：XKSaturn</div>
                     <div class="text-[20px] font-bold">推特：@MasterHXK</div>
@@ -68,5 +68,4 @@ const copyToClipboard = () => {
         height: calc(100% - 55px);
     }
 }
-
 </style>

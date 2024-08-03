@@ -110,7 +110,6 @@ export default {
         downloadError: '请检查网络状态与 JSON 文件有效性',
     },
 
-
     mjset: {
         server: '服务端',
         about: '关于',
@@ -126,8 +125,8 @@ export default {
         galleryInfo: '我的画廊',
         price: '定价',
         me: '我的'
-    }
-    , mjchat: {
+    },
+    mjchat: {
         loading: '正在载入图片'
         , openurl: '直接打开链接'
         , failReason: '失败原因：'
@@ -498,7 +497,32 @@ export default {
         moban: '舞蹈模版',
         moban2: '模版名称',
         use: '使用',
+    },
+
+    price: {
+        free: '免费版',
+        freeUse: '免费体验',
+        oneTime: '一次性',
+        monthly: '按月付费',
+        monthlyUse: '小试牛刀',
+        month: '月',
+        yearly: '按年付费',
+        yearlyUse: '最划算',
+        year: '年',
+        text1: '每天赠送5条消息，免费尝鲜',
+        text2: '所以AI模型均可使用（包括GPT-4o、GPT-4o-mini、GPT-3.5、Claude-3.5、Gemini-Pro、GLM、Moonshot等等）',
+        text3: '每天50条消息（联系客服可免费增加次数）',
+        text4: '每天100条消息（联系客服可免费增加次数）',
+        text5: '赠送20次绘画次数',
+        text6: '赠送300次绘画次数',
+        buy: '购买',
+        contact: '如有问题，请联系客服',
+        telegram: '电报',
+        wechat: '微信',
+        twitter: '推特',
+        email: '邮箱',
+        creditCard: 'Credit Card/Debit Card',
+        wechatpay: '微信支付',
+        alipay: '支付宝支付'
     }
-
-
 }
