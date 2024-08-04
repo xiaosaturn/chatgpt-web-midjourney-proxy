@@ -207,7 +207,8 @@ export default {
         "draw": "繪畫",
         "drawinfo": "AI繪畫 Midjourney引擎",
         "gallery": "畫廊",
-        "galleryInfo": "我的畫廊"
+        "galleryInfo": "我的畫廊",
+        price: '定價'
     },
     "mjchat": {
         "loading": "正在載入圖片",
@@ -459,6 +460,33 @@ export default {
         moban: "跳舞模板",
         moban2: "模板名稱",
         use: "使用"
+    },
+
+    price: {
+        free: '免費版',
+        freeUse: '免費體驗',
+        oneTime: '一次性',
+        monthly: '按月付費',
+        monthlyUse: '小試牛刀',
+        month: '月',
+        yearly: '按年付費',
+        yearlyUse: '最划算',
+        year: '年',
+        text1: '每天贈送5條消息，免費嘗鮮',
+        text2: '所以AI模型均可使用（包括GPT-4o、GPT-4o-mini、GPT-3.5、Claude-3.5、Gemini-Pro、GLM、Moonshot等等）',
+        text3: '每天50條消息（聯繫客服可免費增加次數）',
+        text4: '每天100條消息（聯繫客服可免費增加次數）',
+        text5: '贈送20次繪畫次數',
+        text6: '贈送300次繪畫次數',
+        buy: '購買',
+        contact: '如有問題，請聯繫客服',
+        telegram: '電報',
+        wechat: '微信',
+        twitter: '推特',
+        email: '郵箱',
+        creditCard: 'Credit Card/Debit Card',
+        wechatpay: '微信支付',
+        alipay: '支付寶支付'
     }
 
 }

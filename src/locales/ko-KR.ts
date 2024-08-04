@@ -74,6 +74,7 @@ export default {
         httpsProxy: 'HTTPS 프록시',
         balance: 'API 잔액',
         monthlyUsage: '월 사용량',
+        price: '가격',
     },
     store: {
         siderButton: '프롬프트 저장소',
@@ -200,11 +201,12 @@ export default {
         , "sysname": "AI 그림"
     },
     "mjtab": {
-        "chat": "대화"
-        , "draw": "그림"
-        , "drawinfo": "AI 그림 Midjourney 엔진"
-        , "gallery": "갤러리"
-        , "galleryInfo": "내 갤러리"
+        "chat": "대화",
+        "draw": "그림",
+        "drawinfo": "AI 그림 Midjourney 엔진",
+        "gallery": "갤러리",
+        "galleryInfo": "내 갤러리",
+        price: '가격'
     },
     "mjchat": {
         "loading": "이미지 로드 중"
@@ -459,6 +461,34 @@ export default {
         moban: "댄스 템플릿",
         moban2: "템플릿 이름",
         use: "사용"
+    },
+
+    price: {
+        free: '무료 버전',
+        freeUse: '무료 체험',
+        oneTime: '일회성',
+        monthly: '월 결제',
+        monthlyUse: '소규모 체험',
+        month: '월',
+        yearly: '연 결제',
+        yearlyUse: '가장 경제적',
+        year: '년',
+        text1: '매일 5개의 메시지 무료 제공, 무료로 체험해보세요',
+        text2: '모든 AI 모델 사용 가능 (GPT-4o, GPT-4o-mini, GPT-3.5, Claude-3.5, Gemini-Pro, GLM, Moonshot 등 포함)',
+        text3: '하루 50개의 메시지 (고객 서비스에 문의하면 무료로 횟수 증가 가능)',
+        text4: '하루 100개의 메시지 (고객 서비스에 문의하면 무료로 횟수 증가 가능)',
+        text5: '20회 무료 그림 그리기 기회 제공',
+        text6: '300회 무료 그림 그리기 기회 제공',
+        buy: '구매',
+        contact: '문의 사항이 있으시면 고객 서비스에 연락해 주세요',
+        telegram: '텔레그램',
+        wechat: '위챗',
+        twitter: '트위터',
+        email: '이메일',
+        creditCard: 'Credit Card/Debit Card',
+        wechatpay: '위챗페이',
+        alipay: '알리페이'
     }
+
 
 }

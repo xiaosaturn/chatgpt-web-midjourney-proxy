@@ -74,6 +74,7 @@ export default {
         httpsProxy: 'Proxy HTTPS',
         balance: 'Solde de l\'API',
         monthlyUsage: 'Utilisation Mensuelle',
+        price: 'Tarification'
     },
     store: {
         siderButton: 'Prompt Boutique',
@@ -206,7 +207,8 @@ export default {
         "draw": "Dessin",
         "drawinfo": "Dessin AI avec le Moteur Midjourney",
         "gallery": "Galerie",
-        "galleryInfo": "Ma Galerie"
+        "galleryInfo": "Ma Galerie",
+        price: 'Tarification'
     },
     "mjchat": {
         "loading": "Chargement de l'Image",
@@ -459,6 +461,34 @@ export default {
         moban: "Modèle de danse",
         moban2: "Nom du modèle",
         use: "Utiliser"
-    }
+    },
+
+    price: {
+        free: 'Version gratuite',
+        freeUse: 'Essai gratuit',
+        oneTime: 'Paiement unique',
+        monthly: 'Paiement mensuel',
+        monthlyUse: 'Essai mensuel',
+        month: 'Mois',
+        yearly: 'Paiement annuel',
+        yearlyUse: 'Meilleur rapport qualité-prix',
+        year: 'An',
+        text1: '5 messages gratuits par jour, essayez gratuitement',
+        text2: "Tous les modèles d'IA sont disponibles(y compris GPT- 4o, GPT- 4o - mini, GPT - 3.5, Claude - 3.5, Gemini - Pro, GLM, Moonshot, etc.) ",
+        text3: '50 messages par jour (contactez le service client pour augmenter gratuitement le nombre)',
+        text4: '100 messages par jour (contactez le service client pour augmenter gratuitement le nombre)',
+        text5: '20 utilisations gratuites de la fonction de dessin',
+        text6: '300 utilisations gratuites de la fonction de dessin',
+        buy: 'Acheter',
+        contact: 'Si vous avez des questions, veuillez contacter le service client',
+        telegram: 'Telegram',
+        wechat: 'WeChat',
+        twitter: 'Twitter',
+        email: 'E-mail',
+        creditCard: 'Carte de crédit/Carte de débit',
+        wechatpay: 'Paiement WeChat',
+        alipay: 'Paiement Alipay'
+    },
+
 
 }

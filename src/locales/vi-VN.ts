@@ -72,6 +72,7 @@ export default {
         httpsProxy: 'HTTPS Proxy',
         balance: 'API Balance',
         monthlyUsage: 'Sử dụng hàng tháng',
+        price: 'Giá cả'
     },
     store: {
         siderButton: 'Prompt Store',
@@ -205,7 +206,8 @@ export default {
         "draw": "Vẽ",
         "drawinfo": "Vẽ trí tuệ nhân tạo Midjourney",
         "gallery": "sách",
-        "galleryInfo": "Phòng trưng bày của tôi"
+        "galleryInfo": "Phòng trưng bày của tôi",
+        price: 'Giá cả'
     },
     "mjchat": {
         "loading": "Đang tải hình ảnh",
@@ -459,6 +461,34 @@ export default {
         moban: "Mẫu nhảy múa",
         moban2: "Tên mẫu",
         use: "Sử dụng"
+    },
+
+    price: {
+        free: 'Phiên bản miễn phí',
+        freeUse: 'Dùng thử miễn phí',
+        oneTime: 'Một lần',
+        monthly: 'Thanh toán hàng tháng',
+        monthlyUse: 'Thử nghiệm',
+        month: 'Tháng',
+        yearly: 'Thanh toán hàng năm',
+        yearlyUse: 'Tiết kiệm nhất',
+        year: 'Năm',
+        text1: 'Tặng 5 tin nhắn mỗi ngày, dùng thử miễn phí',
+        text2: 'Có thể sử dụng tất cả các mô hình AI (bao gồm GPT-4o, GPT-4o-mini, GPT-3.5, Claude-3.5, Gemini-Pro, GLM, Moonshot, v.v.)',
+        text3: '50 tin nhắn mỗi ngày (có thể tăng số lượng miễn phí khi liên hệ với dịch vụ khách hàng)',
+        text4: '100 tin nhắn mỗi ngày (có thể tăng số lượng miễn phí khi liên hệ với dịch vụ khách hàng)',
+        text5: 'Tặng 20 lần vẽ',
+        text6: 'Tặng 300 lần vẽ',
+        buy: 'Mua',
+        contact: 'Nếu có vấn đề, vui lòng liên hệ với dịch vụ khách hàng',
+        telegram: 'Telegram',
+        wechat: 'WeChat',
+        twitter: 'Twitter',
+        email: 'Email',
+        creditCard: 'Thẻ tín dụng/Thẻ ghi nợ',
+        wechatpay: 'Thanh toán WeChat',
+        alipay: 'Thanh toán Alipay'
     }
+
 
 }

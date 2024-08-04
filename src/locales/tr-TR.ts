@@ -74,6 +74,7 @@ export default {
         httpsProxy: 'HTTPS Proxy',
         balance: 'API Bakiyesi',
         monthlyUsage: 'Aylık Kullanım',
+        price: 'Fiyatlandırma'
     },
     store: {
         siderButton: 'Prompt Mağazası',
@@ -205,7 +206,8 @@ export default {
         "draw": "Çizim",
         "drawinfo": "Midjourney Motoru ile Yapay Zeka Çizimi",
         "gallery": "Galeri",
-        "galleryInfo": "Benim Galerim"
+        "galleryInfo": "Benim Galerim",
+        price: 'Fiyatlandırma'
     },
     "mjchat": {
         "loading": "Resim Yükleniyor",
@@ -457,5 +459,33 @@ export default {
         moban: "Dans Şablonu",
         moban2: "Şablon Adı",
         use: "Kullan"
+    },
+
+    price: {
+        free: 'Ücretsiz sürüm',
+        freeUse: 'Ücretsiz deneme',
+        oneTime: 'Tek seferlik',
+        monthly: 'Aylık ödeme',
+        monthlyUse: 'Kısa deneme',
+        month: 'Ay',
+        yearly: 'Yıllık ödeme',
+        yearlyUse: 'En uygun fiyat',
+        year: 'Yıl',
+        text1: 'Her gün 5 ücretsiz mesaj, ücretsiz deneme',
+        text2: 'Tüm AI modelleri kullanılabilir (GPT-4o, GPT-4o-mini, GPT-3.5, Claude-3.5, Gemini-Pro, GLM, Moonshot vb. dahil)',
+        text3: 'Günde 50 mesaj (müşteri hizmetleriyle iletişime geçerek ücretsiz artırılabilir)',
+        text4: 'Günde 100 mesaj (müşteri hizmetleriyle iletişime geçerek ücretsiz artırılabilir)',
+        text5: '20 ücretsiz çizim hakkı',
+        text6: '300 ücretsiz çizim hakkı',
+        buy: 'Satın al',
+        contact: 'Sorularınız için lütfen müşteri hizmetleriyle iletişime geçin',
+        telegram: 'Telegram',
+        wechat: 'WeChat',
+        twitter: 'Twitter',
+        email: 'E-posta',
+        creditCard: 'Kredi Kartı/Banka Kartı',
+        wechatpay: 'WeChat Pay',
+        alipay: 'Alipay'
     }
+
 }
