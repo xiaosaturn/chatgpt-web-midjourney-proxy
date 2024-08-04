@@ -40,6 +40,7 @@ app.use(express.static('public', {
 
 //app.use(express.json())
 app.use(bodyParser.json({ limit: '10mb' })); //大文件传输
+// app.use(bodyParser.raw({ type: 'application/json' })); 
 
 app.all('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
@@ -381,7 +382,8 @@ router.post('/app/user/login', login);
 router.put('/app/user', authV2, updateUserInfo);
 
 router.post('/app/money/create-checkout-session', authV2, createCheckoutSession);
-router.post('/webhook', webhookStripe);
+router.post('/app/stripe/callback', webhookStripe);
+app.post('/app/stripe/callback', bodyParser.raw({ type: '*/*' }), webhookStripe);
 
 // 创建 multer 的实例
 const upload3 = multer();

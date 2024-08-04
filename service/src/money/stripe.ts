@@ -3,11 +3,12 @@ import { Request, Response, NextFunction } from 'express';
 import exp from 'constants';
 import { logger } from '../utils/logger';
 
-const stripe2 = new stripe(process.env.StripeKey)
+const stripe2 = new stripe('sk_test_51NFoodQPQTn5KJriUS5tQZ8sgmdcbXIRsomLbS1R4J3eaBU8N9Ey5Gc0WDCRSNBREkgvf6mrPsgD88pi5sdZX2a400sJNxl9AM'); // test
+// const stripe2 = new stripe(process.env.StripeKey)
 
 // Use the secret provided by Stripe CLI for local testing
 // or your webhook endpoint's secret.
-const endpointSecret = 'whsec_...';
+const endpointSecretTest = 'whsec_14b5750b5b751a5fa0eb0eaaeae2107bf6978b2baf07dc0dacf4ba4b08c2edfb';
 
 const createCheckoutSession = async (obj: any, req: Request, res: Response, next: NextFunction) => {
     logger.info({
@@ -65,8 +66,10 @@ const fulfillCheckout = async (sessionId) => {
     const checkoutSession = await stripe2.checkout.sessions.retrieve(sessionId, {
         expand: ['line_items'],
     });
+    console.log('fulfillCheckout', checkoutSession.payment_status);
     // 'no_payment_required' | 'paid' | 'unpaid';
     if (checkoutSession.payment_status == 'paid') {
+        console.log('fulfillCheckout paid', checkoutSession.payment_status);
         // TODO: Perform fulfillment of the line items
 
         // TODO: Record/save fulfillment status for this
@@ -76,23 +79,44 @@ const fulfillCheckout = async (sessionId) => {
     }
 }
 
-const webhookStripe = async (obj: any, req: Request, res: Response, next: NextFunction) => {
+const webhookStripe = async (req: Request, res: Response, next: NextFunction) => {
+    logger.info({
+        msg: req,
+        label: '接收到stripe的回调',
+    });
     const payload = req.body;
     const sig = req.headers['stripe-signature'];
 
     let event;
 
     try {
-        event = stripe2.webhooks.constructEvent(payload, sig, endpointSecret);
+        event = stripe2.webhooks.constructEvent(payload, sig, endpointSecretTest); // test
+        // event = stripe2.webhooks.constructEvent(payload, sig, process.env.endpointSecret);
     } catch (err) {
+        logger.info({
+            msg: err.message,
+            label: 'constructEvent解析出错啦'
+        })
         return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    if (
-        event.type === 'checkout.session.completed'
-        || event.type === 'checkout.session.async_payment_succeeded'
-    ) {
-        fulfillCheckout(event.data.object.id);
+    logger.info({
+        msg: event,
+        label: 'stripe event'
+    });
+    switch (event.type) {
+        case 'checkout.session.completed':
+            fulfillCheckout(event.data.object.id);
+            break;
+        case 'checkout.session.async_payment_succeeded':
+            fulfillCheckout(event.data.object.id);
+            break;
+        case 'payment_intent.succeeded':
+        // Then define and call a method to handle the successful payment intent.
+            break;
+        case 'payment_intent.failed':
+            // Then define and call a method to handle the failed payment intent.
+            break;
     }
 
     res.status(200).end();
