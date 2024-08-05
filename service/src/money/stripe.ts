@@ -90,8 +90,8 @@ const webhookStripe = async (req: Request, res: Response, next: NextFunction) =>
     let event;
 
     try {
-        event = stripe2.webhooks.constructEvent(payload, sig, endpointSecretTest); // test
-        // event = stripe2.webhooks.constructEvent(payload, sig, process.env.endpointSecret);
+        // event = stripe2.webhooks.constructEvent(payload, sig, endpointSecretTest); // test
+        event = stripe2.webhooks.constructEvent(payload, sig, process.env.StripeWebhookKey);
     } catch (err) {
         logger.info({
             msg: err.message,
