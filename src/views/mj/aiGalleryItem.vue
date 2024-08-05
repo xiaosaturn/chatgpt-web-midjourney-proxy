@@ -47,13 +47,16 @@ const breakpoints = {
 }
 
 const loadImg = async () => {
-    const res = await request.get('/app/image-list');
-    if (res.code == 200) {
-        list.value = res.data.list;
-    }
+    // const res = await request.get('/app/image-list');
+    // if (res.code == 200) {
+    //     list.value = res.data.list;
+    // }
     //mlog('local',homeStore.myData.session.isApiGallery );
-    // if (homeStore.myData.session.isApiGallery) loadApiGallery();
-    // else loadImagFormLocal();
+    if (homeStore.myData.session.isApiGallery) {
+        loadApiGallery();
+    } else {
+        loadImagFormLocal();
+    }
 }
 
 const loadApiGallery = async () => {
@@ -168,7 +171,7 @@ loadImg();
     <Waterfall :list="list" :breakpoints="breakpoints" class="!bg-transparent" v-if="list.length">
         <template #item="{ item, url, index }">
             <div class="bg-white dark:bg-[#24272e] rounded-md   overflow-hidden cursor-pointer group/item relative">
-                <LazyImg :url="item.imageUrl" @success="item.isLoad = 1" @click="goShow(item)" />
+                <LazyImg :url="item.image_url" @success="item.isLoad = 1" @click="goShow(item)" />
                 <!-- <LazyImg :url="item.image_hd_url"  @success="item.isLoad=1" /> -->
                 <div class="absolute top-0 left-0 right-0 bottom-0" v-if="item.isLoad == 0">
                     <div class="flex justify-center items-center w-full h-full">
@@ -186,7 +189,7 @@ loadImg();
                                 v-html="$t('mjchat.blend')"></NTag>
                             <NTag v-else type="success" size="small" round>{{ item.action }}</NTag>
                         </div>
-                        <div class="line-clamp-1 text-[12px] text-right">{{ new Date(item.createTime).toLocaleString()
+                        <div class="line-clamp-1 text-[12px] text-right">{{ new Date(item.time).toLocaleString()
                             }}
                         </div>
                         <div class="space-x-2"></div>
