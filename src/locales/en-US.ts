@@ -1,5 +1,6 @@
 export default {
     common: {
+        webTitle: 'All AI，Your Second Brain',
         add: 'Add',
         addSuccess: 'Add Success',
         edit: 'Edit',

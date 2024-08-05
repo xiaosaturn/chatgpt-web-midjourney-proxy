@@ -1,5 +1,6 @@
 export default {
     common: {
+        webTitle: 'All AI，您的第二个大脑',
         add: '添加',
         addSuccess: '添加成功',
         edit: '编辑',

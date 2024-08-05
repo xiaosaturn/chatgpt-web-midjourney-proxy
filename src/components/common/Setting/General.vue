@@ -459,6 +459,13 @@ const submitAvatar = async () => {
     }
 }
 
+const updateLanguage = (value: Language) => {
+    appStore.setLanguage(value);
+    setTimeout(() => {
+        document.title = t('common.webTitle');
+    }, 100)
+}
+
 onMounted(() => {
     getUserInfo();
 })
@@ -474,8 +481,7 @@ onMounted(() => {
                 <NButton size="tiny" type="primary" round @click="updateAvatar">
                     {{ $t('common.updateAvatar') }}
                 </NButton>
-                <input type="file" ref="fileInput" accept="image/*" style="display: none;"
-                        @change="handleFileChange">
+                <input type="file" ref="fileInput" accept="image/*" style="display: none;" @change="handleFileChange">
             </div>
             <div class="flex items-center space-x-4">
                 <span class="flex-shrink-0 w-[100px]">{{ $t('setting.nickname') }}</span>
@@ -571,7 +577,7 @@ onMounted(() => {
                 <span class="flex-shrink-0 w-[100px]">{{ $t('setting.language') }}</span>
                 <div class="flex flex-wrap items-center gap-4">
                     <NSelect style="width: 140px" :value="language" :options="languageOptions"
-                        @update-value="value => appStore.setLanguage(value)" />
+                        @update-value="updateLanguage" />
                 </div>
             </div>
             <div class="flex items-center space-x-4">
