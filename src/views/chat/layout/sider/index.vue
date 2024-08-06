@@ -91,11 +91,11 @@ watch(
                 </div>
                 <div class="flex items-center p-4 space-x-4">
                     <div class="flex-1">
-                        <NButton block round @click="show = true">
+                        <NButton block round color="#ff80ff" @click="show = true">
                             {{ $t('store.siderButton') }}
                         </NButton>
                     </div>
-                    <NButton round @click="handleClearAll">
+                    <NButton round type="warning" circle @click="handleClearAll">
                         <SvgIcon icon="ri:close-circle-line" />
                     </NButton>
                 </div>

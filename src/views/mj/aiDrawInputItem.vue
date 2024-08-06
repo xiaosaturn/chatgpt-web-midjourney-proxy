@@ -417,33 +417,15 @@ const selectFile3 = (input: any) => {
                 </div>
 
             </div>
-
-
-            <!-- <div class="flex "  v-if="$t('mjchat.imgcreate').indexOf('生成图片')!==-1">
-         <n-button type="primary" :block="true" :disabled="isDisabled"  @click="create()">
-            <SvgIcon icon="mingcute:send-plane-fill" />
-
-            <template v-if="st.isLoad">{{$t('mjchat.traning')}} </template>
-            <template v-else> {{$t('mjchat.imgcreate')}}</template>
-
-        </n-button>
-        </div> -->
-
-
         </div>
-
-
-
         <div class="flex">
             <n-button type="primary" :block="true" :disabled="isDisabled" @click="create()">
                 <SvgIcon icon="mingcute:send-plane-fill" />
-
                 <template v-if="st.isLoad">{{ $t('mjchat.traning') }} </template>
                 <template v-else> {{ $t('mjchat.imgcreate') }}</template>
             </n-button>
         </div>
         <div class="flex justify-start items-center py-1">
-
             <div>
                 <n-tag type="success" round size="small" style="cursor: pointer; " :bordered="false"
                     @click="clearAll()">
@@ -453,30 +435,13 @@ const selectFile3 = (input: any) => {
                 </n-tag>
             </div>
         </div>
-
-        <!-- <div>
-    <NDivider dashed>
-        <NTag type="success" round ><div class="cursor-pointer" @click="st.showFace= !st.showFace">换脸服务</div></NTag>
-    </NDivider>
-    <aiFace v-if="st.showFace" />
-    </div> -->
-        <!-- <div class="mb-4 flex justify-between items-center">
-        <div @click="copy()" ref="copyRef">复制</div>
-        <div @click="copy2()"  >复制2</div>
-    </div> -->
-
         <ul class="pt-4" v-if="!isMobile" v-html="$t('mjchat.imginfo')"></ul>
-
-
     </div>
-
-
-
 </template>
+
 <style>
 .aspect-item.active,
 .aspect-item.active .aspect-box {
     border-color: #86dfba;
-
 }
 </style>

@@ -7,12 +7,32 @@ import aiOther from "@/views/mj/aiOther.vue"
 import { onMounted } from 'vue'
 import { t } from "@/locales";
 
-const { theme, themeOverrides } = useTheme()
+const { theme } = useTheme()
 const { language } = useLanguage()
 
 const updateTitle = () => {
     document.title = t('common.webTitle'); // 更新标题为当前语言的标题
 };
+
+const themeOverrides = {
+    common: {
+        primaryColor: '#ff08ff',
+        primaryColorHover: '#ff08ff',
+    },
+    // Button: {
+    //     colorPrimary: '#ff08ff',
+    //     colorDisabledPrimary: '#ff08ff',
+    //     rippleColor: '#ff08ff',
+    //     colorSuccess: '#ff08ff',
+    //     colorDisabledSuccess: '#ff08ff',
+    //     textColorTextPrimary: '#ff08ff',
+    // },
+    Input: {
+        // border: '1px solid #ff08ff',
+        borderHover: '1px solid #ff08ff',
+        borderFocus: '1px solid #ff08ff'
+    }
+}
 
 onMounted(() => {
     updateTitle()

@@ -19,7 +19,9 @@ const authStore = useAuthStore()
 
 const rt = useRoute();
 const ms = useMessage();
+
 openaiSetting(rt.query, ms)
+
 if (rt.name == 'GPTs') {
     let model = `gpt-4-gizmo-${rt.params.gid.toString()}`;
     gptConfigStore.setMyData({ model: model });
@@ -33,18 +35,13 @@ if (rt.name == 'GPTs') {
     ms.success(t('mj.modleSuccess'));
 }
 
-
-
 router.replace({ name: 'Chat', params: { uuid: chatStore.active } })
 homeStore.setMyData({ local: 'Chat' });
 const { isMobile } = useBasicLayout()
 
-
 const collapsed = computed(() => appStore.siderCollapsed)
 
 const needPermission = computed(() => {
-    //mlog( 'Layout token',  authStore.token   )
-
     return !!authStore.session?.auth && !authStore.token
 })
 
@@ -63,7 +60,7 @@ const getContainerClass = computed(() => {
 </script>
 
 <template>
-    <div class="dark:bg-[#24272e] transition-all p-0" :class="[isMobile ? 'h55' : 'h-full']">
+    <div class=" dark:bg-[#24272e] transition-all p-0" :class="[isMobile ? 'h55' : 'h-full']">
         <div class="h-full overflow-hidden" :class="getMobileClass">
             <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
                 <aiSider v-if="!isMobile" />
@@ -78,7 +75,6 @@ const getContainerClass = computed(() => {
         <Permission :visible="needPermission" />
     </div>
     <aiMobileMenu v-if="isMobile" />
-
     <aiFooter />
 </template>
 

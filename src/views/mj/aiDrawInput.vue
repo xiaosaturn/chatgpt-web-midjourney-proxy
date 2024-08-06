@@ -14,7 +14,6 @@ const { isMobile } = useBasicLayout()
 
 <template>
     <div class="overflow-y-auto bg-[#fafbfc] pt-2 dark:bg-[#18181c] h-full ">
-
         <n-tabs type="line" animated default-value="draw">
             <n-tab-pane name="start" tab="">
 
