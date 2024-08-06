@@ -20,99 +20,91 @@ const show = ref(false)
 const collapsed = computed(() => appStore.siderCollapsed)
 
 function handleAdd() {
-  chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
-  if (isMobile.value)
-    appStore.setSiderCollapsed(true)
+    chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
+    if (isMobile.value)
+        appStore.setSiderCollapsed(true)
 }
 
 function handleUpdateCollapsed() {
-  appStore.setSiderCollapsed(!collapsed.value)
+    appStore.setSiderCollapsed(!collapsed.value)
 }
 
 function handleClearAll() {
-  dialog.warning({
-    title: t('chat.deleteMessage'),
-    content: t('chat.clearHistoryConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
-    onPositiveClick: () => {
-      chatStore.clearHistory()
-      if (isMobile.value)
-        appStore.setSiderCollapsed(true)
-    },
-  })
+    dialog.warning({
+        title: t('chat.deleteMessage'),
+        content: t('chat.clearHistoryConfirm'),
+        positiveText: t('common.yes'),
+        negativeText: t('common.no'),
+        onPositiveClick: () => {
+            chatStore.clearHistory()
+            if (isMobile.value)
+                appStore.setSiderCollapsed(true)
+        },
+    })
 }
 
 const getMobileClass = computed<CSSProperties>(() => {
-  if (isMobile.value) {
-    return {
-      position: 'fixed',
-      zIndex: 50,
-      height: '100%',
+    if (isMobile.value) {
+        return {
+            position: 'fixed',
+            zIndex: 50,
+            height: '100%',
+        }
     }
-  }
-  return {}
+    return {}
 })
 
 const mobileSafeArea = computed(() => {
-  if (isMobile.value) {
-    return {
-      paddingBottom: 'env(safe-area-inset-bottom)',
+    if (isMobile.value) {
+        return {
+            paddingBottom: 'env(safe-area-inset-bottom)',
+        }
     }
-  }
-  return {}
+    return {}
 })
 
 watch(
-  isMobile,
-  (val) => {
-    appStore.setSiderCollapsed(val)
-  },
-  {
-    immediate: true,
-    flush: 'post',
-  },
+    isMobile,
+    (val) => {
+        appStore.setSiderCollapsed(val)
+    },
+    {
+        immediate: true,
+        flush: 'post',
+    },
 )
 </script>
 
 <template>
-  <NLayoutSider
-    :collapsed="collapsed"
-    :collapsed-width="0"
-    :width="260"
-    :show-trigger="isMobile ? false : 'arrow-circle'"
-    collapse-mode="transform"
-    
-    bordered
-    :style="getMobileClass"
-    @update-collapsed="handleUpdateCollapsed"
-  >
-    <div class="flex flex-col h-full" :style="mobileSafeArea">
-      <main class="flex flex-col flex-1 min-h-0">
-        <div class="p-4">
-          <NButton dashed block @click="handleAdd">
-            {{ $t('chat.newChatButton') }}
-          </NButton>
+    <NLayoutSider :collapsed="collapsed" :collapsed-width="0" :width="260"
+        :show-trigger="isMobile ? false : 'arrow-circle'" collapse-mode="transform" bordered :style="getMobileClass"
+        @update-collapsed="handleUpdateCollapsed">
+        <div class="flex flex-col h-full" :style="mobileSafeArea">
+            <main class="flex flex-col flex-1 min-h-0">
+                <div class="p-4">
+                    <NButton color="#ff80ff" class="dark:text-[white]" round block @click="handleAdd">
+                        {{ $t('chat.newChatButton') }}
+                    </NButton>
+                </div>
+                <div class="flex-1 min-h-0 pb-4 overflow-hidden">
+                    <List />
+                </div>
+                <div class="flex items-center p-4 space-x-4">
+                    <div class="flex-1">
+                        <NButton block round @click="show = true">
+                            {{ $t('store.siderButton') }}
+                        </NButton>
+                    </div>
+                    <NButton round @click="handleClearAll">
+                        <SvgIcon icon="ri:close-circle-line" />
+                    </NButton>
+                </div>
+            </main>
+            <!-- <Footer /> -->
         </div>
-        <div class="flex-1 min-h-0 pb-4 overflow-hidden">
-          <List />
-        </div>
-        <div class="flex items-center p-4 space-x-4">
-          <div class="flex-1">
-            <NButton block @click="show = true">
-              {{ $t('store.siderButton') }}
-            </NButton>
-          </div>
-          <NButton @click="handleClearAll">
-            <SvgIcon icon="ri:close-circle-line" />
-          </NButton>
-        </div>
-      </main>
-      <!-- <Footer /> -->
-    </div>
-  </NLayoutSider>
-  <template v-if="isMobile">
-    <div v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40" @click="handleUpdateCollapsed" />
-  </template>
-  <PromptStore v-model:visible="show" />
+    </NLayoutSider>
+    <template v-if="isMobile">
+        <div v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40" @click="handleUpdateCollapsed" />
+    </template>
+    <PromptStore v-model:visible="show" />
 </template>

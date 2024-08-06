@@ -6,18 +6,19 @@ import { setupStore } from './store'
 import { setupRouter } from './router'
 
 async function bootstrap() {
-  const app = createApp(App)
-  setupAssets()
+    const app = createApp(App)
 
-  setupScrollbarStyle()
+    setupAssets()
 
-  setupStore(app)
+    setupScrollbarStyle()
 
-  setupI18n(app)
+    setupStore(app)
 
-  await setupRouter(app)
+    setupI18n(app)
 
-  app.mount('#app')
+    await setupRouter(app)
+
+    app.mount('#app')
 }
 
 bootstrap()

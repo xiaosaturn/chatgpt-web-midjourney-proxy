@@ -1,5 +1,6 @@
 import { Redis } from 'ioredis'
 import cron from 'node-cron';
+import { logger } from '../utils/logger';
 
 const redis = new Redis(Number(process.env.REDIS_PORT), process.env.REDIS_HOST, {
     password: process.env.REDIS_AUTH
@@ -51,7 +52,12 @@ const resetArr = [{
 
 // 扫描并重置键值的函数
 const scanAndResetKeys = async () => {
-    console.log('开始扫描并重置键值...');
+    logger.info({
+        msg: {
+            now: new Date()
+        },
+        lable: '开始扫描并重置键值，时间为：'
+    })
     let cursor = '0';
     for (let item of resetArr) {
         do {
@@ -60,10 +66,20 @@ const scanAndResetKeys = async () => {
 
             for (const key of keys) {
                 await redis.set(key, item.value);
-                console.log(`重置键 ${key} 的值为 ${item.value}`);
+                logger.info({
+                    msg: {
+                        value: item.value
+                    },
+                    lable: `重置键 ${key} 的值`
+                })
             }
         } while (cursor !== '0');
-        console.log('扫描并重置完成', item.level);
+        logger.info({
+            msg: {
+                level: item.level
+            },
+            lable: '扫描并重置完成'
+        });
     }
 }
 
@@ -72,7 +88,10 @@ cron.schedule('0 0 * * *', async () => {
     try {
         await scanAndResetKeys()
     } catch (error) {
-        console.error('Error resetting Redis key:', error);
+        logger.info({
+            msg: error,
+            lable: '重置出错了(Error resetting Redis key)'
+        })
     }
 });
 
