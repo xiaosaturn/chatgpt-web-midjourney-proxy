@@ -45,7 +45,7 @@ const fileInput = ref<HTMLInputElement | null>(null);
 let countdown = ref(60);
 let timer: any;
 let isDisabled = ref(false)
-let btnStr = ref('发送验证码')
+let btnStr = ref(t('userInfo.sendCode'))
 
 
 const language = computed({
@@ -80,10 +80,12 @@ const languageOptions: { label: string; key: Language; value: Language }[] = [
     { label: '繁體中文', key: 'zh-TW', value: 'zh-TW' },
     { label: 'English', key: 'en-US', value: 'en-US' },
     { label: '한국어', key: 'ko-KR', value: 'ko-KR' },
+    { label: '日本語', key: 'ja-JP', value: 'ja-JP' },
     { label: 'Русский язык', key: 'ru-RU', value: 'ru-RU' },
     { label: 'Tiếng Việt', key: 'vi-VN', value: 'vi-VN' },
     { label: 'Français', key: 'fr-FR', value: 'fr-FR' },
     { label: 'Türkçe', key: 'tr-TR', value: 'tr-TR' },
+
 ]
 
 function updateUserInfo(options: Partial<UserInfo>) {
@@ -155,7 +157,7 @@ const login = async () => {
         });
         if (res.code == 200) {
             notification.success({
-                title: '登录成功',
+                title: t('userInfo.loginSuccess'),
                 duration: 3000,
             });
             gptServerStore.setMyData({
@@ -173,36 +175,40 @@ const login = async () => {
 }
 
 const getCaptcha = async () => {
-    const res = await request.get('/api/app/user/captcha', {
-        email: userInfo.value.email
-    });
-    if (res.code == 200) {
-        if (timer != null) {
-            return
+    if (validateEmail(userInfo.value.email)) {
+        const res = await request.get('/api/app/user/captcha', {
+            email: userInfo.value.email
+        });
+        if (res.code == 200) {
+            if (timer != null) {
+                return
+            } else {
+                timer = setInterval(() => {
+                    countdown.value--;
+                    btnStr.value = `${countdown.value}s`;
+                    isDisabled.value = true;
+                    if (countdown.value <= 0) {
+                        clearInterval(timer);
+                        timer = null;
+                        btnStr.value = t('userInfo.sendCode');
+                        isDisabled.value = false;
+                        countdown.value = 60;
+                    }
+                }, 1000);
+                notification.success({
+                    title: t('userInfo.sendSuccess'),
+                    duration: 3000,
+                });
+            }
         } else {
-            timer = setInterval(() => {
-                countdown.value--;
-                btnStr.value = `${countdown.value}秒后重新发送`;
-                isDisabled.value = true;
-                if (countdown.value <= 0) {
-                    clearInterval(timer);
-                    timer = null;
-                    btnStr.value = '发送验证码';
-                    isDisabled.value = false;
-                    countdown.value = 60;
-                }
-            }, 1000);
-            notification.success({
-                title: '发送成功',
+            notification.error({
+                title: t('userInfo.sendFailure'),
                 duration: 3000,
+                description: res.msg
             });
         }
     } else {
-        notification.error({
-            title: '发送失败',
-            duration: 3000,
-            description: res.msg
-        });
+
     }
 }
 
@@ -212,7 +218,7 @@ const register = async () => {
         validatePassword(userInfo.value.rePassword)) {
         if (userInfo.value.password != userInfo.value.rePassword) {
             notification.error({
-                title: '两次密码输入不一致',
+                title: t('userInfo.twoNotSame'),
                 duration: 3000,
             });
             return false
@@ -226,7 +232,7 @@ const register = async () => {
             });
             if (res.code == 200) {
                 notification.success({
-                    title: '注册成功，将为你自动登录',
+                    title: t('userInfo.registerSuccess2AutoLogin'),
                     duration: 3000,
                 });
                 gptServerStore.setMyData({
@@ -242,7 +248,7 @@ const register = async () => {
             }
         } else {
             notification.error({
-                title: '验证码格式不正确',
+                title: t('userInfo.captchaFormatNotCorrect'),
                 duration: 3000,
             });
         }
@@ -252,7 +258,7 @@ const register = async () => {
 const validateEmail = (email?: string) => {
     if (email == null) {
         notification.error({
-            title: '邮件不能为空',
+            title: t('userInfo.emailNotNull'),
             duration: 3000,
         });
         return false;
@@ -260,7 +266,7 @@ const validateEmail = (email?: string) => {
 
     if (email.trim() === '') {
         notification.error({
-            title: '邮件不能为空',
+            title: t('userInfo.emailNotNull'),
             duration: 3000,
         });
         return false;
@@ -270,7 +276,7 @@ const validateEmail = (email?: string) => {
 
     if (!emailRegex.test(email)) {
         notification.error({
-            title: '邮件地址格式不正确',
+            title: t('userInfo.emailFormatNotCorrect'),
             duration: 3000,
         });
         return false;
@@ -282,7 +288,7 @@ const validatePassword = (password?: string) => {
     // 检查密码是否为空或null或undefined
     if (!password) {
         notification.error({
-            title: '密码不能为空',
+            title: t('userInfo.passwordNotNull'),
             duration: 3000,
         });
         return false;
@@ -290,7 +296,7 @@ const validatePassword = (password?: string) => {
 
     if (password.trim() === '') {
         notification.error({
-            title: '密码不能为空',
+            title: t('userInfo.passwordNotNull'),
             duration: 3000,
         });
         return false;
@@ -299,7 +305,7 @@ const validatePassword = (password?: string) => {
     // 密码长度至少为8位
     if (password.length < 8) {
         notification.error({
-            title: '密码至少8位',
+            title: t('userInfo.password8bit'),
             duration: 3000,
         });
         return false;
@@ -307,29 +313,29 @@ const validatePassword = (password?: string) => {
 
     if (password.length > 32) {
         notification.error({
-            title: '密码不能超过32位',
+            title: t('userInfo.password32bit'),
             duration: 3000,
         });
         return false;
     }
 
     // 使用正则表达式检查密码格式
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).{8,}$/;
-    const isValid = passwordRegex.test(password);
-    if (!isValid) {
-        notification.error({
-            title: '密码格式不符合要求，至少包含一个大写字母、一个小写字母、一个数字和一个特殊符号',
-            duration: 3000,
-        });
-        return false;
-    }
+    // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).{8,}$/;
+    // const isValid = passwordRegex.test(password);
+    // if (!isValid) {
+    //     notification.error({
+    //         title: t('userInfo.passwordFormatNotCorrect'),
+    //         duration: 3000,
+    //     });
+    //     return false;
+    // }
     return true;
 }
 
 const validateVerificationCode = (code?: string) => {
     if (code == null) {
         notification.error({
-            title: '验证码不能为空',
+            title: t('userInfo.captchaNotNull'),
             duration: 3000,
         });
         return false;
@@ -390,7 +396,7 @@ const updateAvatar = (): void => {
 const updateNickname = () => {
     dialog.create({
         showIcon: false,
-        title: '修改昵称',
+        title: t('userInfo.updateNickname'),
         style: {
             borderRadius: '20px'
         },
@@ -401,17 +407,17 @@ const updateNickname = () => {
                     onUpdateValue: (value) => {
                         nickName.value = value;
                     },
-                    placeholder: '请输入昵称'
+                    placeholder: t('userInfo.inputNickname')
                 })
             ]),
-        positiveText: '确认',
-        negativeText: '取消',
+        positiveText: t('userInfo.confirm'),
+        negativeText: t('userInfo.cancel'),
         onPositiveClick: () => {
             if (nickName.value && nickName.value.trim()) {
                 submitNickname();
             } else {
                 notification.warning({
-                    title: '请输入昵称'
+                    title: t('userInfo.inputNickname')
                 });
             }
         }
@@ -426,15 +432,17 @@ const submitNickname = async () => {
     });
     if (res.code == 200) {
         notification.success({
-            title: '修改成功'
+            title: t('userInfo.updateSuccess'),
+            duration: 3000
         });
         userStore.updateUserInfo({
             nickname: nickName?.value?.trim()
         });
     } else {
         notification.warning({
-            title: '修改失败',
-            content: res.msg
+            title: t('userInfo.updateFailure'),
+            content: res.msg,
+            duration: 3000
         });
     }
 }
@@ -446,15 +454,17 @@ const submitAvatar = async () => {
     });
     if (res.code == 200) {
         notification.success({
-            title: '修改头像成功'
+            title: t('userInfo.updateAvatarSuccess'),
+            duration: 3000
         });
         userStore.updateUserInfo({
             nickname: nickName?.value?.trim()
         });
     } else {
         notification.warning({
-            title: '修改头像失败',
-            content: res.msg
+            title: t('userInfo.updateAvatarFailure'),
+            content: res.msg,
+            duration: 3000
         });
     }
 }
@@ -505,7 +515,7 @@ onMounted(() => {
                     {{ userInfo.expireTime }}
                 </n-tag>
                 <n-tag v-else type="warning" round>
-                    免费用户
+                    {{ $t('userInfo.freeUser') }}
                 </n-tag>
             </div>
 
@@ -592,7 +602,7 @@ onMounted(() => {
                 <div class="flex items-center space-x-4 mb-2">
                     <span class="flex-shrink-0 w-[100px]">{{ $t('setting.email') }}</span>
                     <div class="flex-1">
-                        <NInput v-model:value="userInfo.email" placeholder="" />
+                        <NInput v-model:value="userInfo.email" :placeholder="$t('setting.plzEmail')" />
                     </div>
                 </div>
                 <div class="flex items-center space-x-4 mb-2">
@@ -605,13 +615,13 @@ onMounted(() => {
                 <div class="flex items-center space-x-4 mb-2">
                     <span class="flex-shrink-0 w-[100px]">{{ $t('setting.rePassword') }}</span>
                     <div class="flex-1">
-                        <NInput v-model:value="userInfo.rePassword" placeholder="" />
+                        <NInput v-model:value="userInfo.rePassword" :placeholder="$t('setting.plzPassword')" />
                     </div>
                 </div>
                 <div class="flex items-center space-x-4 mb-4">
                     <span class="flex-shrink-0 w-[100px]">{{ $t('setting.captcha') }}</span>
                     <div class="flex-1">
-                        <NInput v-model:value="userInfo.captcha" placeholder="" />
+                        <NInput v-model:value="userInfo.captcha" :placeholder="$t('setting.plzCaptcha')" />
                     </div>
                     <NButton :disabled="isDisabled" size="tiny" text type="primary" @click="getCaptcha">
                         <!-- {{ $t('setting.getCaptcha') }} -->

@@ -210,14 +210,21 @@ const verificationCode = async (req, res) => {
 const sendMail = async (email) => {
     const code = generateRandomSixDigitNumber();
     const mailOptions = {
-        from: '【黄老师的AI】<807132689@qq.com>',
+        from: '【All AI】<807132689@qq.com>',
         to: email,
-        subject: '验证码',
-        html: `<b style="font-size:28px">您的验证码为：<span style="color:red">${code}</span> ，请在10分钟内输入</b> <br /><br /><br /> \
-        <b style="font-size:28px;color:green">黄师傅AI网址：https://ai.ankerxiao.com </b> <br /><br /><br />
-        <b style="font-size:28px;color:green">关注公众号【MasterH杂货铺】，获取最新AI新闻与工具</b> \
-        <img src="https://image.xiaosaturn.com/2023/hsftyt.jpg"></img>`
+        subject: 'Your Captcha',
+        html: `<b style="font-size:28px">Your Captcha：<span style="color:red">${code}</span> ，Please Input In 10 minutes</b> <br /><br /><br /> \
+        <b style="font-size:28px;color:green">All AI: https://all-ai.chat </b> <br /><br /><br />`
     };
+    // const mailOptions = {
+    //     from: '【All AI】<807132689@qq.com>',
+    //     to: email,
+    //     subject: 'Captcha',
+    //     html: `<b style="font-size:28px">Your Captcha：<span style="color:red">${code}</span> ，Please Input In 10 minutes</b> <br /><br /><br /> \
+    //     <b style="font-size:28px;color:green">All AI: https://all-ai.chat </b> <br /><br /><br />
+    //     <b style="font-size:28px;color:green">关注公众号【MasterH杂货铺】，获取最新AI新闻与工具</b> \
+    //     <img src="https://image.xiaosaturn.com/2023/hsftyt.jpg"></img>`
+    // };
     return new Promise((resolve, reject) => {
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {

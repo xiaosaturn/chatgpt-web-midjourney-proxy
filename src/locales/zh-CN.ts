@@ -85,6 +85,7 @@ export default {
         rePassword: '重新输入密码',
         plzEmail: '请输入邮箱',
         plzPassword: '请输入密码',
+        plzCaptcha: '请输入验证码',
         login: '登录',
         register: '注册',
         noAccount: '没有账号？赶紧去注册吧，GO',
@@ -525,5 +526,32 @@ export default {
         creditCard: 'Credit Card/Debit Card',
         wechatpay: '微信支付',
         alipay: '支付宝支付'
+    },
+
+    userInfo: {
+        sendCode: '发送验证码',
+        loginSuccess: '登录成功',
+        resendCodeAfterSecond: '秒后重新发送',
+        sendSuccess: '发送成功',
+        sendFailure: '发送失败',
+        twoNotSame: '两次密码输入不一致',
+        registerSuccess2AutoLogin: '注册成功，将为你自动登录',
+        captchaFormatNotCorrect: '验证码格式不正确',
+        emailNotNull: '邮件不能为空',
+        emailFormatNotCorrect: '邮件地址格式不正确',
+        passwordNotNull: '密码不能为空',
+        password8bit: '密码至少8位',
+        password32bit: '密码不能超过32位',
+        passwordFormatNotCorrect: '密码格式不符合要求',
+        captchaNotNull: '验证码不能为空',
+        updateNickname: '修改昵称',
+        inputNickname: '请输入昵称',
+        confirm: '确认',
+        cancel: '取消',
+        updateSuccess: '修改成功',
+        updateFailure: '修改失败',
+        updateAvatarSuccess: '修改头像成功',
+        updateAvatarFailure: '修改头像失败',
+        freeUser: '免费用户'
     }
 }

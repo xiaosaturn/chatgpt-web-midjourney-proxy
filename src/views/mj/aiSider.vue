@@ -88,12 +88,12 @@ onMounted(() => {
 
 
                 <a v-if="!isDisableMenu('gallery')" @click="homeStore.setMyData({ act: 'gallery' })"
-                    class=" router-link-exact-active h-12 w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]">
+                    class=" router-link-exact-active h-auto w-12 cursor-pointer rounded-xl bg-white duration-300 dark:bg-[#34373c] hover:bg-[#bbb] dark:hover:bg-[#555]">
                     <n-tooltip placement="right" trigger="hover">
                         <template #trigger>
-                            <div class="flex h-full justify-center items-center   py-1 flex-col">
-                                <SvgIcon icon="material-symbols:imagesmode-outline" class="text-3xl flex-1"></SvgIcon>
-                                <span class="text-[10px]">{{ $t('mjtab.gallery') }}</span>
+                            <div class="flex h-full justify-center items-center py-1 flex-col">
+                                <SvgIcon icon="material-symbols:imagesmode-outline" class="text-3xl"></SvgIcon>
+                                <span class="flex-1 text-[10px]">{{ $t('mjtab.gallery') }}</span>
                             </div>
                         </template>
                         {{ $t('mjtab.galleryInfo') }}

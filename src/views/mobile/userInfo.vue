@@ -6,7 +6,7 @@
                 <div class="relative inline-flex flex flex-col items-center">
                     <n-image :src="userInfo.avatar" alt="user"
                         class="h-20 w-20 rounded-full bg-slate-400 dark:border-slate-700 mb-2" />
-                    <n-button @click="updateAvatar" type="primary" round>更新头像</n-button>
+                    <n-button @click="updateAvatar" type="primary" round>{{ $t('common.updateAvatar') }}</n-button>
                     <input type="file" ref="fileInput" accept="image/*" style="display: none;"
                         @change="handleFileChange">
                 </div>
@@ -20,11 +20,13 @@
 
                     <span class="text-lg text-slate-400 mb-2">{{ userInfo.email }}</span>
                     <div>
-                        <span v-if="userInfo.expireTime" class="rounded-full bg-green-600/10 px-2.5 py-1 text-xs font-semibold leading-5 text-green-600">
-                            到期时间 {{ userInfo.expireTime }}
+                        <span v-if="userInfo.expireTime"
+                            class="rounded-full bg-green-600/10 px-2.5 py-1 text-xs font-semibold leading-5 text-green-600">
+                            {{ $t('setting.expireTime') }} {{ userInfo.expireTime }}
                         </span>
-                        <span v-else class="rounded-full bg-green-600/10 px-3 py-1 text-xs font-semibold leading-5 text-green-600">
-                            免费用户
+                        <span v-else
+                            class="rounded-full bg-green-600/10 px-3 py-1 text-xs font-semibold leading-5 text-green-600">
+                            {{ $t('userInfo.freeUser') }}
                         </span>
                     </div>
                 </div>
@@ -46,6 +48,7 @@ import { SvgIcon } from '@/components/common'
 import request from '@/api/myAxios'
 import { uploadFile } from '@/utils/uploadfile'
 import { randomString } from '@/utils/common'
+import { t } from '@/locales'
 
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
@@ -105,7 +108,8 @@ const confirmUpload = async (file: File) => {
         submitAvatar()
     } else {
         notification.error({
-            title: res.msg
+            title: res.msg,
+            duration: 3000
         });
     }
 }
@@ -119,7 +123,7 @@ const updateAvatar = (): void => {
 const updateNickname = () => {
     dialog.create({
         showIcon: false,
-        title: '修改昵称',
+        title: t('userInfo.updateNickname'),
         style: {
             borderRadius: '20px'
         },
@@ -130,17 +134,17 @@ const updateNickname = () => {
                     onUpdateValue: (value) => {
                         nickName.value = value;
                     },
-                    placeholder: '请输入昵称'
+                    placeholder: t('userInfo.inputNickname')
                 })
             ]),
-        positiveText: '确认',
-        negativeText: '取消',
+        positiveText: t('userInfo.confirm'),
+        negativeText: t('userInfo.cancel'),
         onPositiveClick: () => {
             if (nickName.value && nickName.value.trim()) {
                 submitNickname();
             } else {
                 notification.warning({
-                    title: '请输入昵称'
+                    title: t('userInfo.inputNickname')
                 });
             }
         }
@@ -155,15 +159,17 @@ const submitNickname = async () => {
     });
     if (res.code == 200) {
         notification.success({
-            title: '修改成功'
+            title: t('userInfo.updateSuccess'),
+            duration: 3000
         });
         userStore.updateUserInfo({
             nickname: nickName?.value?.trim()
         });
     } else {
         notification.warning({
-            title: '修改失败',
-            content: res.msg
+            title: t('userInfo.updateFailure'),
+            content: res.msg,
+            duration: 3000
         });
     }
 }
@@ -175,15 +181,17 @@ const submitAvatar = async () => {
     });
     if (res.code == 200) {
         notification.success({
-            title: '修改头像成功'
+            title: t('userInfo.updateAvatarSuccess'),
+            duration: 3000
         });
         userStore.updateUserInfo({
             nickname: nickName?.value?.trim()
         });
     } else {
         notification.warning({
-            title: '修改头像失败',
-            content: res.msg
+            title: t('userInfo.updateAvatarFailure'),
+            content: res.msg,
+            duration: 3000
         });
     }
 }
@@ -198,7 +206,7 @@ const getUserInfo = async () => {
         userStore.resetUserInfo();
     } else {
         // 其他错误
-        
+
     }
 }
 

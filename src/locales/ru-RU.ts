@@ -27,6 +27,8 @@ export default {
         verify: 'Проверить',
         unauthorizedTips: 'Не авторизован, сначала подтвердите свою личность.',
         stopResponding: 'Прекращение отклика',
+        updateAvatar: 'Обновить аватар',
+        updateNickname: 'Обновить никнейм'
     },
     chat: {
         newChatButton: 'Новый чат',
@@ -491,7 +493,33 @@ export default {
         creditCard: 'Credit Card/Debit Card',
         wechatpay: 'Оплата через ВиЧат',
         alipay: 'Оплата через Алипэй'
-    }
+    },
 
+    userInfo: {
+        sendCode: 'Отправить капчу',
+        loginSuccess: 'Успешный вход',
+        resendCodeAfterSecond: 'Повторная отправка через секунды',
+        sendSuccess: 'Отправка успешна',
+        sendFailure: 'Ошибка отправки',
+        twoNotSame: 'Два пароля не совпадают',
+        registerSuccess2AutoLogin: 'Регистрация успешна, вы будете автоматически авторизованы',
+        captchaFormatNotCorrect: 'Формат капчи неверен',
+        emailNotNull: 'Электронная почта не может быть пустой',
+        emailFormatNotCorrect: 'Неверный формат адреса электронной почты',
+        passwordNotNull: 'Пароль не может быть пустым',
+        password8bit: 'Пароль должен содержать не менее 8 символов',
+        password32bit: 'Пароль не может превышать 32 символа',
+        passwordFormatNotCorrect: 'Неверный формат пароля',
+        captchaNotNull: 'Капча не может быть пустой',
+        updateNickname: 'Изменить никнейм',
+        inputNickname: 'Пожалуйста, введите ваш никнейм',
+        confirm: 'Подтвердить',
+        cancel: 'Отмена',
+        updateSuccess: 'Обновление успешно',
+        updateFailure: 'Ошибка обновления',
+        updateAvatarSuccess: 'Обновление аватара успешно',
+        updateAvatarFailure: 'Ошибка обновления аватара',
+        freeUser: 'Бесплатный пользователь'
+    }
 
 }

@@ -3,7 +3,8 @@
         <div class="h-full overflow-hidden">
             <NLayout class="z-40 transition" has-sider>
                 <NLayoutContent class="h-full">
-                    <div v-if="userInfo.id" class="pt-[40px] flex flex-col justify-center items-center" style="overflow: scroll;">
+                    <div v-if="userInfo.id" class="pt-[40px] flex flex-col justify-center items-center"
+                        style="overflow: scroll;">
                         <UserInfo />
                     </div>
                     <template v-else>
@@ -16,8 +17,8 @@
                                             <n-input v-model:value="userInfo.email" placeholder="请输入邮箱" />
                                         </n-form-item>
                                         <n-form-item label="密码" path="password">
-                                            <n-input v-model:value="userInfo.password" type="password" placeholder="请输入密码"
-                                                show-password-on="click" />
+                                            <n-input v-model:value="userInfo.password" type="password"
+                                                placeholder="请输入密码" show-password-on="click" />
                                         </n-form-item>
                                         <n-form-item label="确认密码" path="confirmPassword">
                                             <n-input v-model:value="userInfo.rePassword" type="password"
@@ -27,7 +28,8 @@
                                             <div class="flex justify-between">
                                                 <n-space>
                                                     <n-input v-model:value="userInfo.captcha" placeholder="请输入验证码" />
-                                                    <n-button :disabled="isCountingDown" type="primary" @click="sendVerificationCode">
+                                                    <n-button :disabled="isCountingDown" type="primary"
+                                                        @click="sendVerificationCode">
                                                         {{ countDownText }}
                                                     </n-button>
                                                 </n-space>
@@ -35,8 +37,8 @@
                                         </n-form-item>
                                     </n-space>
                                 </n-form>
-                                <n-button type="primary" block @click="handleRegister"
-                                    :disabled="isSubmitting" size="large">注册</n-button>
+                                <n-button type="primary" block @click="handleRegister" :disabled="isSubmitting"
+                                    size="large">注册</n-button>
                                 <div class="login-link">
                                     已有账号？<n-button text @click="showRegister = false" color="#2080f0">立即登录</n-button>
                                 </div>
@@ -51,13 +53,13 @@
                                             <n-input v-model:value="userInfo.email" placeholder="请输入邮箱" />
                                         </n-form-item>
                                         <n-form-item label="密码" path="password">
-                                            <n-input v-model:value="userInfo.password" type="password" placeholder="请输入密码"
-                                                show-password-on="click" />
+                                            <n-input v-model:value="userInfo.password" type="password"
+                                                placeholder="请输入密码" show-password-on="click" />
                                         </n-form-item>
                                     </n-space>
                                 </n-form>
-                                <n-button type="primary" block @click="handleLogin"
-                                    :disabled="isSubmitting" size="large">登录</n-button>
+                                <n-button type="primary" block @click="handleLogin" :disabled="isSubmitting"
+                                    size="large">登录</n-button>
                                 <div class="login-link">
                                     没有账号？<n-button text @click="showRegister = true" color="#2080f0">立即注册</n-button>
                                 </div>
@@ -82,6 +84,7 @@ import { useAppStore, useUserStore, gptServerStore } from '@/store'
 import request from '@/api/myAxios'
 import { validateEmail, validatePassword, validateVerificationCode } from '@/utils/validator'
 import UserInfo from './userInfo.vue'
+import { t } from '@/locales'
 
 const userStore = useUserStore()
 const { isMobile } = useBasicLayout()
@@ -105,28 +108,28 @@ const { isLogin } = route.params as { isLogin: boolean }
 const userInfo = computed(() => userStore.userInfo)
 let timer: any;
 let isDisabled = ref(false)
-let btnStr = ref('发送验证码')
+let btnStr = ref(t('userInfo.sendCode'))
 
 const rules = {
     email: [
-        { required: true, message: '请输入邮箱', trigger: 'blur' },
-        { type: 'email', message: '请输入有效的邮箱地址', trigger: 'blur' }
+        { required: true, message: t('setting.plzEmail'), trigger: 'blur' },
+        { type: 'email', message: t('userInfo.emailFormatNotCorrect'), trigger: 'blur' }
     ],
     password: [
-        { required: true, message: '请输入密码', trigger: 'blur' },
-        { min: 6, message: '密码长度不能小于6个字符', trigger: 'blur' }
+        { required: true, message: t('setting.plzPassword'), trigger: 'blur' },
+        { min: 8, message: t('userInfo.password8bit'), trigger: 'blur' }
     ],
     confirmPassword: [
-        { required: true, message: '请再次输入密码', trigger: 'blur' },
+        { required: true, message: t('setting.plzPassword'), trigger: 'blur' },
         {
             validator: (rule, value) => value === formModel.value.password,
-            message: '两次输入的密码不一致',
+            message: t('userInfo.twoNotSame'),
             trigger: 'blur'
         }
     ],
     verificationCode: [
-        { required: true, message: '请输入验证码', trigger: 'blur' },
-        { length: 6, message: '验证码长度应为6位', trigger: ['blur', 'change'] }
+        { required: true, message: t('setting.plzCaptcha'), trigger: 'blur' },
+        { length: 6, message: t('userInfo.captchaFormatNotCorrect'), trigger: ['blur', 'change'] }
     ]
 }
 
@@ -150,7 +153,7 @@ const realRegister = async () => {
         validatePassword(userInfo.value.rePassword)) {
         if (userInfo.value.password != userInfo.value.rePassword) {
             notification.error({
-                title: '两次密码输入不一致',
+                title: t('userInfo.twoNotSame'),
                 duration: 3000,
             });
             return false
@@ -164,7 +167,7 @@ const realRegister = async () => {
             });
             if (res.code == 200) {
                 notification.success({
-                    title: '注册成功，将为你自动登录',
+                    title: t('userInfo.registerSuccess2AutoLogin'),
                     duration: 3000,
                 });
                 gptServerStore.setMyData({
@@ -180,7 +183,7 @@ const realRegister = async () => {
             }
         } else {
             notification.error({
-                title: '验证码格式不正确',
+                title: t('userInfo.captchaFormatNotCorrect'),
                 duration: 3000,
             });
         }
@@ -255,13 +258,13 @@ const sendVerificationCode = async () => {
                 }
             }, 1000);
             notification.success({
-                title: '发送成功',
+                title: t('userInfo.sendSuccess'),
                 duration: 3000,
             });
         }
     } else {
         notification.error({
-            title: '发送失败',
+            title: t('userInfo.sendFailure'),
             duration: 3000,
             description: res.msg
         });
@@ -269,7 +272,7 @@ const sendVerificationCode = async () => {
 }
 
 onMounted(() => {
-    
+
 })
 
 </script>

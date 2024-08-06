@@ -27,6 +27,8 @@ export default {
         verify: 'Vérifier',
         unauthorizedTips: 'Non autorisé, veuillez vérifier d\'abord.',
         stopResponding: 'Arrêter de répondre',
+        updateAvatar: `Mettre à jour l'avatar`,
+        updateNickname: 'Mettre à jour le pseudonyme'
     },
     chat: {
         newChatButton: 'Nouveau Chat',
@@ -489,6 +491,34 @@ export default {
         wechatpay: 'Paiement WeChat',
         alipay: 'Paiement Alipay'
     },
+
+    userInfo: {
+        sendCode: 'Envoyer le code de vérification',
+        loginSuccess: 'Connexion réussie',
+        resendCodeAfterSecond: 'Renvoyer après quelques secondes',
+        sendSuccess: 'Envoi réussi',
+        sendFailure: 'Échec de l\'envoi',
+        twoNotSame: 'Les deux mots de passe ne correspondent pas',
+        registerSuccess2AutoLogin: 'Inscription réussie, vous serez connecté automatiquement',
+        captchaFormatNotCorrect: 'Le format du captcha est incorrect',
+        emailNotNull: 'L\'email ne peut pas être vide',
+        emailFormatNotCorrect: 'Le format de l\'adresse email est incorrect',
+        passwordNotNull: 'Le mot de passe ne peut pas être vide',
+        password8bit: 'Le mot de passe doit contenir au moins 8 caractères',
+        password32bit: 'Le mot de passe ne peut pas dépasser 32 caractères',
+        passwordFormatNotCorrect: 'Le format du mot de passe est invalide',
+        captchaNotNull: 'Le captcha ne peut pas être vide',
+        updateNickname: 'Changer de pseudo',
+        inputNickname: 'Veuillez entrer votre pseudo',
+        confirm: 'Confirmer',
+        cancel: 'Annuler',
+        updateSuccess: 'Mise à jour réussie',
+        updateFailure: 'Échec de la mise à jour',
+        updateAvatarSuccess: 'Mise à jour de l\'avatar réussie',
+        updateAvatarFailure: 'Échec de la mise à jour de l\'avatar',
+        freeUser: 'Utilisateur gratuit'
+    }
+
 
 
 }

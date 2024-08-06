@@ -27,6 +27,8 @@ export default {
         verify: 'Doğrula',
         unauthorizedTips: 'Yetkisiz, lütfen önce doğrulama yapın.',
         stopResponding: 'Cevap Vermeyi Durdur',
+        updateAvatar: 'Avatarı Güncelle',
+        updateNickname: 'Takma Adı Güncelle'
     },
     chat: {
         newChatButton: 'Yeni Sohbet',
@@ -486,6 +488,34 @@ export default {
         creditCard: 'Kredi Kartı/Banka Kartı',
         wechatpay: 'WeChat Pay',
         alipay: 'Alipay'
+    },
+
+    userInfo: {
+        sendCode: 'Doğrulama Kodu Gönder',
+        loginSuccess: 'Giriş Başarılı',
+        resendCodeAfterSecond: 'Saniyeler sonra yeniden gönder',
+        sendSuccess: 'Gönderim Başarılı',
+        sendFailure: 'Gönderim Başarısız',
+        twoNotSame: 'İki şifre eşleşmiyor',
+        registerSuccess2AutoLogin: 'Kayıt başarılı, otomatik olarak giriş yapacaksınız',
+        captchaFormatNotCorrect: 'Captcha formatı yanlış',
+        emailNotNull: 'E-posta boş olamaz',
+        emailFormatNotCorrect: 'E-posta adresi formatı yanlış',
+        passwordNotNull: 'Şifre boş olamaz',
+        password8bit: 'Şifre en az 8 karakter olmalıdır',
+        password32bit: 'Şifre 32 karakteri geçemez',
+        passwordFormatNotCorrect: 'Şifre formatı geçersiz',
+        captchaNotNull: 'Captcha boş olamaz',
+        updateNickname: 'Takma Adı Değiştir',
+        inputNickname: 'Lütfen takma adınızı girin',
+        confirm: 'Onayla',
+        cancel: 'İptal',
+        updateSuccess: 'Güncelleme Başarılı',
+        updateFailure: 'Güncelleme Başarısız',
+        updateAvatarSuccess: 'Avatar Güncellemesi Başarılı',
+        updateAvatarFailure: 'Avatar Güncellemesi Başarısız',
+        freeUser: 'Ücretsiz Kullanıcı'
     }
+
 
 }

@@ -82,7 +82,7 @@ watch(
         <div class="flex flex-col h-full" :style="mobileSafeArea">
             <main class="flex flex-col flex-1 min-h-0">
                 <div class="p-4">
-                    <NButton color="#ff80ff" class="dark:text-[white]" round block @click="handleAdd">
+                    <NButton type="primary" round block @click="handleAdd">
                         {{ $t('chat.newChatButton') }}
                     </NButton>
                 </div>
@@ -91,7 +91,7 @@ watch(
                 </div>
                 <div class="flex items-center p-4 space-x-4">
                     <div class="flex-1">
-                        <NButton block round color="#ff80ff" @click="show = true">
+                        <NButton block round type="primary" @click="show = true">
                             {{ $t('store.siderButton') }}
                         </NButton>
                     </div>

@@ -488,6 +488,34 @@ export default {
         creditCard: 'Credit Card/Debit Card',
         wechatpay: '微信支付',
         alipay: '支付寶支付'
+    },
+
+    userInfo: {
+        sendCode: '發送驗證碼',
+        loginSuccess: '登入成功',
+        resendCodeAfterSecond: '秒後重新發送',
+        sendSuccess: '發送成功',
+        sendFailure: '發送失敗',
+        twoNotSame: '兩次密碼輸入不一致',
+        registerSuccess2AutoLogin: '註冊成功，將為你自動登入',
+        captchaFormatNotCorrect: '驗證碼格式不正確',
+        emailNotNull: '郵件不能為空',
+        emailFormatNotCorrect: '郵件地址格式不正確',
+        passwordNotNull: '密碼不能為空',
+        password8bit: '密碼至少8位',
+        password32bit: '密碼不能超過32位',
+        passwordFormatNotCorrect: '密碼格式不符合要求，至少包含一個大寫字母、一個小寫字母、一個數字和一個特殊符號',
+        captchaNotNull: '驗證碼不能為空',
+        updateNickname: '修改暱稱',
+        inputNickname: '請輸入暱稱',
+        confirm: '確認',
+        cancel: '取消',
+        updateSuccess: '修改成功',
+        updateFailure: '修改失敗',
+        updateAvatarSuccess: '修改頭像成功',
+        updateAvatarFailure: '修改頭像失敗',
+        freeUser: '免費用戶'
     }
+
 
 }

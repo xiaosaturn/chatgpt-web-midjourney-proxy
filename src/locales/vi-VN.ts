@@ -26,6 +26,8 @@ export default {
         failed: 'Thất bại',
         verify: 'Xác minh',
         unauthorizedTips: 'Không được ủy quyền, vui lòng xác minh trước.',
+        updateAvatar: 'Cập nhật hình đại diện',
+        updateNickname: 'Cập nhật biệt danh'
     },
     chat: {
         newChatButton: 'Tạo hội thoại',
@@ -488,7 +490,35 @@ export default {
         creditCard: 'Thẻ tín dụng/Thẻ ghi nợ',
         wechatpay: 'Thanh toán WeChat',
         alipay: 'Thanh toán Alipay'
+    },
+
+    userInfo: {
+        sendCode: 'Gửi mã xác thực',
+        loginSuccess: 'Đăng nhập thành công',
+        resendCodeAfterSecond: 'Gửi lại sau giây',
+        sendSuccess: 'Gửi thành công',
+        sendFailure: 'Gửi thất bại',
+        twoNotSame: 'Hai mật khẩu không giống nhau',
+        registerSuccess2AutoLogin: 'Đăng ký thành công, bạn sẽ tự động đăng nhập',
+        captchaFormatNotCorrect: 'Định dạng mã xác thực không đúng',
+        emailNotNull: 'Email không được để trống',
+        emailFormatNotCorrect: 'Định dạng địa chỉ email không đúng',
+        passwordNotNull: 'Mật khẩu không được để trống',
+        password8bit: 'Mật khẩu phải có ít nhất 8 ký tự',
+        password32bit: 'Mật khẩu không được vượt quá 32 ký tự',
+        passwordFormatNotCorrect: 'Định dạng mật khẩu không hợp lệ',
+        captchaNotNull: 'Mã xác thực không được để trống',
+        updateNickname: 'Thay đổi biệt danh',
+        inputNickname: 'Vui lòng nhập biệt danh',
+        confirm: 'Xác nhận',
+        cancel: 'Hủy',
+        updateSuccess: 'Cập nhật thành công',
+        updateFailure: 'Cập nhật thất bại',
+        updateAvatarSuccess: 'Cập nhật ảnh đại diện thành công',
+        updateAvatarFailure: 'Cập nhật ảnh đại diện thất bại',
+        freeUser: 'Người dùng miễn phí'
     }
+
 
 
 }

@@ -85,6 +85,7 @@ export default {
         rePassword: 'Repeat Password',
         plzEmail: 'Please Input Email',
         plzPassword: 'Please Input Password',
+        plzCaptcha: 'Please Input Captcha',
         login: 'Login',
         register: 'Register',
         noAccount: 'No Account？GO 2 Register!',
@@ -514,6 +515,33 @@ export default {
         creditCard: 'Credit Card/Debit Card',
         wechatpay: 'WeChat Pay',
         alipay: 'Alipay'
+    },
+
+    userInfo: {
+        sendCode: 'Send Captcha',
+        loginSuccess: 'Login Successful',
+        resendCodeAfterSecond: 'Resend after seconds',
+        sendSuccess: 'Send Successful',
+        sendFailure: 'Send Failed',
+        twoNotSame: 'The two passwords do not match',
+        registerSuccess2AutoLogin: 'Registration successful, you will be logged in automatically',
+        captchaFormatNotCorrect: 'Captcha format is incorrect',
+        emailNotNull: 'Email cannot be empty',
+        emailFormatNotCorrect: 'Email address format is incorrect',
+        passwordNotNull: 'Password cannot be empty',
+        password8bit: 'Password must be at least 8 characters',
+        password32bit: 'Password cannot exceed 32 characters',
+        passwordFormatNotCorrect: 'Password format is invalid',
+        captchaNotNull: 'Captcha cannot be empty',
+        updateNickname: 'Change Nickname',
+        inputNickname: 'Please enter your nickname',
+        confirm: 'Confirm',
+        cancel: 'Cancel',
+        updateSuccess: 'Update Successful',
+        updateFailure: 'Update Failed',
+        updateAvatarSuccess: 'Avatar Update Successful',
+        updateAvatarFailure: 'Avatar Update Failed',
+        freeUser: 'Free User'
     }
 
 }

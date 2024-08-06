@@ -8,37 +8,39 @@ import ruRU from './ru-RU'
 import viVn from './vi-VN'
 import frFr from './fr-FR'
 import trTr from './tr-TR'
+import jaJP from './ja-JP'
 import { useAppStoreWithOut } from '@/store/modules/app'
 import type { Language } from '@/store/modules/app/helper'
 
 const appStore = useAppStoreWithOut()
 
-const defaultLocale = appStore.language || 'zh-CN'
+const defaultLocale = appStore.language || 'en-US'
 
 const i18n = createI18n({
-  locale: defaultLocale,
-  fallbackLocale: 'en-US',
-  allowComposition: true,
-  messages: {
-    'en-US': enUS,
-    'ko-KR': koKR,
-    'zh-CN': zhCN,
-    'zh-TW': zhTW,
-    'ru-RU': ruRU,
-    'vi-VN': viVn,
-    'fr-FR': frFr,
-    'tr-TR': trTr,
-  },
+    locale: defaultLocale,
+    fallbackLocale: 'en-US',
+    allowComposition: true,
+    messages: {
+        'en-US': enUS,
+        'ko-KR': koKR,
+        'zh-CN': zhCN,
+        'zh-TW': zhTW,
+        'ru-RU': ruRU,
+        'vi-VN': viVn,
+        'fr-FR': frFr,
+        'tr-TR': trTr,
+        'ja-JP': jaJP,
+    },
 })
 
 export const t = i18n.global.t
 
 export function setLocale(locale: Language) {
-  i18n.global.locale = locale
+    i18n.global.locale = locale
 }
 
 export function setupI18n(app: App) {
-  app.use(i18n)
+    app.use(i18n)
 }
 
 export default i18n

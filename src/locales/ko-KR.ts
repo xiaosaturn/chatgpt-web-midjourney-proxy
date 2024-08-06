@@ -27,6 +27,8 @@ export default {
         verify: '검증',
         unauthorizedTips: '인증되지 않았습니다. 먼저 확인하십시오.',
         stopResponding: '응답 중지',
+        updateAvatar: '아바타 업데이트',
+        updateNickname: '닉네임 업데이트'
     },
     chat: {
         newChatButton: '새로운 채팅',
@@ -488,7 +490,33 @@ export default {
         creditCard: 'Credit Card/Debit Card',
         wechatpay: '위챗페이',
         alipay: '알리페이'
-    }
+    },
 
+    userInfo: {
+        sendCode: '캡차 보내기',
+        loginSuccess: '로그인 성공',
+        resendCodeAfterSecond: '초 후에 다시 전송',
+        sendSuccess: '전송 성공',
+        sendFailure: '전송 실패',
+        twoNotSame: '두 비밀번호가 일치하지 않습니다',
+        registerSuccess2AutoLogin: '등록 성공, 자동으로 로그인됩니다',
+        captchaFormatNotCorrect: '캡차 형식이 올바르지 않습니다',
+        emailNotNull: '이메일은 비워둘 수 없습니다',
+        emailFormatNotCorrect: '이메일 주소 형식이 올바르지 않습니다',
+        passwordNotNull: '비밀번호는 비워둘 수 없습니다',
+        password8bit: '비밀번호는 최소 8자 이상이어야 합니다',
+        password32bit: '비밀번호는 32자를 초과할 수 없습니다',
+        passwordFormatNotCorrect: '비밀번호 형식이 유효하지 않습니다',
+        captchaNotNull: '캡차는 비워둘 수 없습니다',
+        updateNickname: '닉네임 변경',
+        inputNickname: '닉네임을 입력하세요',
+        confirm: '확인',
+        cancel: '취소',
+        updateSuccess: '업데이트 성공',
+        updateFailure: '업데이트 실패',
+        updateAvatarSuccess: '아바타 업데이트 성공',
+        updateAvatarFailure: '아바타 업데이트 실패',
+        freeUser: '무료 사용자'
+    }
 
 }

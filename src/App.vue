@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NConfigProvider } from 'naive-ui'
+import { NConfigProvider, darkTheme } from 'naive-ui'
 import { NaiveProvider } from '@/components/common'
 import { useTheme } from '@/hooks/useTheme'
 import { useLanguage } from '@/hooks/useLanguage'
@@ -19,18 +19,29 @@ const themeOverrides = {
         primaryColor: '#ff08ff',
         primaryColorHover: '#ff08ff',
     },
-    // Button: {
-    //     colorPrimary: '#ff08ff',
-    //     colorDisabledPrimary: '#ff08ff',
-    //     rippleColor: '#ff08ff',
-    //     colorSuccess: '#ff08ff',
-    //     colorDisabledSuccess: '#ff08ff',
-    //     textColorTextPrimary: '#ff08ff',
-    // },
+    Button: {
+        colorPrimary: '#ff08ff',
+        textColorPrimary: '#ffffff',
+        textColorHoverPrimary: '#fff'
+        // colorDisabledPrimary: '#ff08ff',
+        // rippleColor: '#ff08ff',
+        // colorSuccess: '#ff08ff',
+        // colorDisabledSuccess: '#ff08ff',
+        // textColorTextPrimary: '#ff08ff',
+    },
     Input: {
         // border: '1px solid #ff08ff',
         borderHover: '1px solid #ff08ff',
         borderFocus: '1px solid #ff08ff'
+    },
+    Message: {
+        iconColorSuccess: '#ff08ff'
+    },
+    Notification: {
+        iconColorSuccess: '#ff08ff'
+    },
+    Dialog: {
+        iconColor: '#ff08ff'
     }
 }
 
