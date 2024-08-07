@@ -55,9 +55,9 @@ const wrapClass = computed(() => {
         'rounded-md',
         isMobile.value ? 'p-2' : 'px-3 py-2',
         // props.inversion ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]',
-        props.inversion ? 'bg-[#ff80ff]' : 'bg-[#f4f6f8]',
+        props.inversion ? 'bg-[#ff08ff] dark:bg-[#8004a0]' : 'bg-[#f4f6f8] dark:bg-[#1e1e20]',
         // props.inversion ? 'dark:bg-[#a1dc95]' : 'dark:bg-[#1e1e20]',
-        props.inversion ? 'dark:bg-[#ff80ff]' : 'dark:bg-[#1e1e20]',
+        // props.inversion ? 'dark:bg-[#ff80ff] dark:bg-opacity-100' : 'dark:bg-[#1e1e20] dark:bg-opacity-100',
         props.inversion ? 'message-request' : 'message-reply',
         { 'text-red-500': props.error },
     ]
