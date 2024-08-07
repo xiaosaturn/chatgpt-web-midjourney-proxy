@@ -86,10 +86,12 @@ const rObj = reactive({
     options: [{
         label: '信用卡/借记卡',
         value: 'usd'
-    }, {
-        label: '微信支付',
-        value: 'cny1'
-    }, {
+    },
+    // {
+    // label: '微信支付',
+    // value: 'cny1'
+    // },
+    {
         label: '支付宝支付',
         value: 'cny2'
     }],
