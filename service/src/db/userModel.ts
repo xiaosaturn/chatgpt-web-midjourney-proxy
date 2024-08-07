@@ -140,7 +140,65 @@ const insertUserPoint = (userId) => {
 const insertUserLevelRecord = (userId) => {
     const sql = `insert into member_level_record (user_id, level_id, level) values (?, ?, ?)`;
     return new Promise((resolve, reject) => {
-        db.query(sql, [userId, 3, 0],
+        db.query(sql, [userId, 1, 1],
+            (err, result) => {
+                if (err) {
+                    throw Error(err);
+                } else {
+                    resolve(result.insertId);
+                }
+            });
+    });
+}
+
+const updateUserLevelRecord = (userId, level) => {
+    const sql = `update member_level_record set level = ?, level_id = ? where id = ?`;
+    return new Promise((resolve, reject) => {
+        db.query(sql, [level, level ,userId],
+            (err, result) => {
+                if (err) {
+                    throw Error(err);
+                } else {
+                    resolve(result.insertId);
+                }
+            });
+    });
+}
+
+const updateUserExpireTime = async (userId, level) => {
+    const res: User = await getUserById(userId);
+    let arr;
+    const nowDay = new Date();
+    if (res.expireTime) {
+        // 有值，说明还要加上
+        arr = res.expireTime.split('-'); // ['2024', '5', '9']
+        if (level == 2) {
+            if (arr[1] == '12') {
+                arr[0] += 1;
+                arr[1] = '01'
+            } else {
+                arr[1] = String(arr[1] + 1).padStart(2, '0');
+            }
+        } else if (level == 3) {
+            arr[0] += 1; // 加一年
+        }
+    } else {
+        // 没值，则初始化
+        if (level == 2) {
+            if (nowDay.getMonth() + 1 == 12) {
+                arr = [nowDay.getFullYear() + 1, '01', String(nowDay.getDate()).padStart(2, '0')]
+            } else {
+                arr = [nowDay.getFullYear(), String(nowDay.getMonth() + 1).padStart(2, '0'), String(nowDay.getDate()).padStart(2, '0')]
+            }
+        } else if (level == 3) {
+            arr = [nowDay.getFullYear() + 1, String(nowDay.getMonth() + 1).padStart(2, '0'), String(nowDay.getDate()).padStart(2, '0')]
+        }
+    }
+    const newExpireTime = arr[0] + '-' + arr[1] + '-' + arr[2] + ' '
+    String(nowDay.getHours()).padStart(2, '0') + ':' + String(nowDay.getMinutes() ).padStart(2, '0') + ':' + String(nowDay.getSeconds() ).padStart(2, '0');
+    const sql = `update member_user set expire_time = ?, level_id = ? where id = ?`;
+    return new Promise((resolve, reject) => {
+        db.query(sql, [newExpireTime, level ,userId],
             (err, result) => {
                 if (err) {
                     throw Error(err);
@@ -190,5 +248,7 @@ export {
     insertUserLevelRecord,
     selectImagesByUserId,
     insertImage,
+    updateUserLevelRecord,
+    updateUserExpireTime,
     type User
 }

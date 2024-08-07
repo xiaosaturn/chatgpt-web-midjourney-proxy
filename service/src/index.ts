@@ -20,6 +20,7 @@ import { viggleProxyFileDo, viggleProxy, lumaProxy, runwayProxy } from './myfun'
 import { uploadFile, uploadFile2, uploadFile3 } from './utils/uploadfile'
 import { createCheckoutSession, webhookStripe } from './money/stripe'
 import cors from 'cors'
+import { logger } from './utils/logger'
 
 const app = express()
 const router = express.Router()
@@ -28,6 +29,8 @@ const corsOptions = {
     methods: ['GET', 'POST'], // 指定允许的 HTTP 方法
     allowedHeaders: ['Content-Type', 'Authorization'] // 指定允许的请求头
 }
+
+app.post('/app/stripe/callback', express.raw({type: 'application/json'}), webhookStripe);
 
 app.use(cors(corsOptions));
 
@@ -382,8 +385,9 @@ router.post('/app/user/login', login);
 router.put('/app/user', authV2, updateUserInfo);
 
 router.post('/app/money/create-checkout-session', authV2, createCheckoutSession);
-router.post('/app/stripe/callback', webhookStripe);
-app.post('/app/stripe/callback', bodyParser.raw({ type: '*/*' }), webhookStripe);
+// router.post('/app/stripe/callback', webhookStripe);
+// app.post('/app/stripe/callback', bodyParser.raw({ type: '*/*' }), webhookStripe);
+
 
 // 创建 multer 的实例
 const upload3 = multer();
@@ -399,7 +403,10 @@ app.set('trust proxy', 1);
 app.listen(3002, () => globalThis.console.log('Server is running on port 3002'));
 
 process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception:', err);
+    logger.info({
+        msg: err,
+        label: 'Uncaught Exception:'
+    })
     // 执行任何必要的清理操作
     // ...
 

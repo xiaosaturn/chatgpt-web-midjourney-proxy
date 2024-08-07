@@ -169,14 +169,14 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
     });
     let tempMsgCount;
     let redisCountKey;
-    if (user.level == 0) {
-        redisCountKey = 'expireTimeLevel0-' + obj.id;
-        tempMsgCount = await getRedisValue(redisCountKey);
-    } else if (user.level == 1) {
+    if (user.level == 1) {
         redisCountKey = 'expireTimeLevel1-' + obj.id;
         tempMsgCount = await getRedisValue(redisCountKey);
     } else if (user.level == 2) {
         redisCountKey = 'expireTimeLevel2-' + obj.id;
+        tempMsgCount = await getRedisValue(redisCountKey);
+    } else if (user.level == 3) {
+        redisCountKey = 'expireTimeLevel3-' + obj.id;
         tempMsgCount = await getRedisValue(redisCountKey);
     }
     let msgCount = Number(tempMsgCount)
@@ -184,7 +184,7 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
         // 有值，说明充钱了
         const expiryDate = moment(user.expireTime); // 将数据库日期转换为moment对象
         const currentDate = moment(); // 获取当前日期
-        if (user.level == 0) {
+        if (user.level == 1) {
             // 没充值，不需要判断会员是否过期，每天免费送5条
             if (msgCount <= 0) {
                 res.status(405);
@@ -203,7 +203,7 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
                 });
             } else {
                 // 没过期，判断24小时是否超过指定次数
-                if (user.level == 1) {
+                if (user.level == 2) {
                     // 月付会员，不超过50次
                     if (msgCount <= 0) {
                         res.status(405);
@@ -212,7 +212,7 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
                             msg: '已超过24小时最大使用次数，请0点之后再试，谢谢'
                         });
                     }
-                } else if (user.level == 2) {
+                } else if (user.level == 3) {
                     // 年度会员，不超过100次
                     if (msgCount <= 0) {
                         res.status(405);

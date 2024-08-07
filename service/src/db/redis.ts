@@ -40,13 +40,13 @@ const getRedisValue = async (key) => {
 }
 
 const resetArr = [{
-    level: 'expireTimeLevel0-*', // 用于匹配要重置的键的模式 *暂定为用户id
+    level: 'expireTimeLevel1-*', // 用于匹配要重置的键的模式 *暂定为用户id
     value: '5' // 重置后的值
 }, {
-    level: 'expireTimeLevel1-*',
+    level: 'expireTimeLevel2-*',
     value: '50'
 }, {
-    level: 'expireTimeLevel2-*',
+    level: 'expireTimeLevel3-*',
     value: '100'
 }]
 
