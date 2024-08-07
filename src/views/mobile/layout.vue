@@ -10,24 +10,26 @@
                     <template v-else>
                         <div v-if="showRegister" class="register-container flex flex-col items-center">
                             <n-space vertical>
-                                <h1 class="title text-center">注册账号</h1>
+                                <h1 class="title text-center">{{ $t('setting.register') }}</h1>
                                 <n-form ref="formRef" inline :model="formModel" :rules="rules" label-placement="top">
                                     <n-space vertical>
-                                        <n-form-item label="邮箱" path="email">
-                                            <n-input v-model:value="userInfo.email" placeholder="请输入邮箱" />
+                                        <n-form-item :label="$t('setting.email')" path="email">
+                                            <n-input v-model:value="userInfo.email"
+                                                :placeholder="$t('setting.plzEmail')" />
                                         </n-form-item>
-                                        <n-form-item label="密码" path="password">
+                                        <n-form-item :label="$t('password')" path="password">
                                             <n-input v-model:value="userInfo.password" type="password"
-                                                placeholder="请输入密码" show-password-on="click" />
+                                                :placeholder="$t('setting.plzPassword')" show-password-on="click" />
                                         </n-form-item>
-                                        <n-form-item label="确认密码" path="confirmPassword">
+                                        <n-form-item :label="$t('setting.confirmPassword')" path="confirmPassword">
                                             <n-input v-model:value="userInfo.rePassword" type="password"
-                                                placeholder="请再次输入密码" show-password-on="click" />
+                                                :placeholder="$t('setting.rePassword')" show-password-on="click" />
                                         </n-form-item>
-                                        <n-form-item label="验证码" path="verificationCode">
+                                        <n-form-item :label="$t('setting.captcha')" path="verificationCode">
                                             <div class="flex justify-between">
                                                 <n-space>
-                                                    <n-input v-model:value="userInfo.captcha" placeholder="请输入验证码" />
+                                                    <n-input v-model:value="userInfo.captcha"
+                                                        :placeholder="$t('setting.plzCaptcha')" />
                                                     <n-button :disabled="isCountingDown" type="primary"
                                                         @click="sendVerificationCode">
                                                         {{ countDownText }}
@@ -38,30 +40,33 @@
                                     </n-space>
                                 </n-form>
                                 <n-button type="primary" block @click="handleRegister" :disabled="isSubmitting"
-                                    size="large">注册</n-button>
+                                    size="large">{{ $t('setting.register') }}</n-button>
                                 <div class="login-link">
-                                    已有账号？<n-button text @click="showRegister = false" color="#2080f0">立即登录</n-button>
+                                    {{ $t('setting.haveAccount') }}<n-button text @click="showRegister = false"
+                                        color="#2080f0">{{ $t('setting.nowLogin') }}</n-button>
                                 </div>
                             </n-space>
                         </div>
                         <div v-else class="register-container flex flex-col items-center">
                             <n-space vertical>
-                                <h1 class="title text-center">登录</h1>
+                                <h1 class="title text-center">{{ $t('setting.login') }}</h1>
                                 <n-form ref="formRef2" inline :model="formModel" :rules="rules" label-placement="top">
                                     <n-space vertical>
-                                        <n-form-item label="邮箱" path="email">
-                                            <n-input v-model:value="userInfo.email" placeholder="请输入邮箱" />
+                                        <n-form-item :label="$t('setting.email')" path="email">
+                                            <n-input v-model:value="userInfo.email"
+                                                :placeholder="$t('setting.plzEmail')" />
                                         </n-form-item>
-                                        <n-form-item label="密码" path="password">
+                                        <n-form-item :label="$t('setting.password')" path="password">
                                             <n-input v-model:value="userInfo.password" type="password"
-                                                placeholder="请输入密码" show-password-on="click" />
+                                                :placeholder="$t('setting.plzPassword')" show-password-on="click" />
                                         </n-form-item>
                                     </n-space>
                                 </n-form>
                                 <n-button type="primary" block @click="handleLogin" :disabled="isSubmitting"
-                                    size="large">登录</n-button>
+                                    size="large">{{ $t('setting.login') }}</n-button>
                                 <div class="login-link">
-                                    没有账号？<n-button text @click="showRegister = true" color="#2080f0">立即注册</n-button>
+                                    {{ $t('setting.noAccount2') }}<n-button text @click="showRegister = true"
+                                        color="#2080f0">{{ $t('setting.nowRegister') }}</n-button>
                                 </div>
                             </n-space>
                         </div>
@@ -196,7 +201,7 @@ const goToLogin = () => {
 
 const countdown = ref(0)
 const isCountingDown = computed(() => countdown.value > 0)
-const countDownText = computed(() => isCountingDown.value ? `${countdown.value}s后重新发送` : '发送验证码')
+const countDownText = computed(() => isCountingDown.value ? `${countdown.value}s` : t('userInfo.sendCode'))
 
 // const sendVerificationCode = debounce(() => {
 //     if (isCountingDown.value) return
@@ -220,7 +225,7 @@ const handleLogin = async () => {
         });
         if (res.code == 200) {
             notification.success({
-                title: '登录成功',
+                title: t('userInfo.loginSuccess'),
                 duration: 3000,
             });
             gptServerStore.setMyData({
