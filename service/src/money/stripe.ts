@@ -3,8 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 import exp from 'constants';
 import { logger } from '../utils/logger';
 
-const stripe2 = new stripe('sk_test_51NFoodQPQTn5KJriUS5tQZ8sgmdcbXIRsomLbS1R4J3eaBU8N9Ey5Gc0WDCRSNBREkgvf6mrPsgD88pi5sdZX2a400sJNxl9AM'); // test
-// const stripe2 = new stripe(process.env.StripeKey)
+// const stripe2 = new stripe('sk_test_51NFoodQPQTn5KJriUS5tQZ8sgmdcbXIRsomLbS1R4J3eaBU8N9Ey5Gc0WDCRSNBREkgvf6mrPsgD88pi5sdZX2a400sJNxl9AM'); // test
+const stripe2 = new stripe(process.env.StripeKey)
 
 // Use the secret provided by Stripe CLI for local testing
 // or your webhook endpoint's secret.
@@ -90,8 +90,8 @@ const webhookStripe = async (req: Request, res: Response, next: NextFunction) =>
     let event;
 
     try {
-        // event = stripe2.webhooks.constructEvent(payload, sig, endpointSecretTest); // test
-        event = stripe2.webhooks.constructEvent(payload, sig, process.env.StripeWebhookKey);
+        event = stripe2.webhooks.constructEvent(payload, sig, endpointSecretTest); // test
+        // event = stripe2.webhooks.constructEvent(payload, sig, process.env.StripeWebhookKey);
     } catch (err) {
         logger.info({
             msg: err.message,
