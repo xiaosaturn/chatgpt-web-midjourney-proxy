@@ -104,11 +104,8 @@ const generate = async () => {
         }
         if (gen3.options.init_image == '') {
             delete gen3.options.init_image;
-            //delete gen3.options.resolution;
         }
-
         gen3.options.exploreMode = st.value.version == 'europa'
-
         const d = await runwayFetch('/tasks', st.value.version == 'gen2' ? obj : gen3)
         mlog("runwayGen2", d)
         d.task && d.task.id && runwayFeed(d.task.id)
