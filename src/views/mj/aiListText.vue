@@ -9,15 +9,19 @@ defineProps<{ myItem: Chat.History, myObj?: gptConfigType }>()
 
 <template>
     <span class="flex justify-start items-center">
-        <SvgIcon icon="ri:message-3-line" v-if="!myObj" />
-        <n-avatar v-else-if="myObj.gpts" :src="myObj.gpts.logo" fallback-src="../../assets/avatar.jpg" :size="18"
-            round />
-        <SvgIcon icon="bi:chat" v-else />
+        <SvgIcon v-if="!myObj" icon="vscode-icons:file-type-excalidraw" class="w-6 h-6" />
+        <n-avatar v-else-if="myObj.gpts" class="w-6 h-6" :src="myObj.gpts.logo" fallback-src="../../assets/avatar.jpg"
+            :size="24" round />
+        <!-- <SvgIcon icon="bi:chat" v-else /> -->
+        <SvgIcon v-else icon="cryptocurrency-color:chat" class="w-6 h-6" />
     </span>
     <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap"
         style="border-color:#ff80ff;">
         <slot />
-        <span v-if="!myObj">{{ myItem.title }}</span>
+        <div v-if="!myObj">
+            <span class="text-[16px]">{{ myItem.title }}</span>
+            <div class="text-[12px] text-gray-400">{{ myItem.latestTime }}</div>
+        </div>
         <n-popover v-else placement="right-start" trigger="hover">
             <template #trigger>
                 <div>

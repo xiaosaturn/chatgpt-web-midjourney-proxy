@@ -42,6 +42,10 @@ const themeOverrides = {
     },
     Dialog: {
         iconColor: '#ff08ff'
+    },
+    Slider: {
+        fillColor: '#ff08ff',
+        fillColorHover: '#ff08ff'
     }
 }
 

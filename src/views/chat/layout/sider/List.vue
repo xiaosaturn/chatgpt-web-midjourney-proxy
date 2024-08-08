@@ -89,7 +89,7 @@ watch(() => gptConfigStore.myData, toMyuid, { deep: true })
             <template v-else>
                 <div v-for="(item, index) of dataSources" :key="index">
                     <a class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-2xl cursor-pointer hover:bg-neutral-100 group dark:border-neutral-800 dark:hover:bg-[#24272e]"
-                        :class="isActive(item.uuid) && ['border-[#ff80ff]', 'bg-neutral-100', 'text-[#ff80ff]', 'dark:bg-[#24272e]', 'dark:border-[#ff80ff]', 'pr-14']"
+                        :class="isActive(item.uuid) && ['border-[#ff08ff]', 'bg-neutral-100', 'text-[#ff80ff]', 'dark:bg-[#24272e]', 'dark:border-[#ff08ff]', 'pr-14']"
                         @click="handleSelect(item)">
                         <AiListText :myObj="isInObjs(item.uuid)" :myItem="item">
                             <NInput v-if="item.isEdit" v-model:value="item.title" size="tiny"

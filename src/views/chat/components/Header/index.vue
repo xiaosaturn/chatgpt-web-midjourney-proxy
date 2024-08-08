@@ -76,12 +76,12 @@ watch(() => homeStore.myData.act, debounce((n) => n == 'saveChat' && (nGptStore.
             </h1>
             <div class="flex items-center space-x-2">
                 <HoverButton @click="handleExport">
-                    <span class="text-xl text-[#4f555e] dark:text-white">
+                    <span class="text-xl text-[#ff08ff] dark:text-[#ff80ff]">
                         <SvgIcon icon="ri:download-2-line" />
                     </span>
                 </HoverButton>
                 <HoverButton @click="handleClear">
-                    <span class="text-xl text-[#4f555e] dark:text-white">
+                    <span class="text-xl text-[#ff08ff] dark:text-[#ff80ff]">
                         <SvgIcon icon="ri:delete-bin-line" />
                     </span>
                 </HoverButton>
