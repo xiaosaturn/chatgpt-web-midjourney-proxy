@@ -126,7 +126,7 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
         res.status(401);
         return res.send({
             code: 401,
-            msg: '无token，请先登录'
+            msg: 'No Token, Please Login'
         });
     }
     jwt.verify(token.split(' ')[1], process.env.SECRET_KEY, {
@@ -136,7 +136,7 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
             res.status(401);
             return res.send({
                 code: 401,
-                msg: '无效的token，请登录'
+                msg: 'Invalid Token, Please Login'
             });
         }
         const redisToken = await getRedisValue(decoded.email)
@@ -144,7 +144,7 @@ export const authV2 = async (req: Request, res: Response, next: NextFunction) =>
             res.status(403);
             return res.send({
                 code: 401,
-                msg: '无效的token，请重新登录'
+                msg: 'Invalid Token, Please Login'
             });
         }
         logger.info({
@@ -190,6 +190,10 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
                 res.status(405);
                 return res.send({
                     code: 405,
+                    msg: 'You have exceeded the maximum usage limit for 24 hours. Please try again after midnight. Thank you'
+                });
+                return res.send({
+                    code: 405,
                     msg: '已超过24小时最大使用次数，请0点之后再试，谢谢'
                 });
             }
@@ -197,6 +201,10 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
             if (expiryDate.isBefore(currentDate)) {
                 // 过期了，需要重新充值
                 res.status(403);
+                return res.send({
+                    code: 403,
+                    msg: 'Your account has expired. Please contact customer service to recharge.'
+                });
                 return res.send({
                     code: 403,
                     msg: '账户已过期，请联系客服充值'
@@ -209,6 +217,10 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
                         res.status(405);
                         return res.send({
                             code: 405,
+                            msg: 'You have exceeded the maximum usage limit for 24 hours. Please try again after midnight. Thank you'
+                        });
+                        return res.send({
+                            code: 405,
                             msg: '已超过24小时最大使用次数，请0点之后再试，谢谢'
                         });
                     }
@@ -216,6 +228,10 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
                     // 年度会员，不超过100次
                     if (msgCount <= 0) {
                         res.status(405);
+                        return res.send({
+                            code: 405,
+                            msg: 'You have exceeded the maximum usage limit for 24 hours. Please try again after midnight. Thank you'
+                        });
                         return res.send({
                             code: 405,
                             msg: '已超过24小时最大使用次数，请0点之后再试，谢谢'
@@ -228,6 +244,10 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
         // 没值，每天体验5次
         if (msgCount <= 0) {
             res.status(405);
+            return res.send({
+                code: 405,
+                msg: 'You have exceeded the maximum usage limit for 24 hours. Please try again after midnight. Thank you'
+            });
             return res.send({
                 code: 405,
                 msg: '已超过24小时最大使用次数，请0点之后再试，谢谢'
@@ -255,7 +275,7 @@ export const authV4 = async (req: Request, res: Response, next: NextFunction) =>
         res.status(401);
         return res.send({
             code: 401,
-            msg: '无token，请先登录'
+            msg: 'No Token, Please Login'
         });
     }
     jwt.verify(token.split(' ')[1], process.env.SECRET_KEY, {
@@ -265,7 +285,7 @@ export const authV4 = async (req: Request, res: Response, next: NextFunction) =>
             res.status(401);
             return res.send({
                 code: 401,
-                msg: '无效的token，请登录'
+                msg: 'Invalid Token, Please Login'
             });
         }
         const redisToken = await getRedisValue(decoded.email)
@@ -273,7 +293,7 @@ export const authV4 = async (req: Request, res: Response, next: NextFunction) =>
             res.status(403);
             return res.send({
                 code: 401,
-                msg: '无效的token，请重新登录'
+                msg: 'Invalid Token, Please Login'
             });
         }
         logger.info({
@@ -297,18 +317,18 @@ export const authV5 = async (obj: any, req: Request, res: Response, next: NextFu
         // submit是提交任务，insight-face/swap是换脸，都需要扣除次数，其他查询不扣次数
         let tempMsgCount;
         let redisCountKey;
-        if (user.level == 0) {
-            redisCountKey = 'midLevel0-' + obj.id;
+        if (user.level == 1) {
+            redisCountKey = 'midLevel1-' + obj.id;
             res.status(405);
             return res.send({
                 code: 405,
-                msg: 'midjournary仅限月度会员或年度会员，请充值后使用，谢谢'
+                msg: 'Midjournary is only available to monthly or annual members. Please recharge to use. Thank you.'
             });
-        } else if (user.level == 1) {
-            redisCountKey = 'midLevel1-' + obj.id;
-            tempMsgCount = await getRedisValue(redisCountKey);
         } else if (user.level == 2) {
             redisCountKey = 'midLevel2-' + obj.id;
+            tempMsgCount = await getRedisValue(redisCountKey);
+        } else if (user.level == 3) {
+            redisCountKey = 'midLevel3-' + obj.id;
             tempMsgCount = await getRedisValue(redisCountKey);
         }
         let msgCount = Number(tempMsgCount);
@@ -320,7 +340,7 @@ export const authV5 = async (obj: any, req: Request, res: Response, next: NextFu
                 // 没充值，不给使用
                 return res.send({
                     code: 405,
-                    msg: 'midjournary仅限月度会员或年度会员，请充值后使用，谢谢'
+                    msg: 'Midjournary is only available to monthly or annual members. Please recharge to use. Thank you.'
                 });
             } else {
                 if (expiryDate.isBefore(currentDate)) {
@@ -328,7 +348,7 @@ export const authV5 = async (obj: any, req: Request, res: Response, next: NextFu
                     res.status(403);
                     return res.send({
                         code: 403,
-                        msg: '账户已过期，请联系客服充值'
+                        msg: 'Your account has expired. Please contact customer service to recharge.'
                     });
                 } else {
                     // 没过期，判断是否超过为0
@@ -336,7 +356,7 @@ export const authV5 = async (obj: any, req: Request, res: Response, next: NextFu
                         res.status(405);
                         return res.send({
                             code: 405,
-                            msg: 'midjournary使用次数已用完，请充值后使用，谢谢'
+                            msg: 'Midjournary usage limit has been reached. Please recharge to use. Thank you.'
                         });
                     }
                 }
@@ -347,7 +367,7 @@ export const authV5 = async (obj: any, req: Request, res: Response, next: NextFu
                 res.status(405);
                 return res.send({
                     code: 405,
-                    msg: 'midjournary仅限月度会员或年度会员，请充值后使用，谢谢'
+                    msg: 'Midjournary is only available to monthly or annual members. Please recharge to use. Thank you.'
                 });
             }
         }
