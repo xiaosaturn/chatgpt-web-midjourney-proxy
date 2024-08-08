@@ -7,6 +7,7 @@ import { isNumber } from "@/utils/is";
 import { localGet, localSaveAny } from "./mjsave";
 import { t } from "@/locales";
 import request from '@/api/myAxios'
+import * as types from './sse/types'
 
 //import { useMessage } from "naive-ui";
 export interface gptsType {
@@ -16,6 +17,10 @@ export interface gptsType {
     info: string
     use_cnt?: string
     bad?: string | number
+}
+
+export class ChatGPTError2 extends types.ChatGPTError {
+    reason?: string
 }
 
 //const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
@@ -158,8 +163,11 @@ export const mjFetch = (url: string, data?: any) => {
         }
         fetch(getUrl(url), opt)
             .then(d2 => d2.json().then(d => {
-                if (d2.ok) resolve(d);
-                else {
+                console.log('dddd:', d)
+                console.log('dddd2:', d2)
+                if (d2.ok) {
+                    resolve(d)
+                } else {
                     reject({ error: d.error ?? (d ?? 'Network response was not ok!'), code: 'response_fail', url: getUrl(url), status: d2.status })
                 }
             }).catch(e => reject({ error: e ? e.toString() : 'json_error', code: 'json_error', url: getUrl(url), status: d2.status }))
@@ -290,13 +298,13 @@ export const subTask = async (data: any, chat: Chat.Chat) => {
         if (d.code == 21) {
             d = await mjFetch('/mj/submit/modal', { taskId: d.result });
         }
-
         backOpt(d, chat);
     } catch (e: any) {
         mlog('mjFetchError', e)
         chat.text = '失败！' + "\n```json\n" + JSON.stringify(e, null, 2) + "\n```\n";
         chat.loading = false;
         homeStore.setMyData({ act: 'updateChat', actData: chat });
+        throw (e)
     }
 
 

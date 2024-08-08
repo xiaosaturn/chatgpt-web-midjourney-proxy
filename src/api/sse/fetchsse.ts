@@ -7,6 +7,7 @@ import { streamAsyncIterable } from './stream-async-iterable'
 export class ChatGPTError2 extends types.ChatGPTError {
     reason?: string
 }
+
 export async function fetchSSE(
     url: string,
     options: Parameters<typeof fetch>[1] & {
