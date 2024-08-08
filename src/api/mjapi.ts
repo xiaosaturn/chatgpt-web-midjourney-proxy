@@ -163,8 +163,6 @@ export const mjFetch = (url: string, data?: any) => {
         }
         fetch(getUrl(url), opt)
             .then(d2 => d2.json().then(d => {
-                console.log('dddd:', d)
-                console.log('dddd2:', d2)
                 if (d2.ok) {
                     resolve(d)
                 } else {
