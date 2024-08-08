@@ -11,7 +11,7 @@ const st = ref({ show: false })
 
 <template>
     <div class="whitespace-pre-wrap pb-10" v-if="!isHideServer">
-        <span class=" text-red-400">{{ $t('mj.setTextInfo') }} </span>
+        <span class="text-red-400">{{ $t('mj.setTextInfo') }} </span>
         <NTag type="primary" effect="dark" @click="st.show = true" size="small" round style="cursor: pointer; ">{{
             $t('setting.setting') }}</NTag>
     </div>

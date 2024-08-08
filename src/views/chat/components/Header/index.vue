@@ -51,12 +51,14 @@ const chatSet = new chatSetting(uuid == null ? 1002 : uuid);
 const nGptStore = ref();
 nGptStore.value = chatSet.getGptConfig();
 const st = ref({ isShow: false });
+
 //导致卡死的原因 当删除时触发 切换 uuid 这个地方会删除的uuid 跟新uuid 一直却换
 watch(() => gptConfigStore.myData, debounce(() => {
     mlog("toMyuid19", "watch gptConfigStore.myData ", chatStore.active)
     nGptStore.value = chatSet.getGptConfig()
 }, 600), { deep: true })
 watch(() => homeStore.myData.act, debounce((n) => n == 'saveChat' && (nGptStore.value = chatSet.getGptConfig()), 600), { deep: true })
+
 </script>
 
 <template>
@@ -89,18 +91,18 @@ watch(() => homeStore.myData.act, debounce((n) => n == 'saveChat' && (nGptStore.
         </div>
 
         <div @click="st.isShow = true"
-            class="absolute left-1/2 top-full -translate-x-1/2 cursor-pointer select-none rounded-b-md border  bg-white px-2 dark:border-neutral-800 dark:bg-[#111114]">
-            <div class="flex items-center   justify-center space-x-1 cursor-pointer hover:text-[#4b9e5f]"
+            class="absolute left-1/2 top-full -translate-x-1/2 cursor-pointer select-none rounded-b-md border bg-white px-2 dark:border-neutral-800 dark:bg-[#111114]">
+            <div class="flex items-center justify-center space-x-1 cursor-pointer hover:text-[#4b9e5f]"
                 v-if="homeStore.myData.local != 'draw'">
                 <template v-if="nGptStore.gpts">
                     <SvgIcon icon="ri:apps-fill" />
-                    <span class="line-clamp-1 overflow-hidden">{{ nGptStore.gpts.name }}</span>
+                    <span class="line-clamp-1 overflow-hidden text-[20px]">{{ nGptStore.gpts.name }}</span>
                 </template>
                 <template v-else>
-                    <SvgIcon icon="heroicons:sparkles" />
-                    <span>{{ nGptStore.model }}</span>
+                    <SvgIcon class="text-[#ff08ff]" icon="heroicons:sparkles" />
+                    <span class="text-[16px] text-[#ff08ff]">{{ nGptStore.model }}</span>
                 </template>
-                <SvgIcon icon="icon-park-outline:right" />
+                <SvgIcon class="text-[#ff08ff]" icon="icon-park-outline:right" />
             </div>
         </div>
     </header>
