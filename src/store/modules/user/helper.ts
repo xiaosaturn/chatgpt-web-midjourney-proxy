@@ -14,6 +14,9 @@ export interface UserInfo {
     description?: string
     expireDate?: string
     expireTime?: string
+    chatCount?: string
+    drawCount?: string
+    level?: string
 }
 
 export interface UserState {

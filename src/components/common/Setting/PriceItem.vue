@@ -49,7 +49,7 @@
                     </svg>
                     {{ $t('price.text2') }}
                 </li>
-                <li v-if="props.type != 1" class="flex gap-x-3">
+                <li class="flex gap-x-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 flex-none text-blue-600" viewBox="0 0 24 24"
                         stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -135,6 +135,7 @@ onMounted(() => {
         rObj.price = '0'
         rObj.priceWay = `/${t('price.oneTime')}`
         rObj.numberStr = t('price.text1')
+        rObj.midjournaryText = t('price.text7')
     } else if (props.type == 2) {
         // 1个月 9.9，限制每天50次
         rObj.type = t('price.monthly')

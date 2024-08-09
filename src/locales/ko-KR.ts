@@ -502,7 +502,7 @@ export default {
         text4: '하루 100개의 메시지 (고객 서비스에 문의하면 무료로 횟수 증가 가능)',
         text5: '100회 무료 그림 그리기 기회 제공',
         text6: '1500회 무료 그림 그리기 기회 제공',
-        text7: '30번의 무료 드로잉 시도를 선물로 드립니다',
+        text7: '10번의 무료 드로잉 시도를 선물로 드립니다',
         buy: '구매',
         contact: '문의 사항이 있으시면 고객 서비스에 연락해 주세요',
         telegram: '텔레그램',
@@ -538,7 +538,10 @@ export default {
         updateFailure: '업데이트 실패',
         updateAvatarSuccess: '아바타 업데이트 성공',
         updateAvatarFailure: '아바타 업데이트 실패',
-        freeUser: '무료 사용자'
+        freeUser: '무료 사용자',
+        chatCount: '오늘 남은 대화 횟수',
+        drawCount: '오늘 남은 그림 횟수',
+
     }
 
 }

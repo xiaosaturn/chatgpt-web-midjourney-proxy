@@ -489,7 +489,7 @@ export default {
         "text4": "毎日100回の無料メッセージ（追加の使用についてはカスタマーサービスにお問い合わせください）",
         "text5": "無料で100回の描画試行をプレゼント",
         "text6": "無料で1500回の描画試行をプレゼント",
-        text7: '30回の無料ドローイングチャンスをプレゼント',
+        text7: '10回の無料ドローイングチャンスをプレゼント',
         "buy": "購入",
         "contact": "ご質問がある場合はカスタマーサービスにお問い合わせください",
         "telegram": "Telegram",
@@ -524,6 +524,9 @@ export default {
         "updateFailure": "更新失敗",
         "updateAvatarSuccess": "アバターの更新成功",
         "updateAvatarFailure": "アバターの更新失敗",
-        "freeUser": "無料ユーザー"
+        "freeUser": "無料ユーザー",
+        chatCount: '今日の会話の残り回数',
+        drawCount: '今日の残り描画回数',
+
     }
 }

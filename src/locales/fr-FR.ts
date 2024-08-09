@@ -502,7 +502,7 @@ export default {
         text4: '100 messages par jour (contactez le service client pour augmenter gratuitement le nombre)',
         text5: '100 utilisations gratuites de la fonction de dessin',
         text6: '1500 utilisations gratuites de la fonction de dessin',
-        text7: 'Cadeau de 30 tentatives de dessin gratuites',
+        text7: 'Cadeau de 10 tentatives de dessin gratuites',
         buy: 'Acheter',
         contact: 'Si vous avez des questions, veuillez contacter le service client',
         telegram: 'Telegram',
@@ -538,7 +538,10 @@ export default {
         updateFailure: 'Échec de la mise à jour',
         updateAvatarSuccess: 'Mise à jour de l\'avatar réussie',
         updateAvatarFailure: 'Échec de la mise à jour de l\'avatar',
-        freeUser: 'Utilisateur gratuit'
+        freeUser: 'Utilisateur gratuit',
+        chatCount: "Nombre de conversations restantes aujourd'hui",
+        drawCount: 'Nombre de dessins restants aujourd\'hui',
+
     }
 
 

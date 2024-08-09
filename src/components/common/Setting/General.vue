@@ -484,6 +484,16 @@ onMounted(() => {
 <template>
     <div class="p-4 space-y-5 min-h-[200px] rounded-[20px]">
         <div class="space-y-6" v-if="gptServerStore.myData.SERVICE_TOKEN">
+            <div class="flex items-center space-x-4 justify-start">
+                <div class="text-[20px] mr-6">{{ $t('userInfo.chatCount') }}：
+                    <n-tag type="primary" size="large" style="font-size:22px;font-weight: bold">{{ userInfo.chatCount
+                        }}</n-tag>
+                </div>
+                <div class="text-[20px]">{{ $t('userInfo.drawCount') }}：
+                    <n-tag type="primary" size="large" style="font-size:22px;font-weight: bold">{{ userInfo.drawCount
+                        }}</n-tag>
+                </div>
+            </div>
             <div class="flex items-center space-x-4">
                 <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
                 <n-avatar round size="large" :src="userInfo.avatar"

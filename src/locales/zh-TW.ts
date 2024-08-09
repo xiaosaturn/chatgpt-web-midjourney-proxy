@@ -499,7 +499,7 @@ export default {
         text4: '每天100條消息（聯繫客服可免費增加次數）',
         text5: '贈送100次繪畫次數',
         text6: '贈送1500次繪畫次數',
-        text7: '免費贈送30次繪畫次數',
+        text7: '免費贈送10次繪畫次數',
         buy: '購買',
         contact: '如有問題，請聯繫客服',
         telegram: '電報',
@@ -535,7 +535,9 @@ export default {
         updateFailure: '修改失敗',
         updateAvatarSuccess: '修改頭像成功',
         updateAvatarFailure: '修改頭像失敗',
-        freeUser: '免費用戶'
+        freeUser: '免費用戶',
+        chatCount: '今日對話剩餘次數',
+        drawCount: '繪畫剩餘次數',
     }
 
 

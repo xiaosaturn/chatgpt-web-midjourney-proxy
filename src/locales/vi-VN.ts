@@ -502,7 +502,7 @@ export default {
         text4: '100 tin nhắn mỗi ngày (có thể tăng số lượng miễn phí khi liên hệ với dịch vụ khách hàng)',
         text5: 'Tặng 100 lần vẽ',
         text6: 'Tặng 1500 lần vẽ',
-        text7: 'Tặng 30 lần vẽ miễn phí',
+        text7: 'Tặng 10 lần vẽ miễn phí',
         buy: 'Mua',
         contact: 'Nếu có vấn đề, vui lòng liên hệ với dịch vụ khách hàng',
         telegram: 'Telegram',
@@ -538,7 +538,10 @@ export default {
         updateFailure: 'Cập nhật thất bại',
         updateAvatarSuccess: 'Cập nhật ảnh đại diện thành công',
         updateAvatarFailure: 'Cập nhật ảnh đại diện thất bại',
-        freeUser: 'Người dùng miễn phí'
+        freeUser: 'Người dùng miễn phí',
+        chatCount: 'Số lần trò chuyện còn lại trong hôm nay',
+        drawCount: 'Số lần vẽ còn lại trong hôm nay',
+
     }
 
 

@@ -525,7 +525,7 @@ export default {
         text4: '每天100条消息（联系客服可免费增加次数）',
         text5: '赠送100次绘画次数',
         text6: '赠送1500次绘画次数',
-        text7: '免费赠送30次绘画次数',
+        text7: '免费赠送10次绘画次数',
         buy: '购买',
         contact: '如有问题，请联系客服',
         telegram: '电报',
@@ -561,6 +561,9 @@ export default {
         updateFailure: '修改失败',
         updateAvatarSuccess: '修改头像成功',
         updateAvatarFailure: '修改头像失败',
-        freeUser: '免费用户'
+        freeUser: '免费用户',
+        chatCount: '今日对话剩余次数',
+        drawCount: '绘画剩余次数',
+
     }
 }

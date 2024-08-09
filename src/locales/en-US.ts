@@ -513,7 +513,7 @@ export default {
         text4: '100 messages daily（Contact customer service for free additional uses）',
         text5: 'Gift of 100 drawing attempts',
         text6: 'Gift of 1500 drawing attempts',
-        text7: 'Gift of 30 free drawing attempts',
+        text7: 'Gift of 10 free drawing attempts',
         buy: 'Buy',
         contact: 'If you have any questions, please contact customer service',
         telegram: 'Telegram',
@@ -549,7 +549,10 @@ export default {
         updateFailure: 'Update Failed',
         updateAvatarSuccess: 'Avatar Update Successful',
         updateAvatarFailure: 'Avatar Update Failed',
-        freeUser: 'Free User'
+        freeUser: 'Free User',
+        chatCount: 'Remaining Conversations Today',
+        drawCount: 'Remaining Drawings Today',
+
     }
 
 }

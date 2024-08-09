@@ -1,7 +1,7 @@
 <template>
     <div
         class="w-full max-w-sm rounded-lg border border-slate-200 bg-white px-3 py-6 shadow dark:border-slate-700 dark:bg-slate-800">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between mb-6">
             <div class="flex items-center">
                 <div class="relative inline-flex flex flex-col items-center">
                     <n-image :src="userInfo.avatar" alt="user"
@@ -20,7 +20,7 @@
 
                     <span class="text-lg text-slate-400 mb-2">{{ userInfo.email }}</span>
                     <div>
-                        <span v-if="userInfo.expireTime"
+                        <span v-if="userInfo.level && userInfo.level > '1'"
                             class="rounded-full bg-green-600/10 px-2.5 py-1 text-xs font-semibold leading-5 text-green-600">
                             {{ $t('setting.expireTime') }} {{ userInfo.expireTime }}
                         </span>
@@ -30,6 +30,19 @@
                         </span>
                     </div>
                 </div>
+
+            </div>
+        </div>
+        <div class="flex flex-col items-start space-x-4">
+            <div class="text-[20px] mb-2">{{ $t('userInfo.chatCount') }}：
+                <n-tag type="primary" size="large" style="font-size:22px;font-weight: bold">{{
+                    userInfo.chatCount
+                    }}</n-tag>
+            </div>
+            <div class="text-[20px] flex justify-start">{{ $t('userInfo.drawCount') }}：
+                <n-tag type="primary" size="large" style="font-size:22px;font-weight: bold">{{
+                    userInfo.drawCount
+                    }}</n-tag>
             </div>
         </div>
         <!-- <div></div>
@@ -43,7 +56,7 @@
 <script lang="ts" setup>
 import { computed, ref, h, onMounted } from 'vue'
 import { gptServerStore, useUserStore } from '@/store'
-import { useNotification, NImage, NButton, NDialog, NInput, useDialog } from 'naive-ui'
+import { useNotification, NImage, NButton, NDialog, NInput, useDialog, NTag } from 'naive-ui'
 import { SvgIcon } from '@/components/common'
 import request from '@/api/myAxios'
 import { uploadFile } from '@/utils/uploadfile'

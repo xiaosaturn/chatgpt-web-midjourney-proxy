@@ -500,7 +500,7 @@ export default {
         text4: 'Günde 100 mesaj (müşteri hizmetleriyle iletişime geçerek ücretsiz artırılabilir)',
         text5: '100 ücretsiz çizim hakkı',
         text6: '1500 ücretsiz çizim hakkı',
-        text7: '30 ücretsiz çizim denemesi hediyesi',
+        text7: '10 ücretsiz çizim denemesi hediyesi',
         buy: 'Satın al',
         contact: 'Sorularınız için lütfen müşteri hizmetleriyle iletişime geçin',
         telegram: 'Telegram',
@@ -536,7 +536,10 @@ export default {
         updateFailure: 'Güncelleme Başarısız',
         updateAvatarSuccess: 'Avatar Güncellemesi Başarılı',
         updateAvatarFailure: 'Avatar Güncellemesi Başarısız',
-        freeUser: 'Ücretsiz Kullanıcı'
+        freeUser: 'Ücretsiz Kullanıcı',
+        chatCount: 'Bugünkü kalan konuşma sayısı',
+        drawCount: 'Bugünkü kalan çizim sayısı',
+
     }
 
 
