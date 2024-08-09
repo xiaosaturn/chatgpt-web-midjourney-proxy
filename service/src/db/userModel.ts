@@ -1,4 +1,5 @@
 import { db, resultsWithCamelCase } from './index.ts';
+import { getRedisValue } from './redis.ts';
 
 interface User {
     id?: number
@@ -12,7 +13,9 @@ interface User {
     gender?: string
     password?: string
     expireTime?: string
-    level?: number // 会员等级， 1-月付会员，2-年度会员
+    level?: number // 会员等级，1-免费会员， 2-月付会员，3-年度会员
+    chatCount?: string | number, // 今日对话剩余次数
+    drawCount?: number | string, // 绘画剩余次数
 }
 
 /**
@@ -61,13 +64,15 @@ const getUserById = async (userId) => {
     left join member_level_record mlr on mlr.user_id = mu.id
     where mu.id=?`;
     return new Promise((resolve, reject) => {
-        db.query(sql, userId, (err, results) => {
+        db.query(sql, userId, async (err, results) => {
             if (err) {
                 throw Error(err)
             } else {
                 const result = results[0];
                 if (result) {
                     const user: User = results[0];
+                    user.chatCount = Number(await getRedisValue(`expireTimeLevel${user.level}-` + user.id));
+                    user.drawCount = Number(await getRedisValue(`midLevel${user.level}-` + user.id));
                     resolve(user);
                 }
             }
