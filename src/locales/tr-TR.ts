@@ -210,9 +210,13 @@ export default {
         "micRec": "Kayıt başlat, lütfen konuşun! 2 saniye boyunca ses yoksa otomatik olarak duracaktır.",
         "micRecEnd": "Kayıt sona erdi",
 
-        subtle: 'Haute définition 2x'
-        , creative: 'Haute définition 2x. Créatif'
-        , gpt_gx: 'Les GPT utilisent g-*'
+        subtle: 'Haute définition 2x',
+        creative: 'Haute définition 2x. Créatif',
+        gpt_gx: 'Les GPT utilisent g-*',
+
+        "cw": "0-100 Karakter referans derecesi",
+        "sref": "Görsel URL Aynı stile sahip görsel oluşturma",
+        "cref": "Görsel URL Aynı karaktere sahip görsel oluşturma",
     },
     "mjset": {
         "server": "Sunucu",
@@ -490,12 +494,13 @@ export default {
         yearly: 'Yıllık ödeme',
         yearlyUse: 'En uygun fiyat',
         year: 'Yıl',
-        text1: 'Her gün 5 ücretsiz mesaj, ücretsiz deneme',
+        text1: 'Her gün 10 ücretsiz mesaj, ücretsiz deneme',
         text2: 'Tüm AI modelleri kullanılabilir (GPT-4o, GPT-4o-mini, GPT-3.5, Claude-3.5, Gemini-Pro, GLM, Moonshot vb. dahil)',
         text3: 'Günde 50 mesaj (müşteri hizmetleriyle iletişime geçerek ücretsiz artırılabilir)',
         text4: 'Günde 100 mesaj (müşteri hizmetleriyle iletişime geçerek ücretsiz artırılabilir)',
-        text5: '20 ücretsiz çizim hakkı',
-        text6: '300 ücretsiz çizim hakkı',
+        text5: '100 ücretsiz çizim hakkı',
+        text6: '1500 ücretsiz çizim hakkı',
+        text7: '30 ücretsiz çizim denemesi hediyesi',
         buy: 'Satın al',
         contact: 'Sorularınız için lütfen müşteri hizmetleriyle iletişime geçin',
         telegram: 'Telegram',

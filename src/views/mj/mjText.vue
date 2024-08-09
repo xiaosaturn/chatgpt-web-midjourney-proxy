@@ -7,6 +7,9 @@ import { homeStore } from '@/store'
 import aiCanvas from './aiCanvas.vue'
 import MarkdownIt from 'markdown-it'
 import { t } from "@/locales"
+import { useAppStoreWithOut } from '@/store/modules/app'
+
+const appStore = useAppStoreWithOut()
 
 interface Props {
     chat: Chat.Chat
@@ -20,6 +23,7 @@ const st = ref({ isLoadImg: false, uri_base64: '', bts: [], isShow: false, isCus
 const reload = () => {
     flechTask(chat.value);
 }
+
 const sub = (type: string, index: number) => {
 
     let text = chat.value.opt?.promptEn + ` ${type} ${index}`;
@@ -34,6 +38,7 @@ const sub = (type: string, index: number) => {
     }
     homeStore.setMyData({ act: 'draw', actData: obj });
 }
+
 //const st= ref({isLoad:false,});
 ////实现本地保存图片
 // const saveImg= (myChat:Chat.Chat)=>{
@@ -44,6 +49,7 @@ const sub = (type: string, index: number) => {
 //         st.value.isLoad=true;
 //     }
 // }
+
 const chat = computed(() => props.chat);
 
 const subV2 = (b: { k: string, n: string }) => {
@@ -116,53 +122,103 @@ const maskOk = (d: any) => {
     //imageSend({t:'V',v: 23,chat:props?.chat,  data:{ mask:d.mask,prompt:d.prompt} })
     st.value.isShow = false;
 }
+
 //专业版本按钮
-const bt = [
+let bt = [
     [
-        { k: ':upsample::1', n: 'U1' }
-        , { k: ':upsample::2', n: 'U2' }
-        , { k: ':upsample::3', n: 'U3' }
-        , { k: ':upsample::4', n: 'U4' }
-        , { k: 'high_variation', n: t('mj.high_variation') },
+        { k: ':upsample::1', n: 'U1' },
+        { k: ':upsample::2', n: 'U2' },
+        { k: ':upsample::3', n: 'U3' },
+        { k: ':upsample::4', n: 'U4' },
+        { k: 'high_variation', n: t('mj.high_variation') },
         { k: 'low_variation', n: t('mj.low_variation') },
         { k: ':Inpaint::1', n: t('mj.redraw') },
         { k: 'Outpaint::50', n: t('mj.p15') },
-        { k: 'Outpaint::75', n: t('mj.p20') }
-        , { k: 'CustomZoom::', n: t('mj.czoom') },
-        { k: 'Outpaint::100', n: t('mj.p100') }
+        { k: 'Outpaint::75', n: t('mj.p20') },
+        { k: 'CustomZoom::', n: t('mj.czoom') },
+        { k: 'Outpaint::100', n: t('mj.p100') },
+
         //MJ::CustomZoom
+        { k: 'Job::PicReader::1', n: 'T1' },
+        { k: 'Job::PicReader::2', n: 'T2' },
+        { k: 'Job::PicReader::3', n: 'T3' },
+        { k: 'Job::PicReader::4', n: 'T4' },
+        { k: 'Picread::Retry', n: t('mj.retry') },
 
-        , { k: 'Job::PicReader::1', n: 'T1' }
-        , { k: 'Job::PicReader::2', n: 'T2' }
-        , { k: 'Job::PicReader::3', n: 'T3' }
-        , { k: 'Job::PicReader::4', n: 'T4' }
-        , { k: 'Picread::Retry', n: t('mj.retry') }
-
-        , { k: 'PromptAnalyzer::1', n: 'T1' }
-        , { k: 'PromptAnalyzer::2', n: 'T2' }
-        , { k: 'PromptAnalyzer::3', n: 'T3' }
-        , { k: 'PromptAnalyzer::4', n: 'T4' }
-        , { k: 'PromptAnalyzer::5', n: 'T5' }
+        { k: 'PromptAnalyzer::1', n: 'T1' },
+        { k: 'PromptAnalyzer::2', n: 'T2' },
+        { k: 'PromptAnalyzer::3', n: 'T3' },
+        { k: 'PromptAnalyzer::4', n: 'T4' },
+        { k: 'PromptAnalyzer::5', n: 'T5' },
 
         //PromptAnalyzer::1
         // ,{k:'Job::PicReader::all',n:'全4张'}
-    ]
-    , [
-        { k: ':variation::1', n: 'V1' }
-        , { k: ':variation::2', n: 'V2' }
-        , { k: ':variation::3', n: 'V3' }
-        , { k: ':variation::4', n: 'V4' }
-        , { k: 'pan_left', n: t('mj.pan_left') }
-        , { k: 'pan_right', n: t('mj.pan_right') }
-        , { k: 'pan_up', n: t('mj.pan_up') }
-        , { k: 'pan_down', n: t('mj.pan_down') }
-        , { k: 'reroll::0', n: t('mjchat.reroll') }
-        , { k: 'upsample_v5_2x', n: t('mj.up2') }
-        , { k: 'upsample_v5_4x', n: t('mj.up4') }
-        , { k: 'upsample_v6_2x_subtle', n: t('mj.subtle') }//t('mj.up2') 'Subtle'
-        , { k: 'upsample_v6_2x_creative', n: t('mj.creative') }  //'Creative'
+    ],
+    [
+        { k: ':variation::1', n: 'V1' },
+        { k: ':variation::2', n: 'V2' },
+        { k: ':variation::3', n: 'V3' },
+        { k: ':variation::4', n: 'V4' },
+        { k: 'pan_left', n: t('mj.pan_left') },
+        { k: 'pan_right', n: t('mj.pan_right') },
+        { k: 'pan_up', n: t('mj.pan_up') },
+        { k: 'pan_down', n: t('mj.pan_down') },
+        { k: 'reroll::0', n: t('mjchat.reroll') },
+        { k: 'upsample_v5_2x', n: t('mj.up2') },
+        { k: 'upsample_v5_4x', n: t('mj.up4') },
+        { k: 'upsample_v6_2x_subtle', n: t('mj.subtle') }, // t('mj.up2') 'Subtle'
+        { k: 'upsample_v6_2x_creative', n: t('mj.creative') }  //'Creative'
     ]
 ]
+
+watch(() => appStore.language, (newLocale, oldLocale) => {
+    bt = [
+        [
+            { k: ':upsample::1', n: 'U1' },
+            { k: ':upsample::2', n: 'U2' },
+            { k: ':upsample::3', n: 'U3' },
+            { k: ':upsample::4', n: 'U4' },
+            { k: 'high_variation', n: t('mj.high_variation') },
+            { k: 'low_variation', n: t('mj.low_variation') },
+            { k: ':Inpaint::1', n: t('mj.redraw') },
+            { k: 'Outpaint::50', n: t('mj.p15') },
+            { k: 'Outpaint::75', n: t('mj.p20') },
+            { k: 'CustomZoom::', n: t('mj.czoom') },
+            { k: 'Outpaint::100', n: t('mj.p100') },
+
+            //MJ::CustomZoom
+            { k: 'Job::PicReader::1', n: 'T1' },
+            { k: 'Job::PicReader::2', n: 'T2' },
+            { k: 'Job::PicReader::3', n: 'T3' },
+            { k: 'Job::PicReader::4', n: 'T4' },
+            { k: 'Picread::Retry', n: t('mj.retry') },
+
+            { k: 'PromptAnalyzer::1', n: 'T1' },
+            { k: 'PromptAnalyzer::2', n: 'T2' },
+            { k: 'PromptAnalyzer::3', n: 'T3' },
+            { k: 'PromptAnalyzer::4', n: 'T4' },
+            { k: 'PromptAnalyzer::5', n: 'T5' },
+
+            //PromptAnalyzer::1
+            // ,{k:'Job::PicReader::all',n:'全4张'}
+        ],
+        [
+            { k: ':variation::1', n: 'V1' },
+            { k: ':variation::2', n: 'V2' },
+            { k: ':variation::3', n: 'V3' },
+            { k: ':variation::4', n: 'V4' },
+            { k: 'pan_left', n: t('mj.pan_left') },
+            { k: 'pan_right', n: t('mj.pan_right') },
+            { k: 'pan_up', n: t('mj.pan_up') },
+            { k: 'pan_down', n: t('mj.pan_down') },
+            { k: 'reroll::0', n: t('mjchat.reroll') },
+            { k: 'upsample_v5_2x', n: t('mj.up2') },
+            { k: 'upsample_v5_4x', n: t('mj.up4') },
+            { k: 'upsample_v6_2x_subtle', n: t('mj.subtle') }, // t('mj.up2') 'Subtle'
+            { k: 'upsample_v6_2x_creative', n: t('mj.creative') }  //'Creative'
+        ]
+    ]
+});
 
 const getIndex = (arr: any[], ib: any) => arr.findIndex((v9: any) => v9.customId.indexOf(ib.k) > -1);
 const getIndexName = (arr: any[], ib: any) => {
@@ -232,6 +288,7 @@ const changCustom = () => {
 
 load();
 </script>
+
 <template>
     <div v-if="st.isLoadImg">
         <div v-if="chat.opt?.status == 'FAILURE'">

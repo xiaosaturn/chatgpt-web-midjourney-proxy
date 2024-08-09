@@ -210,9 +210,13 @@ export default {
         "micRec": "Commencer l'enregistrement, s'il vous plaît parlez ! Il s'arrêtera automatiquement s'il n'y a pas de son pendant 2 secondes.",
         "micRecEnd": "L'enregistrement est terminé",
 
-        subtle: 'Haute définition 2x'
-        , creative: 'Haute définition 2x. Créatif'
-        , gpt_gx: 'Les GPT utilisent g-*'
+        subtle: 'Haute définition 2x',
+        creative: 'Haute définition 2x. Créatif',
+        gpt_gx: 'Les GPT utilisent g-*',
+
+        "cw": "0-100 Degré de référence du personnage",
+        "sref": "URL de l'image Génération d'images avec un style cohérent",
+        "cref": "URL de l'image Génération d'images avec un personnage cohérent"
 
     },
     "mjset": {
@@ -492,12 +496,13 @@ export default {
         yearly: 'Paiement annuel',
         yearlyUse: 'Meilleur rapport qualité-prix',
         year: 'An',
-        text1: '5 messages gratuits par jour, essayez gratuitement',
+        text1: '10 messages gratuits par jour, essayez gratuitement',
         text2: "Tous les modèles d'IA sont disponibles(y compris GPT- 4o, GPT- 4o - mini, GPT - 3.5, Claude - 3.5, Gemini - Pro, GLM, Moonshot, etc.) ",
         text3: '50 messages par jour (contactez le service client pour augmenter gratuitement le nombre)',
         text4: '100 messages par jour (contactez le service client pour augmenter gratuitement le nombre)',
-        text5: '20 utilisations gratuites de la fonction de dessin',
-        text6: '300 utilisations gratuites de la fonction de dessin',
+        text5: '100 utilisations gratuites de la fonction de dessin',
+        text6: '1500 utilisations gratuites de la fonction de dessin',
+        text7: 'Cadeau de 30 tentatives de dessin gratuites',
         buy: 'Acheter',
         contact: 'Si vous avez des questions, veuillez contacter le service client',
         telegram: 'Telegram',

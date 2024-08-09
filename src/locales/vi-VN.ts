@@ -209,9 +209,13 @@ export default {
         "micRec": "Bắt đầu ghi âm, vui lòng nói chuyện! Sẽ tự động dừng nếu không có âm thanh trong vòng 2 giây.",
         "micRecEnd": "Ghi âm đã kết thúc",
 
-        subtle: 'Cao độ phân giải cao gấp 2 lần'
-        , creative: 'Cao độ phân giải cao gấp 2 lần. Sáng tạo'
-        , gpt_gx: 'GPTs sử dụng g-*'
+        subtle: 'Cao độ phân giải cao gấp 2 lần',
+        creative: 'Cao độ phân giải cao gấp 2 lần. Sáng tạo',
+        gpt_gx: 'GPTs sử dụng g-*',
+
+        "cw": "0-100 Mức độ tham chiếu nhân vật",
+        "sref": "URL hình ảnh Tạo hình ảnh với phong cách đồng nhất",
+        "cref": "URL hình ảnh Tạo hình ảnh với nhân vật đồng nhất",
 
     },
     "mjset": {
@@ -492,12 +496,13 @@ export default {
         yearly: 'Thanh toán hàng năm',
         yearlyUse: 'Tiết kiệm nhất',
         year: 'Năm',
-        text1: 'Tặng 5 tin nhắn mỗi ngày, dùng thử miễn phí',
+        text1: 'Tặng 10 tin nhắn mỗi ngày, dùng thử miễn phí',
         text2: 'Có thể sử dụng tất cả các mô hình AI (bao gồm GPT-4o, GPT-4o-mini, GPT-3.5, Claude-3.5, Gemini-Pro, GLM, Moonshot, v.v.)',
         text3: '50 tin nhắn mỗi ngày (có thể tăng số lượng miễn phí khi liên hệ với dịch vụ khách hàng)',
         text4: '100 tin nhắn mỗi ngày (có thể tăng số lượng miễn phí khi liên hệ với dịch vụ khách hàng)',
-        text5: 'Tặng 20 lần vẽ',
-        text6: 'Tặng 300 lần vẽ',
+        text5: 'Tặng 100 lần vẽ',
+        text6: 'Tặng 1500 lần vẽ',
+        text7: 'Tặng 30 lần vẽ miễn phí',
         buy: 'Mua',
         contact: 'Nếu có vấn đề, vui lòng liên hệ với dịch vụ khách hàng',
         telegram: 'Telegram',

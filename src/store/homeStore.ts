@@ -16,9 +16,8 @@ export const homeStore = reactive({
         ms: {} as any,
         is_luma_pro: false,
         is_viggle_pro: false,
-    }
-
-    , setMyData(v: object) {
+    },
+    setMyData(v: object) {
         this.myData = { ...this.myData, ...v };
         if (Object.keys(v).indexOf('act') > -1) {
             setTimeout(() => {
@@ -113,7 +112,7 @@ export interface gptServerType {
     IS_VIGGLE_PRO?: boolean
     RUNWAY_SERVER?: string
     RUNWAY_KEY?: string
-    TAB_VIDEO?:string
+    TAB_VIDEO?: string
     RRUNWAY_VERSION?: string
 }
 

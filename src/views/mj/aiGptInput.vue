@@ -39,8 +39,6 @@ const placeholder = computed(() => {
     return t('chat.placeholder');//可输入说点什么，也可贴截图或拖拽文件
 })
 
-
-
 const { uuid } = route.params as { uuid: string }
 
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))

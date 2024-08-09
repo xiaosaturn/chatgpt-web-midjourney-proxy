@@ -44,6 +44,7 @@ dataSources.value.forEach((item, index) => {
 function handleSubmit() {
     onConversation()
 }
+
 const getInitChat = (txt: string) => {
     let promptMsg: Chat.Chat = {
         dateTime: new Date().toLocaleString(),
@@ -226,10 +227,8 @@ watch(() => homeStore.myData.act, (n) => {
                 homeStore.setMyData({ act: 'dallReload', actData: { myid: dchat.myid, noShow: true } });
                 toBottom();
             }
-
         }
     }
-
 }, { deep: true });
 
 const toBottom = () => {

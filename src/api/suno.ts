@@ -11,6 +11,7 @@ const getUrl = (url: string) => {
     }
     return `/sunoapi${url}`;
 }
+
 function getHeaderAuthorization() {
     let headers = {}
     if (homeStore.myData.vtoken) {
@@ -29,12 +30,18 @@ function getHeaderAuthorization() {
     const bmi = {
         'Authorization': 'Bearer ' + gptServerStore.myData.SUNO_KEY
     }
-    headers = { ...headers, ...bmi }
+    headers = {
+        ...headers, ...bmi, ...{
+            'Authorization': gptServerStore.myData.SERVICE_TOKEN
+        }
+    }
     return headers
 }
+
 export function sleep(time: number) {
     return new Promise((resolve) => setTimeout(resolve, time));
 }
+
 export const lyricsFetch = async (lid: string) => {
     for (let i = 0; i < 50; i++) {
         let dt: any = await sunoFetch(`/lyrics/${lid}`);
@@ -80,13 +87,16 @@ export const FeedTask = async (ids: string[]) => {
 
 }
 
-
 export const sunoFetch = (url: string, data?: any, opt2?: any) => {
     mlog('sunoFetch', url);
     let headers = { 'Content-Type': 'application/json' }
     if (opt2 && opt2.headers) headers = opt2.headers;
 
-    headers = { ...headers, ...getHeaderAuthorization() }
+    headers = {
+        ...headers, ...getHeaderAuthorization(), ...{
+            'Authorization': gptServerStore.myData.SERVICE_TOKEN
+        }
+    }
 
     return new Promise<any>((resolve, reject) => {
         let opt: RequestInit = { method: 'GET' };

@@ -209,9 +209,13 @@ export default {
         "micAsr": "即時識別",
         "micRec": "開始錄音，請說話！2秒內無聲音將自動關閉",
         "micRecEnd": "錄音已結束",
-        subtle: '高清2倍'
-        , creative: '高清2倍. 創意'
-        , gpt_gx: 'GPTs 用 g-*'
+        subtle: '高清2倍',
+        creative: '高清2倍. 創意',
+        gpt_gx: 'GPTs 用 g-*',
+
+        "cw": "0-100 角色參考程度",
+        "sref": "圖片URL 生成風格一致的圖像",
+        "cref": "圖片URL 生成角色一致的圖像",
     },
     "mjset": {
         "server": "服務端",
@@ -489,12 +493,13 @@ export default {
         yearly: '按年付費',
         yearlyUse: '最划算',
         year: '年',
-        text1: '每天贈送5條消息，免費嘗鮮',
+        text1: '每天免費贈送10條消息',
         text2: '所以AI模型均可使用（包括GPT-4o、GPT-4o-mini、GPT-3.5、Claude-3.5、Gemini-Pro、GLM、Moonshot等等）',
         text3: '每天50條消息（聯繫客服可免費增加次數）',
         text4: '每天100條消息（聯繫客服可免費增加次數）',
-        text5: '贈送20次繪畫次數',
-        text6: '贈送300次繪畫次數',
+        text5: '贈送100次繪畫次數',
+        text6: '贈送1500次繪畫次數',
+        text7: '免費贈送30次繪畫次數',
         buy: '購買',
         contact: '如有問題，請聯繫客服',
         telegram: '電報',

@@ -13,7 +13,7 @@ import { MessageApiInjection } from "naive-ui/es/message/src/MessageProvider";
 //import {encode,  encodeChat} from "gpt-tokenizer/cjs/encoding/cl100k_base.js";
 //import { get_encoding } from '@dqbd/tiktoken'
 //import FormData from 'form-data';
-
+import request from '@/api/myAxios'
 
 export const KnowledgeCutOffDate: Record<string, string> = {
     default: "2021-09",
@@ -227,6 +227,12 @@ export const subGPT = async (data: any, chat: Chat.Chat) => {
             chat.opt = { imageUrl: rz.url };
             chat.loading = false;
             homeStore.setMyData({ act: 'updateChat', actData: chat });
+            // 将图片上传到COS，并存储到数据库，ts.imageUrl
+            request.post('/app/upload-url', {
+                imageUrl: rz.url,
+                prompt: rz.revised_prompt,
+                action: 'DALL·E 3'
+            });
         } catch (e) {
             chat.text = '失败！' + "\n```json\n" + JSON.stringify(d, null, 2) + "\n```\n";
             chat.loading = false;

@@ -212,12 +212,15 @@ export default {
         "micWhisper": "Whisper speech recognition",
         "micAsr": "Instant recognition",
         "micRec": "Start recording, please speak! It will automatically stop if there is no sound for 2 seconds.",
-        "micRecEnd": "Recording has ended"
+        "micRecEnd": "Recording has ended",
 
-        , subtle: 'High definition 2x'
-        , creative: 'High definition 2x. Creative'
-        , gpt_gx: 'GPTs use g-*'
+        subtle: 'High definition 2x',
+        creative: 'High definition 2x. Creative',
+        gpt_gx: 'GPTs use g-*',
 
+        "cw": "0-100 Character Reference Degree",
+        "sref": "Image URL Generate images with consistent style",
+        "cref": "Image URL Generate images with consistent character"
     },
     "mjset": {
         "server": "Server",
@@ -504,12 +507,13 @@ export default {
         yearly: 'Yearly',
         yearlyUse: 'The Best Way',
         year: 'year',
-        text1: '5 free messages daily, Experience it at no cost',
+        text1: '10 free messages daily, Experience it at no cost',
         text2: 'All AI model can use（include GPT-4o、GPT-4o-mini、GPT-3.5、Claude-3.5、Gemini-Pro、GLM、Moonshot, etc）',
-        text3: '50 free messages daily（Contact customer service for free additional uses）',
-        text4: '100 free messages daily（Contact customer service for free additional uses）',
-        text5: 'Gift of 20 free drawing attempts',
-        text6: 'Gift of 300 free drawing attempts',
+        text3: '50 messages daily（Contact customer service for free additional uses）',
+        text4: '100 messages daily（Contact customer service for free additional uses）',
+        text5: 'Gift of 100 drawing attempts',
+        text6: 'Gift of 1500 drawing attempts',
+        text7: 'Gift of 30 free drawing attempts',
         buy: 'Buy',
         contact: 'If you have any questions, please contact customer service',
         telegram: 'Telegram',

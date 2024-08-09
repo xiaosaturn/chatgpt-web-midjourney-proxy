@@ -11,30 +11,66 @@ import { mlog, train, upImg, getMjAll, mjFetch } from '@/api'
 //import {copyText3} from "@/utils/format";
 import { homeStore, useChatStore } from "@/store";
 const chatStore = useChatStore()
-import { t } from "@/locales"
+import { t, locale } from "@/locales"
 //import { upImg } from "./mj";
+import { useAppStoreWithOut } from '@/store/modules/app'
 
-const vf = [{ s: 'width: 100%; height: 100%;', label: '1:1' }
-    , { s: 'width: 100%; height: 75%;', label: '4:3' }
-    , { s: 'width: 75%; height: 100%;', label: '3:4' }
-    , { s: 'width: 100%; height: 50%;', label: '16:9' }
-    , { s: 'width: 50%; height: 100%;', label: '9:16' }
+const appStore = useAppStoreWithOut()
+
+const vf = [
+    { s: 'width: 100%; height: 100%;', label: '1:1' },
+    { s: 'width: 100%; height: 75%;', label: '4:3' },
+    { s: 'width: 75%; height: 100%;', label: '3:4' },
+    { s: 'width: 100%; height: 50%;', label: '16:9' },
+    { s: 'width: 50%; height: 100%;', label: '9:16' }
 ];
 
-const f = ref({ bili: -1, quality: '', view: '', light: '', shot: '', style: '', styles: '', version: '--v 6.0', sref: '', cref: '', cw: '', });
-const st = ref({
-    text: '', isDisabled: false, isLoad: false
-    , fileBase64: [], bot: '', showFace: false, upType: ''
+const f = ref({
+    bili: -1,
+    quality: '',
+    view: '',
+    light: '',
+    shot: '',
+    style: '',
+    styles: '',
+    version: '--v 6.1',
+    sref: '',
+    cref: '',
+    cw: '',
 });
-const farr = [
-    { k: 'style', v: t('mjchat.tStyle') }
-    , { k: 'view', v: t('mjchat.tView') }
-    , { k: 'shot', v: t('mjchat.tShot') }
-    , { k: 'light', v: t('mjchat.tLight') }
-    , { k: 'quality', v: t('mjchat.tQuality') }
-    , { k: 'styles', v: t('mjchat.tStyles') }
-    , { k: 'version', v: t('mjchat.tVersion') }
+
+const st = ref({
+    text: '',
+    isDisabled: false,
+    isLoad: false,
+    fileBase64: [],
+    bot: '',
+    showFace: false,
+    upType: ''
+});
+
+let farr = [
+    { k: 'style', v: t('mjchat.tStyle') },
+    { k: 'view', v: t('mjchat.tView') },
+    { k: 'shot', v: t('mjchat.tShot') },
+    { k: 'light', v: t('mjchat.tLight') },
+    { k: 'quality', v: t('mjchat.tQuality') },
+    { k: 'styles', v: t('mjchat.tStyles') },
+    { k: 'version', v: t('mjchat.tVersion') }
 ];
+
+watch(() => appStore.language, (newLocale, oldLocale) => {
+    console.log('newLocal', newLocale);
+    farr = [
+        { k: 'style', v: t('mjchat.tStyle') },
+        { k: 'view', v: t('mjchat.tView') },
+        { k: 'shot', v: t('mjchat.tShot') },
+        { k: 'light', v: t('mjchat.tLight') },
+        { k: 'quality', v: t('mjchat.tQuality') },
+        { k: 'styles', v: t('mjchat.tStyles') },
+        { k: 'version', v: t('mjchat.tVersion') }
+    ];
+});
 
 const drawlocalized = computed(() => {
     let localizedConfig = {};
@@ -62,7 +98,9 @@ const props = defineProps({ buttonDisabled: Boolean });
 const isDisabled = computed(() => {
     return props.buttonDisabled || st.value.isLoad || st.value.text.trim() == ''
 })
+
 const ms = useMessage();
+
 function create() {
     st.value.isLoad = true
     train(st.value.text.trim()).then(ps => {
@@ -295,7 +333,7 @@ const selectFile3 = (input: any) => {
     <input type="file" @change="selectFile3" ref="fsRef3" style="display: none"
         accept="image/jpeg, image/jpg, image/png, image/gif" />
 
-    <div class="overflow-y-auto bg-[#fafbfc] px-4 dark:bg-[#18181c] h-full ">
+    <div class="overflow-y-auto bg-[#fafbfc] px-4 pb-4 dark:bg-[#18181c] h-full ">
         <section class="mb-4">
             <div class="mr-1  mb-2 flex justify-between items-center">
                 <div class="text-sm">{{ $t('mjchat.imgBili') }}</div>
@@ -331,12 +369,12 @@ const selectFile3 = (input: any) => {
         <section class="mb-4 flex justify-between items-center">
             <div>cw(0-100)</div>
             <NInputNumber :min="0" :max="100" v-model:value="f.cw" class="!w-[60%]" size="small" clearable
-                placeholder="0-100 角色参考程度" />
+                :placeholder="$t('mj.cw')" />
         </section>
 
         <section class="mb-4 flex justify-between items-center">
             <div class="w-[45px]">sref</div>
-            <NInput v-model:value="f.sref" size="small" placeholder="图片url 生成风格一致的图像" clearable>
+            <NInput v-model:value="f.sref" size="small" :placeholder="$t('mj.sref')" clearable>
                 <template #suffix>
                     <SvgIcon icon="ri:upload-line" class="cursor-pointer" @click="uploader('sref')"></SvgIcon>
                 </template>
@@ -344,13 +382,12 @@ const selectFile3 = (input: any) => {
         </section>
         <section class="mb-4 flex justify-between items-center">
             <div class="w-[45px]">cref</div>
-            <NInput v-model:value="f.cref" size="small" placeholder="图片url 生成角色一致的图像" clearable>
+            <NInput v-model:value="f.cref" size="small" :placeholder="$t('mj.cref')" clearable>
                 <template #suffix>
                     <SvgIcon icon="ri:upload-line" class="cursor-pointer" @click="uploader('cref')"></SvgIcon>
                 </template>
             </NInput>
         </section>
-
 
         <div class="mb-1">
             <n-input type="textarea" v-model:value="st.text" :placeholder="$t('mjchat.prompt')" round clearable

@@ -321,7 +321,11 @@ export default {
 
         , subtle: '高清2倍'
         , creative: '高清2倍.创意'
-        , gpt_gx: 'GPTs用g-*'
+        , gpt_gx: 'GPTs用g-*',
+
+        "cw": "0-100 角色参考程度",
+        "sref": "图片url 生成风格一致的图像",
+        "cref": "图片url 生成角色一致的图像"
     },
 
     draw: {
@@ -515,12 +519,13 @@ export default {
         yearly: '按年付费',
         yearlyUse: '最划算',
         year: '年',
-        text1: '每天赠送5条消息，免费尝鲜',
+        text1: '每天免费赠送10条消息',
         text2: '所以AI模型均可使用（包括GPT-4o、GPT-4o-mini、GPT-3.5、Claude-3.5、Gemini-Pro、GLM、Moonshot等等）',
         text3: '每天50条消息（联系客服可免费增加次数）',
         text4: '每天100条消息（联系客服可免费增加次数）',
-        text5: '赠送20次绘画次数',
-        text6: '赠送300次绘画次数',
+        text5: '赠送100次绘画次数',
+        text6: '赠送1500次绘画次数',
+        text7: '免费赠送30次绘画次数',
         buy: '购买',
         contact: '如有问题，请联系客服',
         telegram: '电报',
