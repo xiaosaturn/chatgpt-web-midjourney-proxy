@@ -169,28 +169,56 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
     });
     let tempMsgCount;
     let redisCountKey;
-    if (user.level == 1) {
-        redisCountKey = 'expireTimeLevel1-' + obj.id;
-        tempMsgCount = await getRedisValue(redisCountKey);
-    } else if (user.level == 2) {
-        redisCountKey = 'expireTimeLevel2-' + obj.id;
-        tempMsgCount = await getRedisValue(redisCountKey);
-    } else if (user.level == 3) {
-        redisCountKey = 'expireTimeLevel3-' + obj.id;
-        tempMsgCount = await getRedisValue(redisCountKey);
+
+    /**
+     * 由于openai也有绘画接口，所以要和gpt模型区分
+     */
+    let isGPT = true;
+    if (req.originalUrl.includes('images/generations')) {
+        isGPT = false;
+        // 如果请求url包含 images/generations，说明调用的是openai的绘画模型
+        if (user.level == 1) {
+            redisCountKey = 'midLevel1-' + obj.id;
+            tempMsgCount = await getRedisValue(redisCountKey);
+        } else if (user.level == 2) {
+            redisCountKey = 'midLevel2-' + obj.id;
+            tempMsgCount = await getRedisValue(redisCountKey);
+        } else if (user.level == 3) {
+            redisCountKey = 'midLevel3-' + obj.id;
+            tempMsgCount = await getRedisValue(redisCountKey);
+        }
+    } else {
+        // 对话模型
+        if (user.level == 1) {
+            redisCountKey = 'expireTimeLevel1-' + obj.id;
+            tempMsgCount = await getRedisValue(redisCountKey);
+        } else if (user.level == 2) {
+            redisCountKey = 'expireTimeLevel2-' + obj.id;
+            tempMsgCount = await getRedisValue(redisCountKey);
+        } else if (user.level == 3) {
+            redisCountKey = 'expireTimeLevel3-' + obj.id;
+            tempMsgCount = await getRedisValue(redisCountKey);
+        }
     }
+    
     let msgCount = Number(tempMsgCount)
     if (user.expireTime) {
         // 有值，说明充钱了
         const expiryDate = moment(user.expireTime); // 将数据库日期转换为moment对象
         const currentDate = moment(); // 获取当前日期
         if (user.level == 1) {
-            // 没充值，不需要判断会员是否过期，每天免费送5条
+            // 没充值，不需要判断会员是否过期，每天免费送10条
             if (msgCount <= 0) {
                 res.status(405);
+                if (isGPT) {
+                    return res.send({
+                        code: 405,
+                        msg: 'You have exceeded the maximum usage limit for 24 hours. Please try again after midnight. Thank you'
+                    });
+                }
                 return res.send({
                     code: 405,
-                    msg: 'You have exceeded the maximum usage limit for 24 hours. Please try again after midnight. Thank you'
+                    msg: 'You have exceeded the maximum usage limit. Please recharge. Thank you'
                 });
                 return res.send({
                     code: 405,
@@ -215,9 +243,15 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
                     // 月付会员，不超过50次
                     if (msgCount <= 0) {
                         res.status(405);
+                        if (isGPT) {
+                            return res.send({
+                                code: 405,
+                                msg: 'You have exceeded the maximum usage limit for 24 hours. Please try again after midnight. Thank you'
+                            });
+                        }
                         return res.send({
                             code: 405,
-                            msg: 'You have exceeded the maximum usage limit for 24 hours. Please try again after midnight. Thank you'
+                            msg: 'You have exceeded the maximum usage limit. Please recharge. Thank you'
                         });
                         return res.send({
                             code: 405,
@@ -228,9 +262,15 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
                     // 年度会员，不超过100次
                     if (msgCount <= 0) {
                         res.status(405);
+                        if (isGPT) {
+                            return res.send({
+                                code: 405,
+                                msg: 'You have exceeded the maximum usage limit for 24 hours. Please try again after midnight. Thank you'
+                            });
+                        }
                         return res.send({
                             code: 405,
-                            msg: 'You have exceeded the maximum usage limit for 24 hours. Please try again after midnight. Thank you'
+                            msg: 'You have exceeded the maximum usage limit. Please recharge. Thank you'
                         });
                         return res.send({
                             code: 405,
@@ -241,12 +281,18 @@ export const authV3 = async (obj: any, req: Request, res: Response, next: NextFu
             }
         }
     } else {
-        // 没值，每天体验5次
+        // 没值，每天体验10次
         if (msgCount <= 0) {
             res.status(405);
+            if (isGPT) {
+                return res.send({
+                    code: 405,
+                    msg: 'You have exceeded the maximum usage limit for 24 hours. Please try again after midnight. Thank you'
+                });
+            }
             return res.send({
                 code: 405,
-                msg: 'You have exceeded the maximum usage limit for 24 hours. Please try again after midnight. Thank you'
+                msg: 'You have exceeded the maximum usage limit. Please recharge. Thank you'
             });
             return res.send({
                 code: 405,
@@ -269,7 +315,7 @@ export const authV4 = async (req: Request, res: Response, next: NextFunction) =>
     console.log('token', token)
     logger.info({
         msg: req,
-        label: 'authV2开始认证',
+        label: 'authV4开始认证',
     });
     if (!token) {
         res.status(401);

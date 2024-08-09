@@ -86,22 +86,22 @@ const fulfillCheckout = async (sessionId, userId, level) => {
             setRedisValue(`expireTimeLevel2-` + userId, 50); // 支付成功，每天50条消息的
             let midCount = Number(await getRedisValue(`midLevel2-` + userId));
             if (midCount > 0) {
-                midCount += 20;
+                midCount += 100;
             } else {
-                midCount = 20;
+                midCount = 100;
             }
-            setRedisValue(`midLevel2-` + userId, midCount); // 支付成功，赠送一次性20次绘画次数
+            setRedisValue(`midLevel2-` + userId, midCount); // 支付成功，赠送一次性100次绘画次数
             updateUserExpireTime(userId, level);
         } else if (level == 3) {
             // 年度会员
             setRedisValue(`expireTimeLevel3-` + userId, 100); // 支付成功，每天100条消息的
             let midCount = Number(await getRedisValue(`midLevel3-` + userId));
             if (midCount > 0) {
-                midCount += 300;
+                midCount += 1500;
             } else {
-                midCount = 300;
+                midCount = 1500;
             }
-            setRedisValue(`midLevel3-` + userId, 300); // 支付成功，赠送一次性300次绘画次数
+            setRedisValue(`midLevel3-` + userId, 300); // 支付成功，赠送一次性1500次绘画次数
             updateUserExpireTime(userId, level);
         }
         updateUserLevelRecord(userId, level); // 插入lelve等级

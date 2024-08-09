@@ -252,8 +252,9 @@ const imgUrl = function () {
 
 const initUserLevel = async (userId) => {
     const res = await insertUserPoint(userId); // 只是记录下，不作他用
-    const res2 = await setRedisValue('expireTimeLevel1-' + userId, 5); // 初始注册，赠送5条消息，0点后重置
+    const res2 = await setRedisValue('expireTimeLevel1-' + userId, 10); // 初始注册，每天赠送10条消息，0点后重置
     const res3 = await insertUserLevelRecord(userId); // 插入lelve等级
+    const res4 = await setRedisValue('midLevel1-' + userId, 5); // 初始注册，一次性赠送5次绘画
     // midjournary levle2 20次，level3 300次，midLevel1-userId，手动添加到redis里
 }
 
