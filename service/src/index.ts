@@ -136,14 +136,19 @@ const API_BASE_URL = isNotEmptyString(process.env.OPENAI_API_BASE_URL)
 
 console.log('API_BASE_URL', API_BASE_URL)
 
-app.use('/mjapi', authV2, authV5, proxy(process.env.MJ_SERVER ? process.env.MJ_SERVER : 'https://api.aijuli.com', {
+app.use('/mjapi', authV2, authV5, proxy(process.env.MJ_SERVER, {
     https: false, limit: '10mb',
     proxyReqPathResolver: function (req) {
-        return req.originalUrl.replace('/mjapi', '') // 将URL中的 `/mjapi` 替换为空字符串
+        const realUrl = req.originalUrl.replace('/mjapi', '/mj-relax');
+        logger.info({
+            msg: realUrl,
+            label: '实际请求URL：'
+        });
+        return req.originalUrl.replace('/mjapi', '/mj-relax') // 将URL中的 `/mjapi` 替换为空字符串
     },
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
         proxyReqOpts.headers['mj-api-secret'] = proxyReqOpts.headers['authorization'],
-            proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.OPENAI_API_KEY;
+        proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.MJ_KEY;
         proxyReqOpts.headers['Content-Type'] = 'application/json';
         proxyReqOpts.headers['Mj-Version'] = pkg.version;
         return proxyReqOpts;
@@ -336,7 +341,6 @@ app.use('/sunoapi', authV2, proxy(process.env.SUNO_SERVER ?? API_BASE_URL, {
         proxyReqOpts.headers['Mj-Version'] = pkg.version;
         return proxyReqOpts;
     },
-
 }));
 
 
