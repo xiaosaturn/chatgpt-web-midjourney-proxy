@@ -8,6 +8,7 @@ import sunoLayout from '@/views/suno/layout.vue'
 import lumaLayout from '@/views/luma/layout.vue'
 import mobileMeLayout from '@/views/mobile/layout.vue'
 import mobilePriceLayout from '@/views/mobile/price.vue'
+import landingpage from '@/views/LandingPage.vue'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -131,6 +132,12 @@ const routes: RouteRecordRaw[] = [
         path: '/mobile/price',
         name: 'mobileprice',
         component: mobilePriceLayout,
+    },
+
+    {
+        path: '/landing/page',
+        name: 'landingpage',
+        component: landingpage,
     },
 
     //调试

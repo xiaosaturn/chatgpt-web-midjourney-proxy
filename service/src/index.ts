@@ -19,6 +19,7 @@ import { getUserByIdService, verificationCode, registerUser, login, updateUserIn
 import { viggleProxyFileDo, viggleProxy, lumaProxy, runwayProxy } from './myfun'
 import { uploadFile, uploadFile2, uploadFile3 } from './utils/uploadfile'
 import { createCheckoutSession, webhookStripe } from './money/stripe'
+import { payNativeOrder, wxpayCallback, getWXPlatformCert } from './money/wxpay'
 import cors from 'cors'
 import { logger } from './utils/logger'
 
@@ -30,7 +31,8 @@ const corsOptions = {
     allowedHeaders: ['Content-Type', 'Authorization'] // 指定允许的请求头
 }
 
-app.post('/app/stripe/callback', express.raw({type: 'application/json'}), webhookStripe);
+app.post('/app/stripe/callback', express.raw({ type: 'application/json' }), webhookStripe);
+router.post('/app/money/wxcallback', express.raw({ type: 'application/json' }), wxpayCallback);
 
 app.use(cors(corsOptions));
 
@@ -391,7 +393,8 @@ router.put('/app/user', authV2, updateUserInfo);
 router.post('/app/money/create-checkout-session', authV2, createCheckoutSession);
 // router.post('/app/stripe/callback', webhookStripe);
 // app.post('/app/stripe/callback', bodyParser.raw({ type: '*/*' }), webhookStripe);
-
+router.post('/app/money/wxnativepay', authV2, payNativeOrder);
+router.get('/app/money/wxplatform-cert', authV2, getWXPlatformCert);
 
 // 创建 multer 的实例
 const upload3 = multer();
