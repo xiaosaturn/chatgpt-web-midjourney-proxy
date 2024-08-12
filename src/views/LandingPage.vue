@@ -7,17 +7,18 @@
                     <div class="flex space-x-7">
                         <div>
                             <a href="#" class="flex items-center py-4">
-                                <img src="path/to/all-ai-chat-logo.png" alt="All-AI.chat Logo" class="h-8 w-auto mr-2">
+                                <img src="https://deepimage.polo-e.net/applets/20240809/085020_1723193421132.png"
+                                    alt="All-AI.chat Logo" class="h-8 w-auto mr-2">
                             </a>
                         </div>
                     </div>
                     <div class="hidden md:flex items-center space-x-4">
                         <a v-for="item in navItems" :key="item" :href="'#' + item"
                             class="py-2 px-3 text-gray-700 hover:text-pink-500 transition duration-300">{{ $t('nav.' +
-                            item) }}</a>
+                                item) }}</a>
                         <a href="#"
                             class="py-2 px-3 bg-pink-500 text-white rounded hover:bg-pink-600 transition duration-300">{{
-                            $t('nav.signup') }}</a>
+                                $t('nav.signup') }}</a>
                     </div>
                 </div>
             </div>
@@ -115,7 +116,7 @@
                         </ul>
                         <a href="#"
                             class="block text-center bg-pink-500 text-white py-2 rounded hover:bg-pink-600 transition duration-300">{{
-                            $t('pricing.selectPlan') }}</a>
+                                $t('pricing.selectPlan') }}</a>
                     </div>
                 </div>
             </div>

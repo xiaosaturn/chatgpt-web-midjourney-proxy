@@ -345,7 +345,11 @@ const validateVerificationCode = (code?: string) => {
 }
 
 const getUserInfo = async () => {
-    const res = await request.get('/app/user');
+    const res = await request.get('/app/user', null, {
+        headers: {
+            'Cache-Control': ' no-cache'
+        }
+    });
     if (res.code == 200) {
         userStore.updateUserInfo(res.data);
     } else if (res.code == 401 || res.code == 403) {

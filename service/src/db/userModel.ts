@@ -1,5 +1,6 @@
 import { db, resultsWithCamelCase } from './index.ts';
 import { getRedisValue } from './redis.ts';
+import { logger } from '../utils/logger';
 
 interface User {
     id?: number
@@ -176,19 +177,27 @@ const updateUserExpireTime = async (userId, level) => {
     const nowDay = new Date();
     if (res.expireTime) {
         // 有值，说明还要加上
+        logger.info({
+            msg: res,
+            label: '有expireTime：'
+        });
         arr = res.expireTime.split('-'); // ['2024', '5', '9']
         if (level == 2) {
             if (arr[1] == '12') {
-                arr[0] += 1;
+                arr[0] = String(Number(arr[0]) + 1).padStart(2, '0');
                 arr[1] = '01'
             } else {
-                arr[1] = String(arr[1] + 1).padStart(2, '0');
+                arr[1] = String(Number(arr[1]) + 1).padStart(2, '0');
             }
         } else if (level == 3) {
             arr[0] += 1; // 加一年
         }
     } else {
         // 没值，则初始化
+        logger.info({
+            msg: res,
+            label: '无expireTime：'
+        });
         if (level == 2) {
             if (nowDay.getMonth() + 1 == 12) {
                 arr = [nowDay.getFullYear() + 1, '01', String(nowDay.getDate()).padStart(2, '0')]
@@ -199,6 +208,10 @@ const updateUserExpireTime = async (userId, level) => {
             arr = [nowDay.getFullYear() + 1, String(nowDay.getMonth() + 1).padStart(2, '0'), String(nowDay.getDate()).padStart(2, '0')]
         }
     }
+    logger.info({
+        msg: arr,
+        label: '处理好的arr为：'
+    });
     const newExpireTime = arr[0] + '-' + arr[1] + '-' + arr[2] + ' '
     String(nowDay.getHours()).padStart(2, '0') + ':' + String(nowDay.getMinutes() ).padStart(2, '0') + ':' + String(nowDay.getSeconds() ).padStart(2, '0');
     const sql = `update member_user set expire_time = ?, level_id = ? where id = ?`;

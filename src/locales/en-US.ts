@@ -551,7 +551,7 @@ export default {
         updateAvatarFailure: 'Avatar Update Failed',
         freeUser: 'Free User',
         chatCount: 'Remaining Conversations Today',
-        drawCount: 'Remaining Drawings Today',
+        drawCount: 'Remaining Drawings',
 
     }
 

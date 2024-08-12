@@ -526,7 +526,7 @@ export default {
         "updateAvatarFailure": "アバターの更新失敗",
         "freeUser": "無料ユーザー",
         chatCount: '今日の会話の残り回数',
-        drawCount: '今日の残り描画回数',
+        drawCount: 'の残り描画回数',
 
     }
 }

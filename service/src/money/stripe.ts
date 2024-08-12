@@ -101,7 +101,7 @@ const fulfillCheckout = async (sessionId, userId, level) => {
             } else {
                 midCount = 1500;
             }
-            setRedisValue(`midLevel3-` + userId, 300); // 支付成功，赠送一次性1500次绘画次数
+            setRedisValue(`midLevel3-` + userId, midCount); // 支付成功，赠送一次性1500次绘画次数
             updateUserExpireTime(userId, level);
         }
         updateUserLevelRecord(userId, level); // 插入lelve等级

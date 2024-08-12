@@ -9,6 +9,7 @@ import bodyParser from 'body-parser';
 import moment from 'moment';
 import axios from 'axios';
 import fs from 'fs';
+import { Buffer } from 'buffer';
 
 const nativeURL = 'https://api.mch.weixin.qq.com/v3/pay/transactions/native';
 const wxPlatformCertUrl = 'https://api.mch.weixin.qq.com/v3/certificates';
@@ -127,7 +128,6 @@ const getWXPlatformCert = async () => {
         });
         const realData = data['data'];
         if (realData && realData[0]) {
-            console.log('realData:', realData);
             const encryptCertificate = realData[0]['encrypt_certificate'];
             const key = createAesKey(Buffer.from(process.env.WXPAY_APIV3_KEY, 'utf8'));
             const associatedData = encryptCertificate.associated_data;
@@ -157,19 +157,24 @@ const payNativeOrder = async (obj: any, req: Request, res: Response, next: NextF
     const body = {
         appid: process.env.WXPAY_APP_ID,
         mchid: process.env.WXPAY_MCH_ID,
-        description: "月度会员",
+        description: "All-AI Chat月度会员",
         out_trade_no: orderNo,
-        notify_url: "https://all-ai.chat/app/money/wxcallback",
+        // notify_url: "https://all-ai.chat/app/money/wxcallback",
+        notify_url: "http://mpce.tpddns.cn:41000/app/money/wxcallback",
         amount: {
             total: 1
-        }
+        },
+        attach: JSON.stringify({
+            userId: obj.id,
+            level: req.body.level
+        })
     };
     if (req.body.level == 2) {
         // 月度会员
         
     } else if (req.body.level == 3) {
         // 年度会员
-        body.description = "年度会员";
+        body.description = "All-AI Chat年度会员";
         body.amount.total = 69900;
     }
 
@@ -226,32 +231,147 @@ const payNativeOrder = async (obj: any, req: Request, res: Response, next: NextF
     }
 }
 
-const wxpayCallback = async (req: Request, res: Response, next: NextFunction) => {
-    const timestamp = req.headers['Wechatpay-Timestamp'];
-    const nonce = req.headers['Wechatpay-Nonce'];
-    const signature = req.headers['Wechatpay-Signature'];
-    const serial = req.headers['Wechatpay-Serial'];
+const convertSignatureToBuffer = (signature: string): Buffer => {
+    return Buffer.from(signature, 'base64');
+}
 
-    if (serial == process.env.WXPAY_CERT_NO) {
+const wxpayCallback = async (req: Request, res: Response, next: NextFunction) => {
+    const timestamp = String(req.headers['wechatpay-timestamp']);
+    const nonce = req.headers['wechatpay-nonce'];
+    const signature = String(req.headers['wechatpay-signature']);
+    const serial = req.headers['wechatpay-serial'];
+
+    logger.info({
+        msg: req,
+        label: '测试微信回调req：'
+    });
+
+    if (serial == process.env.WXPAY_PLATFORM_CERT_NO) {
         const body = req.body; // 回调请求体
         const message = `${timestamp}\n${nonce}\n${JSON.stringify(body)}\n`;
 
         // 读取保存的平台证书
-        const cert = fs.readFileSync('path/to/platform_cert.pem', 'utf8');
+        // const cert = fs.readFileSync('path/to/platform_cert.pem', 'utf8');
         const certStr = await getWXPlatformCert();
-        if (certStr) {
-            const verify = crypto.createVerify('RSA-SHA256');
-            verify.update(message);
-            const isValid = verify.verify(certStr, sign(Buffer.from(message, 'utf-8')), 'base64');
-            if (isValid) {
-                console.log('签名验证通过');
+        if (certStr && signature) {
+            const publicKey = crypto.createPublicKey(certStr);
+            const verifier = crypto.createVerify('RSA-SHA256');
+            verifier.update(message);
+            const signatureBuffer = convertSignatureToBuffer(String(signature));
+            const isSignatureValid = verifier.verify(publicKey, signatureBuffer);
+
+            // 5. 检查时间戳以防止重放攻击
+            const currentTimestamp = Math.floor(Date.now() / 1000);
+            const timeSkew = Math.abs(currentTimestamp - parseInt(timestamp));
+            const isTimestampValid = timeSkew <= 300; // 允许5分钟的时间偏差
+            
+            // 6. 处理签名探测流量
+            const isProbeTraffic = signature.startsWith('WECHATPAY/SIGNTEST/');
+
+            if (!isSignatureValid) {
+                if (isProbeTraffic) {
+                    logger.info({
+                        msg: '',
+                        label: '检测到签名探测流量'
+                    });
+                    res.send({
+                        code: 200,
+                        msg: 'success'
+                    });
+                }
+                logger.info({
+                    msg: '',
+                    label: '签名验证失败'
+                });
+                throw new Error('签名验证失败');
+            }
+        
+            if (!isTimestampValid) {
+                logger.info({
+                    msg: '',
+                    label: '时间戳验证失败，可能存在重放攻击'
+                });
+                throw new Error('时间戳验证失败，可能存在重放攻击');
+            }
+            if (isSignatureValid) {
+                // 解密消息
+                const resource = body.resource;
+                const key = createAesKey(Buffer.from(process.env.WXPAY_APIV3_KEY, 'utf8'));
+                const nonce = Buffer.from(body.resource.nonce, 'utf8');
+                const decrypted = decryptToString(key, resource.associated_data, nonce, resource.ciphertext);
+                logger.info({
+                    msg: decrypted,
+                    label: '微信支付回调解密出的消息体：'
+                });
+                if (decrypted) {
+                    const jsonObj = JSON.parse(decrypted);
+                    if (jsonObj.trade_state == 'SUCCESS') {
+                        // 处理支付成功的逻辑
+                        logger.info({
+                            msg: jsonObj,
+                            label: '开始处理用户信息'
+                        });
+                        const attach = JSON.parse(jsonObj.attach);
+                        handlePaySuccess(attach.userId, attach.level);
+                    }
+                }
             } else {
-                console.log('签名验证失败');
+                logger.info({
+                    msg: '',
+                    label: '签名验证失败'
+                });
             }
         }
     } else {
-
+        logger.info({
+            msg: '',
+            label: '序列号不一致，请重新获取平台证书'
+        });
+        throw new Error('序列号不一致，请重新获取平台证书');
     }
+    res.send({
+        code: 200,
+        msg: 'success'
+    });
+}
+
+const handlePaySuccess = async (userId, level) => {
+    logger.info({
+        msg: '',
+        label: `userId为${userId}, level为${level}`
+    });
+    if (level == 2) {
+        // 月度会员
+        logger.info({
+            msg: '',
+            label: 'level2的逻辑'
+        });
+        setRedisValue(`expireTimeLevel2-` + userId, 50); // 支付成功，每天50条消息的
+        let midCount = Number(await getRedisValue(`midLevel2-` + userId));
+        if (midCount > 0) {
+            midCount += 100;
+        } else {
+            midCount = 100;
+        }
+        setRedisValue(`midLevel2-` + userId, midCount); // 支付成功，赠送一次性100次绘画次数
+        updateUserExpireTime(userId, level);
+    } else if (level == 3) {
+        // 年度会员
+        logger.info({
+            msg: '',
+            label: 'level3的逻辑'
+        });
+        setRedisValue(`expireTimeLevel3-` + userId, 100); // 支付成功，每天100条消息的
+        let midCount = Number(await getRedisValue(`midLevel3-` + userId));
+        if (midCount > 0) {
+            midCount += 1500;
+        } else {
+            midCount = 1500;
+        }
+        setRedisValue(`midLevel3-` + userId, midCount); // 支付成功，赠送一次性1500次绘画次数
+        updateUserExpireTime(userId, level);
+    }
+    updateUserLevelRecord(userId, level); // 插入lelve等级
 }
 
 const customStringify = (obj) => {
