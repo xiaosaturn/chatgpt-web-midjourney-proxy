@@ -12,6 +12,7 @@ import fs from 'fs';
 import { Buffer } from 'buffer';
 
 const nativeURL = 'https://api.mch.weixin.qq.com/v3/pay/transactions/native';
+const h5payURL = 'https://api.mch.weixin.qq.com/v3/pay/transactions/h5';
 const wxPlatformCertUrl = 'https://api.mch.weixin.qq.com/v3/certificates';
 const schema = "WECHATPAY2-SHA256-RSA2048";
 const KEY_LENGTH_BYTE = 32;
@@ -151,7 +152,7 @@ const getWXPlatformCert = async () => {
 const payNativeOrder = async (obj: any, req: Request, res: Response, next: NextFunction) => {
     logger.info({
         msg: 'wxpay',
-        label: '调用微信支付开始',
+        label: '调用微信Native支付开始',
     });
     const orderNo = 'YSH' + moment().format('YYYYMMDDHHmmss');
     const body = {
@@ -229,6 +230,117 @@ const payNativeOrder = async (obj: any, req: Request, res: Response, next: NextF
         console.error('请求失败:', error.response ? error.response.data : error.message);
         throw error;
     }
+}
+
+const payH5Order = async (obj: any, req: Request, res: Response, next: NextFunction) => {
+    logger.info({
+        msg: 'wxpay',
+        label: '调用微信H5支付开始',
+    });
+    const orderNo = 'YSH' + moment().format('YYYYMMDDHHmmss');
+    const body = {
+        appid: process.env.WXPAY_APP_ID,
+        mchid: process.env.WXPAY_MCH_ID,
+        description: "All-AI Chat月度会员",
+        out_trade_no: orderNo,
+        // notify_url: "https://all-ai.chat/app/money/wxcallback",
+        attach: JSON.stringify({
+            userId: obj.id,
+            level: req.body.level
+        }),
+        notify_url: "http://mpce.tpddns.cn:41000/app/money/wxcallback",
+        amount: {
+            total: 1
+        },
+        scene_info: {
+            payer_client_ip: "127.0.0.1",
+            h5_info: {
+                type: "iOS",
+            }
+        }
+    };
+    if (req.body.level == 2) {
+        // 月度会员
+        
+    } else if (req.body.level == 3) {
+        // 年度会员
+        body.description = "All-AI Chat年度会员";
+        body.amount.total = 69900;
+    }
+
+    const token = getToken('POST', h5payURL, customStringify(body));
+    const authorization = schema + ' ' + token;
+    logger.info({
+        msg: token,
+        label: 'H5支付生成的token：'
+    });
+    const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': authorization
+    };
+    logger.info({
+        msg: body,
+        label: '调用微信H5 Pay的入参：',
+    });
+    try {
+        // 用axios报错，json转换循环引用的错误，所以用fetch
+        const response = await axios.post(h5payURL, customStringify(body), {
+            headers,
+        });
+        // const response = await fetch(h5payURL, {
+        //     method: 'POST',
+        //     headers: headers,
+        //     body: customStringify(body)
+        // });
+        console.log('resonse:', response)
+        // if (!response.ok) {
+        //     throw new Error(`HTTP error! status: ${response.status}`);
+        // }
+        // const data = await response.json();
+
+        // logger.info({
+        //     msg: JSON.stringify(data),
+        //     label: '调用微信H5 Pay返回结果：',
+        // });
+        res.send({
+            code: 200,
+            msg: 'success',
+            data: ''
+        });
+        // console.log('Native支付二维码链接data:', response.data);
+        // console.log('Native支付二维码链接:', response.data.code_url);
+        // return response.data;
+    } catch (error) {
+        res.status(402);
+        res.send({
+            code: 402,
+            msg: error.response ? error.response.data : error.message
+        });
+        console.error('请求失败:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+}
+
+const getClientIp = (req: Request): string => {
+    let ip: string | undefined;
+    
+    // 检查 X-Forwarded-For 头
+    const forwardedFor = req.headers['x-forwarded-for'];
+    if (forwardedFor) {
+      ip = Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor.split(',')[0];
+    }
+    
+    // 如果没有 X-Forwarded-For 头，使用 req.ip
+    if (!ip) {
+      ip = req.ip;
+    }
+    
+    // 处理 IPv6 地址
+    if (ip.substring(0, 7) == "::ffff:") {
+      ip = ip.substr(7);
+    }
+    return ip;
 }
 
 const convertSignatureToBuffer = (signature: string): Buffer => {
@@ -430,4 +542,5 @@ export {
     payNativeOrder,
     wxpayCallback,
     getWXPlatformCert,
+    payH5Order,
 }

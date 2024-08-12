@@ -68,17 +68,35 @@
                 class="cursor-pointer mt-8 block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold leading-6 text-blue-50 shadow-sm hover:bg-blue-700">{{
                     $t('price.buy') }}</n-button>
         </n-popselect>
+
+        <n-modal v-model:show="isShowWXPayUrl">
+            <div class="flex bg-white justify-center items-center p-8 flex-col rounded-[20px]"
+                style="position:fixed;top:30%;left:50%;transform: translateX(-50%);">
+                <div class="text-[20px] font-bold">打开微信扫描下方二维码，进行付款，谢谢</div>
+                <n-qr-code id="qr-code" style="margin-bottom: 20px;" :value="wxpayUrl" color="#ff08ff" />
+                <n-button type="primary" @click="handleDownloadQRCode">
+                    下载
+                </n-button>
+                <div class="text-[18px] font-bold mb-2">付款完成之后，请刷新页面</div>
+                <div class="text-gray">支付遇到问题，请联系微信：XKSaturn</div>
+            </div>
+        </n-modal>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import request from '@/api/myAxios'
-import { useNotification, NImage, NButton, NSpace, NPopselect, NPopconfirm, NDialog, NInput, useDialog } from 'naive-ui'
+import {
+    useNotification, NImage, NButton, NSpace, NPopselect,
+    NPopconfirm, NDialog, NInput, useDialog, NModal, NQrCode
+} from 'naive-ui'
 import { t } from '@/locales'
 
 const notification = useNotification()
 
+const wxpayUrl = ref('');
+const isShowWXPayUrl = ref(false)
 const loading = ref(false)
 const props = defineProps(['type'])
 const rObj = reactive({
@@ -87,13 +105,13 @@ const rObj = reactive({
         label: '信用卡/借记卡',
         value: 'usd'
     },
-    // {
-    // label: '微信支付',
-    // value: 'cny1'
-    // },
+    {
+        label: '微信支付',
+        value: 'wxpay'
+    },
     {
         label: '支付宝支付',
-        value: 'cny2'
+        value: 'alipay'
     }],
     type: '免费版',
     typeStr: '✨ 免费体验',
@@ -105,25 +123,51 @@ const rObj = reactive({
     midjournaryText: ''
 })
 
+const handleDownloadQRCode = () => {
+    const canvas = document
+        .querySelector('#qr-code')
+        ?.querySelector<HTMLCanvasElement>('canvas')
+    if (canvas) {
+        const url = canvas.toDataURL()
+        const a = document.createElement('a')
+        a.download = 'QRCode.png'
+        a.href = url
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+    }
+}
+
 const checkoutStripe = async (value: string) => {
     loading.value = true;
-    const res = await request.post('/api/app/money/create-checkout-session', {
-        level: props.type,
-        currency: value
-    });
-    loading.value = false;
-    if (res.code == 200) {
-        window.location.href = res.data.url;
-    } else if (res.code = 401) {
-        notification.error({
-            title: '请先登录',
-            duration: 3000
+    if (value == 'usd' || value == 'alipay') {
+        const res = await request.post('/api/app/money/create-checkout-session', {
+            level: props.type,
+            currency: value
         });
-    } else {
-        notification.error({
-            title: res.msg,
-            duration: 3000
+        loading.value = false;
+        if (res.code == 200) {
+            window.location.href = res.data.url;
+        } else if (res.code = 401) {
+            notification.error({
+                title: '请先登录',
+                duration: 3000
+            });
+        } else {
+            notification.error({
+                title: res.msg,
+                duration: 3000
+            });
+        }
+    } else if (value == 'wxpay') {
+        const res = await request.post('/api/app/money/wxnativepay', {
+            level: props.type,
         });
+        loading.value = false;
+        if (res.code == 200) {
+            wxpayUrl.value = res.data;
+            isShowWXPayUrl.value = true;
+        }
     }
 }
 

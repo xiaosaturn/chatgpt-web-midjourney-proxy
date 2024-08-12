@@ -29,7 +29,7 @@ const createCheckoutSession = async (obj: any, req: Request, res: Response, next
             }
         ],
         mode: 'payment',
-        payment_method_types: req.body.currency == 'usd' ? ['card', 'link'] : ['wechat_pay', 'alipay'],
+        payment_method_types: req.body.currency == 'usd' ? ['card', 'link'] : ['alipay'],
         payment_method_options: {
             wechat_pay: {
                 client: 'web'

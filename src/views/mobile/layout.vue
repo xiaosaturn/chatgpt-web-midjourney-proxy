@@ -49,27 +49,7 @@
                         </div>
                         <div v-else class="register-container flex flex-col items-center">
                             <n-space vertical>
-                                <div class="box">
-                                    <div class="content">
-                                        <h1 class="title text-center">{{ $t('setting.login') }}</h1>
-                                        <div>
-                                            <input type="text" v-model="userInfo.email"
-                                                :placeholder="$t('setting.plzEmail')" />
-                                        </div>
-                                        <div>
-                                            <input v-model="userInfo.password" type="password"
-                                                :placeholder="$t('setting.plzPassword')">
-                                        </div>
-                                        <div @click="handleLogin" class="login text-white text-center h-10 leading-10">
-                                            <!-- <input type="submit" value="登录"> -->
-                                            {{ $t('setting.login') }}
-                                        </div>
-                                    </div>
-                                    <!-- <div href="#" class="btns">忘记密码</div> -->
-                                    <div @click="showRegister = true" class="btns register">{{ $t('setting.register')
-                                        }}</div>
-                                </div>
-                                <!-- <h1 class="title text-center">{{ $t('setting.login') }}</h1>
+                                <h1 class="title text-center">{{ $t('setting.login') }}</h1>
                                 <n-form ref="formRef2" inline :model="formModel" :rules="rules" label-placement="top">
                                     <n-space vertical>
                                         <n-form-item :label="$t('setting.email')" path="email">
@@ -87,7 +67,7 @@
                                 <div class="login-link">
                                     {{ $t('setting.noAccount2') }}<n-button text @click="showRegister = true"
                                         color="#2080f0">{{ $t('setting.nowRegister') }}</n-button>
-                                </div> -->
+                                </div>
                             </n-space>
                         </div>
                     </template>
@@ -237,8 +217,6 @@ const countDownText = computed(() => isCountingDown.value ? `${countdown.value}s
 // }, 300)
 
 const handleLogin = async () => {
-    console.log('useriemail:', userInfo.value.email)
-    return;
     if (userInfo.value.email && userInfo.value.password) {
         // 登录
         const res = await request.post('/api/app/user/login', {

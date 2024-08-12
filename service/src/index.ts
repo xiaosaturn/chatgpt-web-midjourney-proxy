@@ -19,7 +19,7 @@ import { getUserByIdService, verificationCode, registerUser, login, updateUserIn
 import { viggleProxyFileDo, viggleProxy, lumaProxy, runwayProxy } from './myfun'
 import { uploadFile, uploadFile2, uploadFile3 } from './utils/uploadfile'
 import { createCheckoutSession, webhookStripe } from './money/stripe'
-import { payNativeOrder, wxpayCallback, getWXPlatformCert } from './money/wxpay'
+import { payNativeOrder, wxpayCallback, getWXPlatformCert, payH5Order } from './money/wxpay'
 import cors from 'cors'
 import { logger } from './utils/logger'
 
@@ -394,6 +394,7 @@ router.post('/app/money/create-checkout-session', authV2, createCheckoutSession)
 // router.post('/app/stripe/callback', webhookStripe);
 // app.post('/app/stripe/callback', bodyParser.raw({ type: '*/*' }), webhookStripe);
 router.post('/app/money/wxnativepay', authV2, payNativeOrder);
+router.post('/app/money/wxh5pay', authV2, payH5Order);
 router.get('/app/money/wxplatform-cert', authV2, getWXPlatformCert);
 
 // 创建 multer 的实例
