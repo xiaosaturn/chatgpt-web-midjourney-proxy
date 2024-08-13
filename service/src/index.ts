@@ -20,6 +20,7 @@ import { viggleProxyFileDo, viggleProxy, lumaProxy, runwayProxy } from './myfun'
 import { uploadFile, uploadFile2, uploadFile3 } from './utils/uploadfile'
 import { createCheckoutSession, webhookStripe } from './money/stripe'
 import { payNativeOrder, wxpayCallback, getWXPlatformCert, payH5Order } from './money/wxpay'
+import { aliwebPayOrder, alipayCallback, alih5PayOrder } from './money/alipay'
 import cors from 'cors'
 import { logger } from './utils/logger'
 
@@ -33,6 +34,7 @@ const corsOptions = {
 
 app.post('/app/stripe/callback', express.raw({ type: 'application/json' }), webhookStripe);
 router.post('/app/money/wxcallback', express.raw({ type: 'application/json' }), wxpayCallback);
+router.post('/app/money/alipayCallback', express.raw({ type: 'application/x-www-form-urlencoded' }), alipayCallback);
 
 app.use(cors(corsOptions));
 
@@ -396,6 +398,11 @@ router.post('/app/money/create-checkout-session', authV2, createCheckoutSession)
 router.post('/app/money/wxnativepay', authV2, payNativeOrder);
 router.post('/app/money/wxh5pay', authV2, payH5Order);
 router.get('/app/money/wxplatform-cert', authV2, getWXPlatformCert);
+
+router.post('/app/money/aliwebpay', authV2, aliwebPayOrder);
+router.post('/app/money/alih5pay', authV2, alih5PayOrder);
+
+
 
 // 创建 multer 的实例
 const upload3 = multer();

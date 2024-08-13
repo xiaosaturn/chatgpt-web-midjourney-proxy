@@ -69,12 +69,14 @@
                     $t('price.buy') }}</n-button>
         </n-popselect>
 
-        <n-modal v-model:show="isShowWXPayUrl">
-            <div class="flex bg-white justify-center items-center p-8 flex-col rounded-[20px]"
-                style="position:fixed;top:30%;left:50%;transform: translateX(-50%);">
-                <div class="text-[20px] font-bold">打开微信扫描下方二维码，进行付款，谢谢</div>
-                <n-qr-code id="qr-code" style="margin-bottom: 20px;" :value="wxpayUrl" color="#ff08ff" />
-                <n-button type="primary" @click="handleDownloadQRCode">
+        <n-modal v-model:show="isShowWXPayUrl" style="width:300px;padding:20px">
+            <div class="flex bg-white justify-center items-center py-8 px-12 flex-col rounded-[20px]"
+                style="position:fixed;top:20%;left:50%;transform: translateX(-50%);">
+                <div class="text-[20px] font-bold mb-2">打开微信扫描下方二维码，进行付款，谢谢</div>
+                <div class="flex w-full justify-center">
+                    <n-qr-code id="qr-code" class="mb-2" style="padding:0;" :value="wxpayUrl" color="#ff08ff" />
+                </div>
+                <n-button class="mb-2" style="margin-bottom: 10px;" type="primary" @click="handleDownloadQRCode">
                     下载
                 </n-button>
                 <div class="text-[18px] font-bold mb-2">付款完成之后，请刷新页面</div>
@@ -92,6 +94,10 @@ import {
     NPopconfirm, NDialog, NInput, useDialog, NModal, NQrCode
 } from 'naive-ui'
 import { t } from '@/locales'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
+
+// 移动端自适应相关
+const { isMobile } = useBasicLayout()
 
 const notification = useNotification()
 
@@ -140,7 +146,7 @@ const handleDownloadQRCode = () => {
 
 const checkoutStripe = async (value: string) => {
     loading.value = true;
-    if (value == 'usd' || value == 'alipay') {
+    if (value == 'usd') {
         const res = await request.post('/api/app/money/create-checkout-session', {
             level: props.type,
             currency: value
@@ -168,7 +174,27 @@ const checkoutStripe = async (value: string) => {
             wxpayUrl.value = res.data;
             isShowWXPayUrl.value = true;
         }
+    } else if (value == 'alipay') {
+        let api = '/api/app/money/aliwebpay';
+        console.log('isMobile', isMobile);
+        if (isMobile.value) {
+            api = '/api/app/money/alih5pay';
+        }
+        const res = await request.post(api, {
+            level: props.type,
+        });
+        loading.value = false;
+        const div = document.createElement('div');
+        div.innerHTML = res;
+        // 获取表单
+        const form = div.querySelector('form');
+        form.target = '_blank';
+        // 将表单添加到body
+        document.body.appendChild(form);
+        // 自动提交表单
+        form.submit();
     }
+
 }
 
 onMounted(() => {

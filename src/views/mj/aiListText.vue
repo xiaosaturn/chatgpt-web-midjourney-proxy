@@ -9,7 +9,9 @@ defineProps<{ myItem: Chat.History, myObj?: gptConfigType }>()
 
 <template>
     <span class="flex justify-start items-center">
-        <SvgIcon v-if="!myObj" icon="vscode-icons:file-type-excalidraw" class="w-6 h-6" />
+        <!-- <SvgIcon v-if="!myObj" icon="vscode-icons:file-type-excalidraw" class="w-6 h-6" /> -->
+        <n-avatar v-if="!myObj" class="w-6 h-6"
+            src="https://deepimage.polo-e.net/applets/20240813/012414_1723512253388.png"></n-avatar>
         <n-avatar v-else-if="myObj.gpts" class="w-6 h-6" :src="myObj.gpts.logo" fallback-src="../../assets/avatar.jpg"
             :size="24" round />
         <!-- <SvgIcon icon="bi:chat" v-else /> -->
