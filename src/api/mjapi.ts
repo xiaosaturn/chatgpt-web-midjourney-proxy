@@ -382,6 +382,9 @@ export const canVisionModel = (model: string) => {
 export const isCanBase64Model = (model: string) => {
     //gpt-4o
     //customVisionModel
+    if (model.indexOf('gpt-4o') > -1 || (model.indexOf('gemini') > -1 && model.indexOf('1.5') > -1)) {
+        return true
+    }
     let visionArr = [
         'gpt-4o-2024-08-06',
         'gemini-pro-vision', 'gpt-4o', 'gpt-4o-2024-05-13', 'gemini-pro-1.5', 'gpt-4-turbo', 'gpt-4-turbo-2024-04-09',
