@@ -345,7 +345,7 @@ const validateVerificationCode = (code?: string) => {
 }
 
 const getUserInfo = async () => {
-    const res = await request.get('/app/user', null, {
+    const res = await request.get('/api/app/user', null, {
         headers: {
             'Cache-Control': ' no-cache'
         }
@@ -373,7 +373,7 @@ const handleFileChange = (event: Event) => {
 const confirmUpload = async (file: File) => {
     const formData = new FormData()
     formData.append('file', file)
-    const res = await request.post('/app/upload', formData, {
+    const res = await request.post('/api/app/upload', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         }
@@ -429,7 +429,7 @@ const updateNickname = () => {
 }
 
 const submitNickname = async () => {
-    const res = await request.put('/app/user', {
+    const res = await request.put('/api/app/user', {
         id: userInfo.value.id,
         avatar: userInfo.value.avatar,
         nickname: nickName?.value?.trim()
@@ -452,7 +452,7 @@ const submitNickname = async () => {
 }
 
 const submitAvatar = async () => {
-    const res = await request.put('/app/user', {
+    const res = await request.put('/api/app/user', {
         id: userInfo.value.id,
         avatar: userInfo.value.avatar,
     });

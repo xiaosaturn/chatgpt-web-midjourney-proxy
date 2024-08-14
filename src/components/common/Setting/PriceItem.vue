@@ -10,7 +10,6 @@
             </div>
             <p class="mt-6 flex items-baseline gap-x-1">
                 <span class="text-5xl font-bold tracking-tight">
-
                     {{ '$' + rObj.price }}
                 </span>
                 <span class="text-sm font-semibold leading-6 text-slate-700 dark:text-slate-400">{{ rObj.priceWay
