@@ -164,7 +164,7 @@ const payNativeOrder = async (obj: any, req: Request, res: Response, next: NextF
         out_trade_no: orderNo,
         notify_url: callbackUrl,
         amount: {
-            total: 1
+            total: 6900
         },
         attach: JSON.stringify({
             userId: obj.id,

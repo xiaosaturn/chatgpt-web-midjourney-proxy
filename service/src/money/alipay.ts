@@ -4,8 +4,8 @@ import { Request, Response, NextFunction } from 'express';
 import moment from 'moment';
 import { handlePaySuccess } from './wxpay';
 
-const monthlyPrice = '0.01';
-const yearlyPrice = '0.02';
+const monthlyPrice = '69.00';
+const yearlyPrice = '699.00';
 const callbackUrl = 'https://all-ai.chat/api/app/money/alipayCallback';
 // const callbackUrl = 'http://mpce.tpddns.cn:41000/app/money/alipayCallback'; // 测试回调
 
