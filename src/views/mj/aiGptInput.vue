@@ -14,7 +14,7 @@ import {
 import { gptConfigStore, homeStore, useChatStore } from '@/store';
 import { AutoCompleteOptions } from 'naive-ui/es/auto-complete/src/interface';
 import { RenderLabel } from 'naive-ui/es/_internal/select-menu/src/interface';
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import aiModel from "@/views/mj/aiModel.vue"
 import AiMic from './aiMic.vue';
 import { useIconRender } from '@/hooks/useIconRender'
@@ -23,6 +23,7 @@ import VueTurnstile from 'vue-turnstile';
 const { iconRender } = useIconRender()
 //import FormData from 'form-data'
 const route = useRoute()
+const router = useRouter()
 const chatStore = useChatStore()
 
 const emit = defineEmits(['update:modelValue'])
@@ -219,6 +220,7 @@ const appearance = computed(() => {
     return homeStore.myData.vtoken ? 'interaction-only' : 'always'
 })
 const tRef = ref();
+
 //const vt= ref<{thandel?:any}>({ });
 onMounted(() => {
     if (homeStore.myData.session.turnstile) {
@@ -226,9 +228,18 @@ onMounted(() => {
         //vt.value.thandel= setInterval( tRef.value.reset , 8300)
     }
 });
+
 // onUnmounted( ()=>{
 //     if(vt.value.thandel) clearInterval( vt.value.thandel)
 // });
+
+const go2Service = () => {
+    router.push({
+        name: 'policyService',
+
+    });
+}
+
 watch(() => homeStore.myData.vtoken, regCookie)
 
 </script>
@@ -289,11 +300,24 @@ watch(() => homeStore.myData.vtoken, regCookie)
         <aiModel @close="st.isShow = false" />
     </NModal>
 
+
+
     <!-- <n-drawer v-model:show="st.showMic" :width="420" :on-update:show="onShowFun">
     <n-drawer-content title="录音" closable>
         <AiMic />
     </n-drawer-content>
 </n-drawer> -->
+
+    <div class="pt-3 flex justify-center text-[12px] text-gray-400">
+        <div class="text-gray-400 cursor-pointer" @click="go2Service">用户协议</div>
+        <div class="w-4"></div>
+        <div>隐私政策</div>
+        <div class="w-4"></div>
+        <div>用户支付协议</div>
+        <div class="w-4"></div>
+        <div>皖ICP备2020015467号-5</div>
+    </div>
+
 
 </template>
 

@@ -9,6 +9,7 @@ import lumaLayout from '@/views/luma/layout.vue'
 import mobileMeLayout from '@/views/mobile/layout.vue'
 import mobilePriceLayout from '@/views/mobile/price.vue'
 import landingpage from '@/views/LandingPage.vue'
+import policyService from '@/views/protocol/service.vue'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -138,6 +139,12 @@ const routes: RouteRecordRaw[] = [
         path: '/landing/page',
         name: 'landingpage',
         component: landingpage,
+    },
+
+    {
+        path: '/policy/service',
+        name: 'policyService',
+        component: policyService,
     },
 
     //调试

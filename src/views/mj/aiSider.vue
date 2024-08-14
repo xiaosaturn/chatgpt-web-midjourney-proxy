@@ -39,7 +39,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="flex-shrink-0 w-[60px] z-[1000]  h-full" v-if="!isMobile" data-tauri-drag-region>
+    <div class="flex-shrink-0 w-[60px] z-[1000] h-full" style="" v-if="!isMobile" data-tauri-drag-region>
         <div
             class="flex h-full select-none flex-col items-center justify-between bg-[#e8eaf1] px-2 pt-4 pb-8 dark:bg-[#25272d]">
             <div class="flex flex-col space-y-4 flex-1 " :class="{ 'pt-5': homeStore.myData.isClient }"
