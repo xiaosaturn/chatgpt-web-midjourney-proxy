@@ -2,6 +2,12 @@ import { AlipaySdk } from 'alipay-sdk';
 import { logger } from '../utils/logger';
 import { Request, Response, NextFunction } from 'express';
 import moment from 'moment';
+import { handlePaySuccess } from './wxpay';
+
+const monthlyPrice = '0.01';
+const yearlyPrice = '0.02';
+const callbackUrl = 'https://all-ai.chat/api/app/money/alipayCallback';
+// const callbackUrl = 'http://mpce.tpddns.cn:41000/app/money/alipayCallback'; // 测试回调
 
 // 实例化客户端
 const alipaySdk = new AlipaySdk({
@@ -36,7 +42,7 @@ const aliwebPayOrder = async (obj: any, req: Request, res: Response, next: NextF
     const goodsId = 'G-' + moment().format('YYYYMMDDHHmmss');
     const bizContent = {
         out_trade_no: orderNo,
-        total_amount: "0.01",
+        total_amount: monthlyPrice,
         subject: 'All-AI Chat月度会员',
         product_code: 'FAST_INSTANT_TRADE_PAY',
         qr_pay_mode: "1",
@@ -47,22 +53,23 @@ const aliwebPayOrder = async (obj: any, req: Request, res: Response, next: NextF
                 goods_id: goodsId,
                 goods_name: 'All-AI Chat月度会员',
                 quantity: 1,
-                price: "0.01",
+                price: monthlyPrice,
             }
-        ]
+        ],
+        passbackParams: encodeURIComponent(`id=${obj.id}&level=${req.body.level}`)
     }
     if (req.body.level == 3) {
         bizContent.subject = 'All-AI Chat年度会员';
-        bizContent.total_amount = '699.00';
+        bizContent.total_amount = yearlyPrice;
         bizContent.goods_detail[0].goods_name = 'All-AI Chat年度会员'
-        bizContent.goods_detail[0].price = '699.00';
+        bizContent.goods_detail[0].price = yearlyPrice;
     }
     logger.info({
         msg: bizContent,
         label: 'alipay.trade.page.pay入参：'
     });
     const formRes = await alipaySdk.pageExec("alipay.trade.page.pay", {
-        notify_url: 'http://mpce.tpddns.cn:41000/app/money/alipayCallback',
+        notify_url: callbackUrl,
         bizContent
     });
     res.send(formRes);
@@ -73,7 +80,7 @@ const alih5PayOrder = async (obj: any, req: Request, res: Response, next: NextFu
     const goodsId = 'G-' + moment().format('YYYYMMDDHHmmss');
     const bizContent = {
         out_trade_no: orderNo,
-        total_amount: "0.01",
+        total_amount: monthlyPrice,
         subject: 'All-AI Chat月度会员',
         product_code: 'FAST_INSTANT_TRADE_PAY',
         qr_pay_mode: "1",
@@ -84,103 +91,85 @@ const alih5PayOrder = async (obj: any, req: Request, res: Response, next: NextFu
                 goods_id: goodsId,
                 goods_name: 'All-AI Chat月度会员',
                 quantity: 1,
-                price: "0.01",
+                price: monthlyPrice,
             }
-        ]
+        ],
+        passbackParams: encodeURIComponent(`id=${obj.id}&level=${req.body.level}`)
     }
     if (req.body.level == 3) {
         bizContent.subject = 'All-AI Chat年度会员';
-        bizContent.total_amount = '699.00';
+        bizContent.total_amount = yearlyPrice;
         bizContent.goods_detail[0].goods_name = 'All-AI Chat年度会员'
-        bizContent.goods_detail[0].price = '699.00';
+        bizContent.goods_detail[0].price = yearlyPrice;
     }
     logger.info({
         msg: bizContent,
         label: 'alipay.trade.wap.pay入参：'
     });
     const formRes = await alipaySdk.pageExec("alipay.trade.wap.pay", {
-        notify_url: 'http://mpce.tpddns.cn:41000/app/money/alipayCallback',
+        notify_url: callbackUrl,
         bizContent
     });
     res.send(formRes);
 }
 
 const alipayCallback = async (req: Request, res: Response, next: NextFunction) => {
-    console.log('req.header:', req.headers)
     const params = req.body;
+    const signVerified = alipaySdk.checkNotifySignV2(params);
+    logger.info({
+        msg: signVerified,
+        label: 'signVerified验签'
+    });
+    logger.info({
+        msg: params,
+        label: 'signVerified验签的params'
+    });
     try {
-        // 验证通知的真实性
-        const jsonStr = params.toString('utf8');
-        const decodedStr = decodeURIComponent(jsonStr);
-        const decodedArr = decodedStr.split('&');
-        const decodedObj = {};
-        if (decodedArr) {
-            decodedArr.map(item => {
-                const arr = item.split('=')
-                decodedObj[arr[0]] = arr[1];
-            });
-            logger.info({
-                msg: decodedObj,
-                label: '从buffer解析出的数据转成obj：'
-            });
-            const allDecodedObj = Object.assign({}, decodedObj);
-            delete decodedObj['sign'];
-            delete decodedObj['sign_type'];
-            logger.info({
-                msg: decodedObj,
-                label: '删除了sign/sign_type的obj：'
-            });
-            const sortStr = objToSortedString(decodedObj);
-            logger.info({
-                msg: sortStr,
-                label: '排序之后的sortStr：'
-            });
-            const signVerified = alipaySdk.checkNotifySignV2(allDecodedObj);
-            const signVerified2 = alipaySdk.checkNotifySignV2(decodedObj);
-            const signVerified3 = alipaySdk.checkNotifySignV2(jsonStr);
-            logger.info({
-                msg: signVerified,
-                label: 'signVerified验签'
-            });
-            logger.info({
-                msg: signVerified2,
-                label: 'signVerified验签2'
-            });
-            logger.info({
-                msg: signVerified3,
-                label: 'signVerified验签3'
-            });
-            if (signVerified) {
-                // 通知验证成功
-                const tradeStatus = params.trade_status;
+        if (signVerified) {
+            // 通知验证成功
+            const tradeStatus = params.trade_status;
+            const passbackParams = str2obj(params.passback_params);
 
-                if (tradeStatus === 'TRADE_SUCCESS' || tradeStatus === 'TRADE_FINISHED') {
-                    // 支付成功，进行相应的业务处理
-                    const outTradeNo = params.out_trade_no; // 商户订单号
-                    const tradeNo = params.trade_no; // 支付宝交易号
-                    const totalAmount = params.total_amount; // 交易金额
-
-                    // TODO: 在这里添加您的业务逻辑
-                    console.log(`Payment successful for order ${outTradeNo}`);
-
-                    // 返回成功结果给支付宝
-                    res.send('success');
-                } else {
-                    // 其他交易状态
-                    console.log(`Received payment status: ${tradeStatus}`);
-                    res.send('success');
-                }
+            if (tradeStatus === 'TRADE_SUCCESS' || tradeStatus === 'TRADE_FINISHED') {
+                // 支付成功，进行相应的业务处理
+                handlePaySuccess(passbackParams['id'], passbackParams['level']);
+                // 返回成功结果给支付宝
+                res.send('success');
             } else {
-                logger.info({
-                    msg: jsonStr,
-                    label: '通知验证失败'
-                });
+                // 其他交易状态
+                console.log(`Received payment status: ${tradeStatus}`);
+                res.send('success');
             }
+        } else {
+            logger.info({
+                msg: params,
+                label: '通知验签失败'
+            });
+            res.status(500).send('fail');
         }
     } catch (error) {
         console.error('Error processing Alipay notification:', error);
         res.status(500).send('fail');
     }
+}
+
+const str2obj = (str) => {
+    // 1. 解码字符串
+    let decodedString = decodeURIComponent(str);
+
+    // 2. 将字符串分割成键值对
+    let pairs = decodedString.split('&');
+
+    // 3. 创建一个对象来存储结果
+    let result = {};
+
+    // 4. 遍历键值对并添加到结果对象中
+    pairs.forEach(pair => {
+        let [key, value] = pair.split('=');
+        result[key] = value;
+    });
+
+    return result;
 }
 
 const objToSortedString = (obj) => {

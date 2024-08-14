@@ -34,7 +34,10 @@ const corsOptions = {
 
 app.post('/app/stripe/callback', express.raw({ type: 'application/json' }), webhookStripe);
 router.post('/app/money/wxcallback', express.raw({ type: 'application/json' }), wxpayCallback);
-router.post('/app/money/alipayCallback', express.raw({ type: 'application/x-www-form-urlencoded' }), alipayCallback);
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+router.post('/app/money/alipayCallback', alipayCallback);
 
 app.use(cors(corsOptions));
 

@@ -17,6 +17,8 @@ const wxPlatformCertUrl = 'https://api.mch.weixin.qq.com/v3/certificates';
 const schema = "WECHATPAY2-SHA256-RSA2048";
 const KEY_LENGTH_BYTE = 32;
 const AUTH_TAG_LENGTH_BYTE = 16;
+const callbackUrl = 'https://all-ai.chat/api/app/money/wxcallback';
+// const callbackUrl = 'http://mpce.tpddns.cn:41000/app/money/wxcallback'; // 测试回调
 
 const getToken = (method, httpurl, body = null) => {
     const nonceStr = generateNonceStr();
@@ -104,7 +106,7 @@ function decryptToString(aesKey, associatedData, nonceStr, ciphertext) {
 const getWXPlatformCert = async () => {
     const token = getToken('GET', wxPlatformCertUrl);
     const headers = {
-        'User-Agent': 'Apifox/1.0.0 (https://apifox.com)',
+        'User-Agent': 'YSH Agent',
         'Accept': 'application/json',
         'Authorization': `${schema} ${token}`,
         'Accept-Language': 'zh-CN'
@@ -160,8 +162,7 @@ const payNativeOrder = async (obj: any, req: Request, res: Response, next: NextF
         mchid: process.env.WXPAY_MCH_ID,
         description: "All-AI Chat月度会员",
         out_trade_no: orderNo,
-        // notify_url: "https://all-ai.chat/app/money/wxcallback",
-        notify_url: "http://mpce.tpddns.cn:41000/app/money/wxcallback",
+        notify_url: callbackUrl,
         amount: {
             total: 1
         },
@@ -216,7 +217,7 @@ const payNativeOrder = async (obj: any, req: Request, res: Response, next: NextF
         res.send({
             code: 200,
             msg: 'success',
-            data: data.code_url
+            data: data['code_url']
         });
         // console.log('Native支付二维码链接data:', response.data);
         // console.log('Native支付二维码链接:', response.data.code_url);
@@ -243,12 +244,11 @@ const payH5Order = async (obj: any, req: Request, res: Response, next: NextFunct
         mchid: process.env.WXPAY_MCH_ID,
         description: "All-AI Chat月度会员",
         out_trade_no: orderNo,
-        // notify_url: "https://all-ai.chat/app/money/wxcallback",
+        notify_url: callbackUrl,
         attach: JSON.stringify({
             userId: obj.id,
             level: req.body.level
         }),
-        notify_url: "http://mpce.tpddns.cn:41000/app/money/wxcallback",
         amount: {
             total: 1
         },
@@ -543,4 +543,5 @@ export {
     wxpayCallback,
     getWXPlatformCert,
     payH5Order,
+    handlePaySuccess
 }

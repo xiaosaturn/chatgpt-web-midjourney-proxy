@@ -37,12 +37,12 @@
             <div class="text-[20px] mb-2">{{ $t('userInfo.chatCount') }}：
                 <n-tag type="primary" size="large" style="font-size:22px;font-weight: bold">{{
                     userInfo.chatCount
-                    }}</n-tag>
+                }}</n-tag>
             </div>
             <div class="text-[20px] flex justify-start">{{ $t('userInfo.drawCount') }}：
                 <n-tag type="primary" size="large" style="font-size:22px;font-weight: bold">{{
                     userInfo.drawCount
-                    }}</n-tag>
+                }}</n-tag>
             </div>
         </div>
         <!-- <div></div>
@@ -211,6 +211,7 @@ const submitAvatar = async () => {
 
 const getUserInfo = async () => {
     const res = await request.get('/app/user');
+    console.log('res:::', res)
     if (res.code == 200) {
         userStore.updateUserInfo(res.data);
     } else if (res.code == 401 || res.code == 403) {
