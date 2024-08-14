@@ -146,13 +146,21 @@ console.log('API_BASE_URL', API_BASE_URL)
 app.use('/mjapi', authV2, authV5, proxy(process.env.MJ_SERVER, {
     https: false, limit: '10mb',
     proxyReqPathResolver: function (req) {
-        const realUrl = req.originalUrl.replace('/mjapi', '/mj-relax');
+        const realUrl = req.originalUrl.replace('/mjapi', '');
         logger.info({
             msg: realUrl,
             label: '实际请求URL：'
         });
-        return req.originalUrl.replace('/mjapi', '/mj-relax') // 将URL中的 `/mjapi` 替换为空字符串
+        return req.originalUrl.replace('/mjapi', '') // 将URL中的 `/mjapi` 替换为空字符串
     },
+    // proxyReqPathResolver: function (req) {
+    //     const realUrl = req.originalUrl.replace('/mjapi', '/mj-relax');
+    //     logger.info({
+    //         msg: realUrl,
+    //         label: '实际请求URL：'
+    //     });
+    //     return req.originalUrl.replace('/mjapi', '/mj-relax') // 将URL中的 `/mjapi` 替换为空字符串
+    // },
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
         proxyReqOpts.headers['mj-api-secret'] = proxyReqOpts.headers['authorization'],
         proxyReqOpts.headers['Authorization'] = 'Bearer ' + process.env.MJ_KEY;
