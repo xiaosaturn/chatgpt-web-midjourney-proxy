@@ -229,7 +229,7 @@ export const flechTask = (chat: Chat.Chat) => {
         if (ts.progress && ts.progress == "100%") {
             chat.loading = false;
             // 将图片上传到COS，并存储到数据库，ts.imageUrl
-            request.post('/app/upload-url', {
+            request.post('/api/app/upload-url', {
                 imageUrl: ts.imageUrl,
                 prompt: ts.promptEn ? ts.promptEn : ts.prompt,
                 action: ts.action

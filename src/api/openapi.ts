@@ -229,7 +229,7 @@ export const subGPT = async (data: any, chat: Chat.Chat) => {
             chat.loading = false;
             homeStore.setMyData({ act: 'updateChat', actData: chat });
             // 将图片上传到COS，并存储到数据库，ts.imageUrl
-            request.post('/app/upload-url', {
+            request.post('/api/app/upload-url', {
                 imageUrl: rz.url,
                 prompt: rz.revised_prompt,
                 action: 'DALL·E 3'
