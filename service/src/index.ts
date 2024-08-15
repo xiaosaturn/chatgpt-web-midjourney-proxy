@@ -13,7 +13,6 @@ import proxy from "express-http-proxy"
 import bodyParser from 'body-parser';
 import FormData from 'form-data'
 import axios from 'axios';
-import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { getUserByIdService, verificationCode, registerUser, login, updateUserInfo, queryAllImages } from './users/index'
 import { viggleProxyFileDo, viggleProxy, lumaProxy, runwayProxy } from './myfun'
@@ -248,54 +247,54 @@ if (isUpload) {
 app.use('/uploads', express.static('uploads'));
 
 // R2Client function
-const R2Client = () => {
-    const accountId = process.env.R2_ACCOUNT_ID;
-    const accessKeyId = process.env.R2_KEY_ID;
-    const accessKeySecret = process.env.R2_KEY_SECRET;
-    const endpoint = new AWS.Endpoint(`https://${accountId}.r2.cloudflarestorage.com`);
-    const s3 = new AWS.S3({
-        endpoint: endpoint,
-        region: 'auto',
-        credentials: new AWS.Credentials(accessKeyId, accessKeySecret),
-        signatureVersion: 'v4',
-    });
-    return s3;
-};
+// const R2Client = () => {
+//     const accountId = process.env.R2_ACCOUNT_ID;
+//     const accessKeyId = process.env.R2_KEY_ID;
+//     const accessKeySecret = process.env.R2_KEY_SECRET;
+//     const endpoint = new AWS.Endpoint(`https://${accountId}.r2.cloudflarestorage.com`);
+//     const s3 = new AWS.S3({
+//         endpoint: endpoint,
+//         region: 'auto',
+//         credentials: new AWS.Credentials(accessKeyId, accessKeySecret),
+//         signatureVersion: 'v4',
+//     });
+//     return s3;
+// };
 
 // cloudflare R2 upload
-app.post('/openapi/pre_signed', (req, res) => {
-    const bucketName = process.env.R2_BUCKET_NAME;
-    const domain = process.env.R2_DOMAIN;
-    const s3 = R2Client();
-    const fileName = uuidv4();
-    const saveFile = `${new Date().toISOString().split('T')[0]}/${fileName}${req.body.file_name}`;
+// app.post('/openapi/pre_signed', (req, res) => {
+//     const bucketName = process.env.R2_BUCKET_NAME;
+//     const domain = process.env.R2_DOMAIN;
+//     const s3 = R2Client();
+//     const fileName = uuidv4();
+//     const saveFile = `${new Date().toISOString().split('T')[0]}/${fileName}${req.body.file_name}`;
 
-    const params = {
-        Bucket: bucketName,
-        Key: saveFile,
-        ContentType: req.body.ContentType,
-        Expires: 60 * 60, // 1 hour
-    };
+//     const params = {
+//         Bucket: bucketName,
+//         Key: saveFile,
+//         ContentType: req.body.ContentType,
+//         Expires: 60 * 60, // 1 hour
+//     };
 
-    s3.getSignedUrl('putObject', params, (err, url) => {
-        if (err) {
-            res.status(500).json({
-                status: 'Error',
-                message: `Couldn't get presigned URL for PutObject: ${err.message}`
-            });
-            return;
-        }
+//     s3.getSignedUrl('putObject', params, (err, url) => {
+//         if (err) {
+//             res.status(500).json({
+//                 status: 'Error',
+//                 message: `Couldn't get presigned URL for PutObject: ${err.message}`
+//             });
+//             return;
+//         }
 
-        res.json({
-            status: 'Success',
-            message: '',
-            data: {
-                up: url,
-                url: `${domain}/${saveFile}`
-            }
-        });
-    });
-});
+//         res.json({
+//             status: 'Success',
+//             message: '',
+//             data: {
+//                 up: url,
+//                 url: `${domain}/${saveFile}`
+//             }
+//         });
+//     });
+// });
 
 app.use(
     '/openapi/v1/audio/transcriptions', authV2,
