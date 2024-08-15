@@ -234,10 +234,23 @@ onMounted(() => {
 // });
 
 const go2Service = () => {
-    router.push({
-        name: 'policyService',
+    // window.location.href = '/policy/service'
+    window.open('/policy/service', '_blank');
+}
 
-    });
+const go2Privacy = () => {
+    // window.location.href = '/policy/service'
+    window.open('/policy/privacy', '_blank');
+}
+
+const go2Pay = () => {
+    // window.location.href = '/policy/service'
+    window.open('/policy/pay', '_blank');
+}
+
+const go2Beian = () => {
+    // window.location.href = '/policy/service'
+    window.open('https://beian.miit.gov.cn/#/Integrated/index', '_blank');
 }
 
 watch(() => homeStore.myData.vtoken, regCookie)
@@ -309,13 +322,13 @@ watch(() => homeStore.myData.vtoken, regCookie)
 </n-drawer> -->
 
     <div class="pt-3 flex justify-center text-[12px] text-gray-400">
-        <div class="text-gray-400 cursor-pointer" @click="go2Service">用户协议</div>
+        <div class="cursor-pointer" @click="go2Service">用户协议</div>
         <div class="w-4"></div>
-        <div>隐私政策</div>
+        <div class="cursor-pointer" @click="go2Privacy">隐私政策</div>
         <div class="w-4"></div>
-        <div>用户支付协议</div>
+        <div class="cursor-pointer" @click="go2Pay">用户支付协议</div>
         <div class="w-4"></div>
-        <div>皖ICP备2020015467号-5</div>
+        <div class="cursor-pointer" @click="go2Beian">皖ICP备2020015467号-5</div>
     </div>
 
 

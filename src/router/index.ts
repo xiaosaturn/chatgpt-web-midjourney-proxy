@@ -10,6 +10,8 @@ import mobileMeLayout from '@/views/mobile/layout.vue'
 import mobilePriceLayout from '@/views/mobile/price.vue'
 import landingpage from '@/views/LandingPage.vue'
 import policyService from '@/views/protocol/service.vue'
+import policyPrivacy from '@/views/protocol/privacy.vue'
+import policyPay from '@/views/protocol/pay.vue'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -146,6 +148,19 @@ const routes: RouteRecordRaw[] = [
         name: 'policyService',
         component: policyService,
     },
+
+    {
+        path: '/policy/privacy',
+        name: 'policyPrivacy',
+        component: policyPrivacy,
+    },
+
+    {
+        path: '/policy/pay',
+        name: 'policyPay',
+        component: policyPay,
+    },
+
 
     //调试
     // {
