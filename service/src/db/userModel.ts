@@ -83,7 +83,7 @@ const getUserById = async (userId) => {
 const insertUser = async (params) => {
     const sql = 'insert into member_user \
         (nickname, avatar, email, password, level_id, register_ip, register_terminal_name)\
-        values(?, ?, ?, ?, 3, ?, ?)';
+        values(?, ?, ?, ?, 1, ?, ?)';
     return new Promise((resolve, reject) => {
         db.query(sql,
             [params.nickname, params.avatar, params.email, params.password, params.registerIp, params.registerTerminalName],
