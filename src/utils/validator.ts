@@ -66,16 +66,16 @@ const validatePassword = (password?: string) => {
         return false;
     }
 
-    // 使用正则表达式检查密码格式
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).{8,}$/;
-    const isValid = passwordRegex.test(password);
-    if (!isValid) {
-        notification.error({
-            title: '密码格式不符合要求，至少包含一个大写字母、一个小写字母、一个数字和一个特殊符号',
-            duration: 3000,
-        });
-        return false;
-    }
+    // 使用正则表达式检查密码格式，不校验这个了，要不麻烦
+    // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).{8,}$/;
+    // const isValid = passwordRegex.test(password);
+    // if (!isValid) {
+    //     notification.error({
+    //         title: '密码格式不符合要求，至少包含一个大写字母、一个小写字母、一个数字和一个特殊符号',
+    //         duration: 3000,
+    //     });
+    //     return false;
+    // }
     return true;
 }
 
