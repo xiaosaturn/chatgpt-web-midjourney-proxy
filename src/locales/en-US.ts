@@ -553,6 +553,13 @@ export default {
         chatCount: 'Remaining Conversations Today',
         drawCount: 'Remaining Drawings',
 
+    },
+
+    policy: {
+        protocol: 'User Agreement',
+        privacy: 'Privacy Policy',
+        pay: 'User Payment Agreement',
     }
+
 
 }

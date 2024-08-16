@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { t } from '@/locales'
+import { t, locale } from '@/locales'
 import {
     NInput, NButton, useMessage, NImage, NTooltip, NAutoComplete, NTag
     , NPopover, NModal, NDropdown
@@ -19,6 +19,9 @@ import aiModel from "@/views/mj/aiModel.vue"
 import AiMic from './aiMic.vue';
 import { useIconRender } from '@/hooks/useIconRender'
 import VueTurnstile from 'vue-turnstile';
+import { useAppStoreWithOut } from '@/store/modules/app'
+
+const appStore = useAppStoreWithOut()
 
 const { iconRender } = useIconRender()
 //import FormData from 'form-data'
@@ -39,6 +42,8 @@ const placeholder = computed(() => {
         return t('chat.placeholderMobile')
     return t('chat.placeholder');//可输入说点什么，也可贴截图或拖拽文件
 })
+
+const lang = computed(() => appStore.language);
 
 const { uuid } = route.params as { uuid: string }
 
@@ -322,15 +327,14 @@ watch(() => homeStore.myData.vtoken, regCookie)
 </n-drawer> -->
 
     <div class="pt-3 flex justify-center text-[12px] text-gray-400">
-        <div class="cursor-pointer" @click="go2Service">用户协议</div>
+        <div class="cursor-pointer" @click="go2Service">{{ $t('policy.protocol') }}</div>
         <div class="w-4"></div>
-        <div class="cursor-pointer" @click="go2Privacy">隐私政策</div>
+        <div class="cursor-pointer" @click="go2Privacy">{{ $t('policy.privacy') }}</div>
         <div class="w-4"></div>
-        <div class="cursor-pointer" @click="go2Pay">用户支付协议</div>
+        <div class="cursor-pointer" @click="go2Pay">{{ $t('policy.pay') }}</div>
         <div class="w-4"></div>
-        <div class="cursor-pointer" @click="go2Beian">皖ICP备2020015467号-5</div>
+        <div v-if="lang == 'zh-CN' || lang == 'en-US'" class="cursor-pointer" @click="go2Beian">皖ICP备2020015467号-5</div>
     </div>
-
 
 </template>
 

@@ -542,8 +542,13 @@ export default {
         chatCount: 'Số lần trò chuyện còn lại trong hôm nay',
         drawCount: 'Số lần vẽ còn lại trong hôm nay',
 
-    }
+    },
 
+    policy: {
+        protocol: 'Thỏa thuận người dùng',
+        privacy: 'Chính sách bảo mật',
+        pay: 'Thỏa thuận thanh toán người dùng',
+    }
 
 
 }

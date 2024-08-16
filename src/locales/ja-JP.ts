@@ -528,5 +528,12 @@ export default {
         chatCount: '今日の会話の残り回数',
         drawCount: 'の残り描画回数',
 
+    },
+
+    policy: {
+        protocol: 'ユーザー規約',
+        privacy: 'プライバシーポリシー',
+        pay: 'ユーザー支払い規約',
     }
+
 }

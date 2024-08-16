@@ -540,7 +540,12 @@ export default {
         chatCount: 'Bugünkü kalan konuşma sayısı',
         drawCount: 'Bugünkü kalan çizim sayısı',
 
-    }
+    },
 
+    policy: {
+        protocol: 'Kullanıcı Sözleşmesi',
+        privacy: 'Gizlilik Politikası',
+        pay: 'Kullanıcı Ödeme Sözleşmesi',
+    }
 
 }

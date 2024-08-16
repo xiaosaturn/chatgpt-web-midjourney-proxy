@@ -538,7 +538,12 @@ export default {
         freeUser: '免費用戶',
         chatCount: '今日對話剩餘次數',
         drawCount: '繪畫剩餘次數',
-    }
+    },
 
+    policy: {
+        protocol: '用戶協議',
+        privacy: '隱私政策',
+        pay: '用戶支付協議',
+    }
 
 }

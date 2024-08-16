@@ -542,6 +542,13 @@ export default {
         chatCount: '오늘 남은 대화 횟수',
         drawCount: '오늘 남은 그림 횟수',
 
+    },
+
+    policy: {
+        protocol: '사용자 계약',
+        privacy: '개인정보 처리방침',
+        pay: '사용자 결제 계약',
     }
+
 
 }

@@ -565,5 +565,11 @@ export default {
         chatCount: '今日对话剩余次数',
         drawCount: '绘画剩余次数',
 
+    },
+
+    policy: {
+        protocol: '用户协议',
+        privacy: '隐私政策',
+        pay: '用户支付协议',
     }
 }

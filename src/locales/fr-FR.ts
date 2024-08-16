@@ -542,8 +542,13 @@ export default {
         chatCount: "Nombre de conversations restantes aujourd'hui",
         drawCount: 'Nombre de dessins restants aujourd\'hui',
 
-    }
+    },
 
+    policy: {
+        protocol: 'Accord utilisateur',
+        privacy: 'Politique de confidentialité',
+        pay: 'Accord de paiement utilisateur',
+    }
 
 
 }
