@@ -86,7 +86,7 @@ const insertUser = async (params) => {
         values(?, ?, ?, ?, 1, ?, ?)';
     return new Promise((resolve, reject) => {
         db.query(sql,
-            [params.nickname, params.avatar, params.email, params.password, params.registerIp, params.registerTerminalName],
+            ['AI大脑', params.avatar, params.email, params.password, params.registerIp, params.registerTerminalName],
             (err, result) => {
                 if (err) {
                     throw Error(err);
