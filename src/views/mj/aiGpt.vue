@@ -71,10 +71,13 @@ watch(() => homeStore.myData.act, async (n) => {
 
         let promptMsg = getInitChat(dd.prompt);
         if (dd.fileBase64 && dd.fileBase64.length > 0) {
-            if (!canVisionModel(model)) model = canBase64Model(model)//model='gpt-4-vision-preview';
+            if (!canVisionModel(model)) model = canBase64Model(model) //model='gpt-4-vision-preview';
 
             try {
-                let images = await localSaveAny(JSON.stringify(dd.fileBase64));
+                let images = await localSaveAny(JSON.stringify({
+                    fileName: dd.fileName,
+                    fileBase64: dd.fileBase64
+                }));
                 mlog('key', images);
                 promptMsg.opt = { images: [images] }
             } catch (e) {
