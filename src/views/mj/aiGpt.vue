@@ -7,7 +7,8 @@ import {
     getInitChat, mlog, subModel, getSystemMessage, localSaveAny, canVisionModel
     , isTTS, subTTS, file2blob, whisperUpload, getHistoryMessage, checkDisableGpt4, chatSetting,
     canBase64Model,
-    isCanBase64Model
+    isCanBase64Model,
+    isNewModel
 } from '@/api'
 //import { isNumber } from '@/utils/is'
 import { useMessage } from "naive-ui";
@@ -40,29 +41,26 @@ const goFinish = () => {
 const getMessage = async (start = 1000, loadingCnt = 3) => {
     return getHistoryMessage(dataSources.value, loadingCnt, start);
 }
+
 watch(() => textRz.value, (n) => {
-    //mlog('🐞 textRz',n);
     if (n.length == 0) return;
     updateChatSome(+st.value.uuid, st.value.index, { dateTime: new Date().toLocaleString(), text: n.join('') })
     //scrollToBottom();
     homeStore.setMyData({ act: 'scrollToBottomIfAtBottom' })
     //homeStore.setMyData({act:'scrollToBottom'})
 }, { deep: true })
+
 const { uuid } = useRoute().params as { uuid: string }
+
 watch(() => homeStore.myData.act, async (n) => {
-
-
-
     if (n == 'gpt.submit' || n == 'gpt.whisper') {
-
         const dd: any = homeStore.myData.actData;
-
         let uuid2 = dd.uuid ?? uuid;
         st.value.uuid = uuid2;
         const chatSet = new chatSetting(+st.value.uuid);
         const nGptStore = chatSet.getGptConfig();
         mlog('gpt.submit', dd, dd.uuid, nGptStore);
-        let model = nGptStore.model;//gptConfigStore.myData.model
+        let model = nGptStore.model; // gptConfigStore.myData.model
 
         if (checkDisableGpt4(model)) {
             ms.error(t('mj.disableGpt4'));
@@ -127,9 +125,6 @@ watch(() => homeStore.myData.act, async (n) => {
             homeStore.setMyData({ act: 'scrollToBottom' });
         }
 
-
-
-
         let outMsg: Chat.Chat = {
             dateTime: new Date().toLocaleString(),
             text: t('mj.thinking'),//'思考中...',
@@ -159,8 +154,10 @@ watch(() => homeStore.myData.act, async (n) => {
         let historyMesg = await getMessage();
         mlog('historyMesg', historyMesg);
         //return ;
-        let message = [{ "role": "system", "content": getSystemMessage(+uuid2) },
-        ...historyMesg];
+        let message = [{ "role": "system", "content": getSystemMessage(+uuid2) }, ...historyMesg];
+        if (isNewModel(model)) {
+            message = [...historyMesg];
+        }
         if (dd.fileBase64 && dd.fileBase64.length > 0) {
             //if(  model=='gpt-4-vision-preview' || model=='gemini-pro-1.5'){
             if (isCanBase64Model(model)) {
@@ -315,7 +312,11 @@ const submit = (model: string, message: any[], opt?: any) => {
             uuid: st.value.uuid, // 当前会话
             onMessage: (d) => {
                 mlog('🐞消息', d);
-                textRz.value.push(d.text);
+                if (d.isAll) {
+                    textRz.value = [d.text];
+                } else {
+                    textRz.value.push(d.text);
+                }
             },
             onError: (e: any) => {
                 mlog('onError', e)

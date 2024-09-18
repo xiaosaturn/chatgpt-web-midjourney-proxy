@@ -26,6 +26,10 @@ export const KnowledgeCutOffDate: Record<string, string> = {
     "gpt-4o-mini": "2023-10",
     "gpt-4o-2024-08-06": "2023-10",
     "chatgpt-4o-latest": "2023-10",
+    "o1-mini": "2023-10",
+    "o1-mini-2024-09-12": "2023-10",
+    "o1-preview": "2023-10",
+    "o1-preview-2024-0912": "2023-10",
     "gpt-4-turbo": "2023-12",
     "gpt-4-turbo-preview": "2023-12",
     "claude-3-opus-20240229": "2023-08",
@@ -246,7 +250,7 @@ export const subGPT = async (data: any, chat: Chat.Chat) => {
 
 interface subModelType {
     message: any[]
-    onMessage: (d: { text: string, isFinish: boolean }) => void
+    onMessage: (d: { text: string, isFinish: boolean, isAll?: boolean }) => void
     onError?: (d?: any) => void
     signal?: AbortSignal
     model?: string
@@ -302,6 +306,11 @@ Latex block: $$e=mc^2$$`;
     return DEFAULT_SYSTEM_TEMPLATE;
 
 }
+
+export const isNewModel = (model: string) => {
+    return model.startsWith('o1-')
+}
+
 export const subModel = async (opt: subModelType) => {
     //
     let model = opt.model ?? (gptConfigStore.myData.model ? gptConfigStore.myData.model : "gpt-3.5-turbo");
@@ -325,48 +334,71 @@ export const subModel = async (opt: subModelType) => {
         model = model.replace('gpt-4-gizmo-', '')
     }
 
-    let body = {
+    let body: any = {
         max_tokens,
         model,
         temperature,
         top_p,
         presence_penalty, frequency_penalty,
-        "messages": opt.message
-        , stream: true
+        "messages": opt.message,
+        stream: true
     }
-    //
 
-    let headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'text/event-stream',
-    }
-    headers = { ...headers, ...getHeaderAuthorization() }
-    headers = {
-        ...headers, ...{
-            'Authorization': gptServerStore.myData.SERVICE_TOKEN
+    if (isNewModel(model)) {
+        body = {
+            max_completion_tokens: max_tokens,
+            model,
+            top_p,
+            presence_penalty, frequency_penalty,
+            "messages": opt.message,
+            stream: false
         }
     }
-    try {
-        await fetchSSE(gptGetUrl('/v1/chat/completions'), {
-            method: 'POST',
-            headers: headers,
-            signal: opt.signal,
-            onMessage: async (data: string) => {
-                if (data == '[DONE]') opt.onMessage({ text: '', isFinish: true })
-                else {
-                    const obj = JSON.parse(data);
-                    opt.onMessage({ text: obj.choices[0].delta?.content ?? '', isFinish: obj.choices[0].finish_reason != null })
-                }
-            },
-            onError(e) {
-                mlog('❌未错误', e)
-                opt.onError && opt.onError(e)
-            },
-            body: JSON.stringify(body)
-        });
-    } catch (error) {
-        mlog('❌未错误2', error)
-        opt.onError && opt.onError(error)
+
+    if (body.stream) {
+        let headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'text/event-stream',
+        }
+        headers = { ...headers, ...getHeaderAuthorization() }
+        headers = {
+            ...headers, ...{
+                'Authorization': gptServerStore.myData.SERVICE_TOKEN
+            }
+        }
+
+        try {
+            await fetchSSE(gptGetUrl('/v1/chat/completions'), {
+                method: 'POST',
+                headers: headers,
+                signal: opt.signal,
+                onMessage: async (data: string) => {
+                    if (data == '[DONE]') opt.onMessage({ text: '', isFinish: true })
+                    else {
+                        const obj = JSON.parse(data);
+                        opt.onMessage({ text: obj.choices[0].delta?.content ?? '', isFinish: obj.choices[0].finish_reason != null })
+                    }
+                },
+                onError(e) {
+                    mlog('❌未错误', e)
+                    opt.onError && opt.onError(e)
+                },
+                body: JSON.stringify(body)
+            });
+        } catch (error) {
+            mlog('❌未错误2', error)
+            opt.onError && opt.onError(error)
+        }
+    } else {
+        try {
+            mlog('🐞非流输出', body)
+            opt.onMessage({ text: t('mj.thinking'), isFinish: false })
+            let obj: any = await gptFetch('/v1/chat/completions', body)
+            opt.onMessage({ text: obj.choices[0].message.content ?? '', isFinish: true, isAll: true })
+        } catch (error) {
+            mlog('❌未错误2', error)
+            opt.onError && opt.onError(error)
+        }
     }
 }
 
@@ -532,6 +564,7 @@ export const countTokens = async (dataSources: Chat.Chat[], input: string, uuid:
 
     return rz;
 }
+
 const getModelMax = (model: string) => {
     let max = 4;
     model = model.toLowerCase();
@@ -541,7 +574,7 @@ const getModelMax = (model: string) => {
         return 16;
     } else if (model.indexOf('32k') > -1) {
         return 32;
-    } else if (model.indexOf('gpt-4-turbo') > -1 || model.indexOf('gpt-4o') > -1) {
+    } else if (model.indexOf('gpt-4-turbo') > -1 || model.indexOf('gpt-4o') > -1 || model.indexOf('o1-') > -1) {
         return 128;
     } else if (model.indexOf('64k') > -1) {
         return 64;
